@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Charlotte's Library</title>
+<script src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --parchment: #f5efe6;
+    --parchment-dark: #ede3d4;
+    --ink: #2c1f0e;
+    --ink-light: #5c4a32;
+    --spine: #8b3a2a;
+    --spine-light: #c4593e;
+    --gold: #c9963a;
+    --gold-light: #e8bf72;
+    --sage: #5a7a5a;
+    --shadow: rgba(44,31,14,0.15);
+    --shadow-deep: rgba(44,31,14,0.3);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Texture overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  header {
+    background: var(--ink);
+    padding: 18px 20px 14px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px var(--shadow-deep);
+  }
+
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--gold-light);
+    letter-spacing: 0.02em;
+    text-align: center;
+  }
+
+  header p {
+    text-align: center;
+    font-size: 0.7rem;
+    color: #a08060;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* Nav tabs */
+  .tabs {
+    display: flex;
+    background: var(--ink);
+    border-top: 1px solid #3d2e1a;
+    padding: 0 16px 10px;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .tab-btn {
+    flex: 1;
+    max-width: 130px;
+    padding: 7px 10px;
+    border: 1px solid #5c4030;
+    border-radius: 20px;
+    background: transparent;
+    color: #a08060;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .tab-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--ink);
+    font-weight: 700;
+  }
+
+  /* Main content */
+  main { padding: 16px; max-width: 600px; margin: 0 auto; }
+
+  /* Scan button */
+  .scan-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--spine);
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 16px var(--shadow-deep);
+    z-index: 200;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scan-fab:active { transform: scale(0.94); }
+
+  /* Search bar */
+  .search-bar {
+    position: relative;
+    margin-bottom: 14px;
+  }
+
+  .search-bar input {
+    width: 100%;
+    padding: 10px 16px 10px 38px;
+    border: 1.5px solid var(--parchment-dark);
+    border-radius: 8px;
+    background: white;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.9rem;
+    color: var(--ink);
+    outline: none;
+    transition: border 0.2s;
+  }
+
+  .search-bar input:focus { border-color: var(--gold); }
+
+  .search-bar .icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #b09070;
+    font-size: 1rem;
+  }
+
+  /* Sort row */
+  .sort-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+
+  .sort-row label {
+    font-size: 0.72rem;
+    color: var(--ink-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .sort-row select {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1.5px solid var(--parchment-dark);
+    border-radius: 6px;
+    background: white;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.82rem;
+    color: var(--ink);
+    outline: none;
+  }
+
+  /* Book cards */
+  .book-list { display: flex; flex-direction: column; gap: 14px; padding-bottom: 90px; }
+
+  .book-card {
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    box-shadow: 0 2px 8px var(--shadow);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.15s;
+    border-left: 4px solid var(--gold);
+    animation: slideIn 0.25s ease;
+  }
+
+  .book-card.wishlist { border-left-color: var(--sage); }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .book-cover {
+    width: 58px;
+    min-width: 58px;
+    height: 84px;
+    border-radius: 4px;
+    object-fit: cover;
+    box-shadow: 2px 2px 8px var(--shadow);
+  }
+
+  .book-cover-placeholder {
+    width: 58px;
+    min-width: 58px;
+    height: 84px;
+    border-radius: 4px;
+    background: linear-gradient(135deg, var(--spine) 0%, #5a1a10 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    box-shadow: 2px 2px 8px var(--shadow);
+    color: var(--gold-light);
+  }
+
+  .book-info { flex: 1; min-width: 0; }
+
+  .book-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--ink);
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .book-author {
+    font-size: 0.78rem;
+    color: var(--ink-light);
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+
+  .book-meta {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+
+  .badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .badge-owned { background: #fff0d0; color: var(--gold); }
+  .badge-wish { background: #e8f0e8; color: var(--sage); }
+  .badge-read { background: #e8f0ff; color: #3a5aaa; }
+  .badge-unread { background: #f0e8e8; color: #aa3a3a; }
+  .badge-reading { background: #f0e8ff; color: #7a3aaa; }
+
+  .stars {
+    display: flex;
+    gap: 1px;
+    font-size: 0.85rem;
+  }
+
+  .star { cursor: pointer; color: #ddd; transition: color 0.1s; }
+  .star.filled { color: var(--gold); }
+
+  .book-notes {
+    font-size: 0.75rem;
+    color: var(--ink-light);
+    font-style: italic;
+    line-height: 1.4;
+    border-top: 1px solid var(--parchment-dark);
+    margin-top: 6px;
+    padding-top: 5px;
+  }
+
+  .book-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .action-btn {
+    padding: 4px 10px;
+    border-radius: 5px;
+    font-size: 0.7rem;
+    border: 1.5px solid;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.15s;
+    background: transparent;
+  }
+
+  .btn-edit { border-color: var(--gold); color: var(--gold); }
+  .btn-edit:active { background: var(--gold); color: white; }
+  .btn-delete { border-color: #cc4444; color: #cc4444; }
+  .btn-delete:active { background: #cc4444; color: white; }
+  .btn-move { border-color: var(--sage); color: var(--sage); }
+  .btn-move:active { background: var(--sage); color: white; }
+
+  /* Empty state */
+  .empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--ink-light);
+  }
+
+  .empty .icon { font-size: 3rem; margin-bottom: 14px; opacity: 0.5; }
+  .empty h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 8px; }
+  .empty p { font-size: 0.85rem; line-height: 1.6; }
+
+  /* Stats bar */
+  .stats-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .stat-pill {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px var(--shadow);
+  }
+
+  .stat-pill .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--spine);
+    font-weight: 700;
+  }
+
+  .stat-pill .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    margin-top: 2px;
+  }
+
+  /* Modal overlay */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(20,12,4,0.75);
+    z-index: 500;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0;
+    animation: fadeIn 0.2s;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  .modal {
+    background: var(--parchment);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 24px 20px 36px;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    color: var(--ink);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1.5px solid var(--parchment-dark);
+  }
+
+  /* Scanner */
+  #scanner-container {
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    position: relative;
+    background: #000;
+    min-height: 200px;
+  }
+
+  #scanner-container video,
+  #scanner-container canvas { width: 100% !important; height: auto !important; }
+
+  .scan-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .scan-frame {
+    width: 75%;
+    height: 80px;
+    border: 2px solid var(--gold-light);
+    border-radius: 6px;
+    box-shadow: 0 0 0 9999px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  .scan-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: var(--gold-light);
+    animation: scanMove 1.8s ease-in-out infinite;
+    top: 0;
+    box-shadow: 0 0 6px var(--gold-light);
+  }
+
+  @keyframes scanMove {
+    0%, 100% { top: 0; }
+    50% { top: calc(100% - 2px); }
+  }
+
+  /* ISBN manual input */
+  .isbn-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .isbn-row input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1.5px solid var(--parchment-dark);
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-family: 'Lato', sans-serif;
+    background: white;
+    color: var(--ink);
+    outline: none;
+  }
+
+  .isbn-row input:focus { border-color: var(--gold); }
+
+  /* Book lookup result */
+  .lookup-result {
+    background: white;
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+    display: flex;
+    gap: 14px;
+    box-shadow: 0 2px 8px var(--shadow);
+  }
+
+  .lookup-result img {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+
+  .lookup-result .details h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+
+  .lookup-result .details p {
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    font-style: italic;
+    margin-bottom: 4px;
+  }
+
+  .lookup-result .details small {
+    font-size: 0.72rem;
+    color: #999;
+  }
+
+  /* Form fields */
+  .form-group { margin-bottom: 14px; }
+
+  .form-group label {
+    display: block;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    margin-bottom: 5px;
+    font-weight: 700;
+  }
+
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--parchment-dark);
+    border-radius: 8px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.88rem;
+    background: white;
+    color: var(--ink);
+    outline: none;
+    transition: border 0.2s;
+  }
+
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold); }
+
+  .form-group textarea { resize: vertical; min-height: 70px; }
+
+  .star-picker {
+    display: flex;
+    gap: 6px;
+    font-size: 1.6rem;
+    padding: 4px 0;
+  }
+
+  .star-picker .star { cursor: pointer; transition: transform 0.1s; }
+  .star-picker .star:active { transform: scale(1.2); }
+
+  /* Buttons */
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+  }
+
+  .btn-primary {
+    flex: 1;
+    padding: 12px;
+    background: var(--spine);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .btn-primary:active { background: var(--spine-light); }
+
+  .btn-secondary {
+    padding: 12px 20px;
+    background: transparent;
+    color: var(--ink-light);
+    border: 1.5px solid var(--parchment-dark);
+    border-radius: 10px;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .btn-type {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: transparent;
+  }
+
+  .btn-type.owned { border-color: var(--gold); color: var(--gold); }
+  .btn-type.owned.active { background: var(--gold); color: white; }
+  .btn-type.wishlist { border-color: var(--sage); color: var(--sage); }
+  .btn-type.wishlist.active { background: var(--sage); color: white; }
+
+  .status-message {
+    text-align: center;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    margin-bottom: 14px;
+    font-weight: 700;
+  }
+
+  .status-ok { background: #e8f5e9; color: #2e7d32; }
+  .status-err { background: #ffebee; color: #c62828; }
+  .status-loading { background: #fff8e1; color: #f57f17; }
+
+  .divider {
+    text-align: center;
+    color: #b09070;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin: 14px 0;
+    position: relative;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 35%;
+    height: 1px;
+    background: var(--parchment-dark);
+  }
+
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Charlotte's Library</h1>
+  <p>A personal book collection</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('owned')">📚 Owned</button>
+  <button class="tab-btn" onclick="switchTab('wishlist')">✨ Wishlist</button>
+</div>
+
+<main>
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div class="search-bar">
+    <span class="icon">🔍</span>
+    <input type="text" id="search-input" placeholder="Search by title or author…" oninput="renderBooks()">
+  </div>
+
+  <div class="sort-row">
+    <label>Sort:</label>
+    <select id="sort-select" onchange="renderBooks()">
+      <option value="recent">Recently Added</option>
+      <option value="title">Title A–Z</option>
+      <option value="author">Author A–Z</option>
+      <option value="rating">Highest Rated</option>
+    </select>
+  </div>
+
+  <div class="book-list" id="book-list"></div>
+</main>
+
+<button class="scan-fab" onclick="openScanner()" title="Scan a book">📷</button>
+
+<!-- Scanner Modal -->
+<div class="modal-overlay" id="scan-modal" style="display:none">
+  <div class="modal">
+    <h2>📷 Add a Book</h2>
+
+    <div id="scan-status"></div>
+
+    <div id="scanner-container">
+      <div class="scan-overlay"><div class="scan-frame"><div class="scan-line"></div></div></div>
+    </div>
+
+    <div class="divider">or enter ISBN manually</div>
+
+    <div class="isbn-row">
+      <input type="number" id="isbn-input" placeholder="Enter ISBN (10 or 13 digits)">
+      <button class="btn-primary" style="flex:none;padding:10px 16px" onclick="lookupISBN()">Look Up</button>
+    </div>
+
+    <div id="lookup-result-area"></div>
+
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add/Edit Book Modal -->
+<div class="modal-overlay" id="add-modal" style="display:none">
+  <div class="modal">
+    <h2 id="add-modal-title">Add to Library</h2>
+
+    <div id="found-book-preview"></div>
+
+    <div style="display:flex;gap:10px;margin-bottom:14px">
+      <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">📚 Owned</button>
+      <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">✨ Wishlist</button>
+    </div>
+
+    <div class="form-group">
+      <label>Reading Status</label>
+      <select id="field-status">
+        <option value="unread">Unread</option>
+        <option value="reading">Currently Reading</option>
+        <option value="read">Finished</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label>Star Rating</label>
+      <div class="star-picker" id="star-picker">
+        <span class="star" onclick="setRating(1)">★</span>
+        <span class="star" onclick="setRating(2)">★</span>
+        <span class="star" onclick="setRating(3)">★</span>
+        <span class="star" onclick="setRating(4)">★</span>
+        <span class="star" onclick="setRating(5)">★</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Notes</label>
+      <textarea id="field-notes" placeholder="Thoughts, quotes, why she wants it…"></textarea>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-secondary" onclick="closeAddModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveBook()">Save Book</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── State ───────────────────────────────────────────────────────────────────
+let books = JSON.parse(localStorage.getItem('herLibrary') || '[]');
+let currentTab = 'owned';
+let scannerRunning = false;
+let currentBook = null;  // book being added
+let editingId = null;
+let selectedType = 'owned';
+let selectedRating = 0;
+
+function save() { localStorage.setItem('herLibrary', JSON.stringify(books)); }
+
+// ─── Tabs ────────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'owned') || (i === 1 && tab === 'wishlist'));
+  });
+  renderBooks();
+}
+
+// ─── Render ──────────────────────────────────────────────────────────────────
+function renderBooks() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const sort = document.getElementById('sort-select').value;
+
+  let list = books.filter(b => b.type === currentTab);
+
+  if (q) list = list.filter(b =>
+    b.title.toLowerCase().includes(q) ||
+    b.author.toLowerCase().includes(q)
+  );
+
+  list = [...list].sort((a, b) => {
+    if (sort === 'title') return a.title.localeCompare(b.title);
+    if (sort === 'author') return a.author.localeCompare(b.author);
+    if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
+    return b.addedAt - a.addedAt;
+  });
+
+  const el = document.getElementById('book-list');
+
+  if (list.length === 0) {
+    el.innerHTML = `<div class="empty">
+      <div class="icon">${currentTab === 'owned' ? '📚' : '✨'}</div>
+      <h3>${currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty'}</h3>
+      <p>${currentTab === 'owned' ? 'Tap the 📷 button to scan a book spine barcode.' : 'Scan a book and add it to the wishlist.'}</p>
+    </div>`;
+  } else {
+    el.innerHTML = list.map(b => bookCard(b)).join('');
+  }
+
+  renderStats();
+}
+
+function stars(rating) {
+  return [1,2,3,4,5].map(i =>
+    `<span class="star ${i <= rating ? 'filled' : ''}">★</span>`
+  ).join('');
+}
+
+function statusBadge(s) {
+  const map = { read: ['badge-read','✓ Read'], unread: ['badge-unread','Unread'], reading: ['badge-reading','Reading'] };
+  const [cls, label] = map[s] || map.unread;
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function bookCard(b) {
+  const coverHtml = b.cover
+    ? `<img class="book-cover" src="${b.cover}" alt="">`
+    : `<div class="book-cover-placeholder">📖</div>`;
+
+  const moveLabel = b.type === 'owned' ? '→ Wishlist' : '→ Library';
+
+  return `<div class="book-card ${b.type === 'wishlist' ? 'wishlist' : ''}" id="card-${b.id}">
+    ${coverHtml}
+    <div class="book-info">
+      <div class="book-title" title="${esc(b.title)}">${esc(b.title)}</div>
+      <div class="book-author">${esc(b.author)}</div>
+      <div class="book-meta">
+        ${statusBadge(b.status)}
+        <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? '📚 Owned' : '✨ Wishlist'}</span>
+      </div>
+      <div class="stars">${stars(b.rating || 0)}</div>
+      ${b.notes ? `<div class="book-notes">${esc(b.notes)}</div>` : ''}
+      <div class="book-actions">
+        <button class="action-btn btn-edit" onclick="editBook('${b.id}')">Edit</button>
+        <button class="action-btn btn-move" onclick="moveBook('${b.id}')">${moveLabel}</button>
+        <button class="action-btn btn-delete" onclick="deleteBook('${b.id}')">Remove</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function renderStats() {
+  const owned = books.filter(b => b.type === 'owned');
+  const wish = books.filter(b => b.type === 'wishlist');
+  const read = owned.filter(b => b.status === 'read');
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat-pill"><div class="num">${owned.length}</div><div class="label">Owned</div></div>
+    <div class="stat-pill"><div class="num">${read.length}</div><div class="label">Read</div></div>
+    <div class="stat-pill"><div class="num">${wish.length}</div><div class="label">Wishlist</div></div>
+  `;
+}
+
+// ─── Book actions ─────────────────────────────────────────────────────────────
+function deleteBook(id) {
+  if (!confirm('Remove this book?')) return;
+  books = books.filter(b => b.id !== id);
+  save(); renderBooks();
+}
+
+function moveBook(id) {
+  const b = books.find(x => x.id === id);
+  if (!b) return;
+  b.type = b.type === 'owned' ? 'wishlist' : 'owned';
+  save(); renderBooks();
+}
+
+function editBook(id) {
+  const b = books.find(x => x.id === id);
+  if (!b) return;
+  editingId = id;
+  currentBook = b;
+  openAddModal(b, true);
+}
+
+// ─── Scanner (ZXing) ──────────────────────────────────────────────────────────
+let zxingReader = null;
+
+function openScanner() {
+  document.getElementById('scan-modal').style.display = 'flex';
+  document.getElementById('scan-status').innerHTML = '';
+  document.getElementById('isbn-input').value = '';
+  document.getElementById('lookup-result-area').innerHTML = '';
+  startZXing();
+}
+
+function closeScanner() {
+  stopZXing();
+  document.getElementById('scan-modal').style.display = 'none';
+}
+
+async function startZXing() {
+  if (scannerRunning) return;
+
+  // Ensure video element exists
+  const container = document.getElementById('scanner-container');
+  let video = container.querySelector('video');
+  if (!video) {
+    video = document.createElement('video');
+    video.setAttribute('playsinline', 'true');
+    video.style.cssText = 'width:100%;border-radius:10px;display:block;';
+    container.insertBefore(video, container.firstChild);
+  }
+
+  try {
+    const hints = new Map();
+    const formats = [
+      ZXing.BarcodeFormat.EAN_13,
+      ZXing.BarcodeFormat.EAN_8,
+      ZXing.BarcodeFormat.UPC_A,
+      ZXing.BarcodeFormat.UPC_E
+    ];
+    hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
+
+    zxingReader = new ZXing.BrowserMultiFormatReader(hints);
+
+    const devices = await ZXing.BrowserMultiFormatReader.listVideoInputDevices();
+    // Prefer back camera
+    const backCam = devices.find(d => /back|rear|environment/i.test(d.label)) || devices[devices.length - 1];
+    const deviceId = backCam ? backCam.deviceId : undefined;
+
+    scannerRunning = true;
+    setScanStatus('📷 Point camera at the barcode on the back of the book', 'loading');
+
+    await zxingReader.decodeFromVideoDevice(deviceId, video, (result, err) => {
+      if (result) {
+        const code = result.getText();
+        if (code && code.length >= 10) {
+          stopZXing();
+          document.getElementById('isbn-input').value = code;
+          lookupISBN(code);
+        }
+      }
+      // Ignore NotFoundException - it fires continuously while scanning
+    });
+
+  } catch(e) {
+    scannerRunning = false;
+    setScanStatus('Could not access camera. Please enter the ISBN manually below, or check that camera permissions are enabled for this site in Chrome settings.', 'err');
+  }
+}
+
+function stopZXing() {
+  if (zxingReader) {
+    try { zxingReader.reset(); } catch(e) {}
+    zxingReader = null;
+  }
+  scannerRunning = false;
+}
+
+function setScanStatus(msg, type) {
+  const el = document.getElementById('scan-status');
+  el.innerHTML = `<div class="status-message status-${type}">${msg}</div>`;
+}
+
+async function lookupISBN(isbnOverride) {
+  const isbn = isbnOverride || document.getElementById('isbn-input').value.trim();
+  if (!isbn || isbn.length < 10) {
+    setScanStatus('Please enter a valid ISBN (10 or 13 digits).', 'err');
+    return;
+  }
+
+  setScanStatus('Looking up book…', 'loading');
+
+  try {
+    const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
+    const data = await res.json();
+
+    if (!data.items || data.items.length === 0) {
+      setScanStatus('Book not found. Try a different ISBN.', 'err');
+      return;
+    }
+
+    const info = data.items[0].volumeInfo;
+    currentBook = {
+      id: null,
+      isbn,
+      title: info.title || 'Unknown Title',
+      author: (info.authors || ['Unknown Author']).join(', '),
+      cover: info.imageLinks ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '') : '',
+      year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
+      pages: info.pageCount || '',
+      type: 'owned',
+      status: 'unread',
+      rating: 0,
+      notes: '',
+      addedAt: Date.now()
+    };
+
+    setScanStatus('', 'ok');
+    showLookupResult(currentBook);
+  } catch(e) {
+    setScanStatus('Network error. Check your connection.', 'err');
+  }
+}
+
+function showLookupResult(book) {
+  const area = document.getElementById('lookup-result-area');
+  area.innerHTML = `<div class="lookup-result">
+    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">📖</div>'}
+    <div class="details">
+      <h3>${esc(book.title)}</h3>
+      <p>${esc(book.author)}</p>
+      <small>${book.year}${book.pages ? ' · ' + book.pages + ' pages' : ''}</small>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
+    <button class="btn-primary" onclick="proceedToAdd()">Add to Library →</button>
+  </div>`;
+}
+
+function proceedToAdd() {
+  closeScanner();
+  editingId = null;
+  openAddModal(currentBook, false);
+}
+
+// ─── Add/Edit Modal ───────────────────────────────────────────────────────────
+function openAddModal(book, isEdit) {
+  document.getElementById('add-modal-title').textContent = isEdit ? 'Edit Book' : 'Add to Library';
+  document.getElementById('add-modal').style.display = 'flex';
+
+  // Preview
+  document.getElementById('found-book-preview').innerHTML = `<div class="lookup-result" style="margin-bottom:16px">
+    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">📖</div>'}
+    <div class="details"><h3>${esc(book.title)}</h3><p>${esc(book.author)}</p></div>
+  </div>`;
+
+  selectType(book.type || 'owned');
+  document.getElementById('field-status').value = book.status || 'unread';
+  document.getElementById('field-notes').value = book.notes || '';
+  setRating(book.rating || 0);
+}
+
+function closeAddModal() {
+  document.getElementById('add-modal').style.display = 'none';
+  editingId = null;
+  currentBook = null;
+}
+
+function selectType(type) {
+  selectedType = type;
+  document.getElementById('btn-owned').classList.toggle('active', type === 'owned');
+  document.getElementById('btn-wish').classList.toggle('active', type === 'wishlist');
+}
+
+function setRating(r) {
+  selectedRating = r;
+  document.querySelectorAll('#star-picker .star').forEach((s, i) => {
+    s.classList.toggle('filled', i < r);
+  });
+}
+
+function saveBook() {
+  if (!currentBook) return;
+
+  const bookData = {
+    ...currentBook,
+    type: selectedType,
+    status: document.getElementById('field-status').value,
+    rating: selectedRating,
+    notes: document.getElementById('field-notes').value.trim(),
+  };
+
+  if (editingId) {
+    const idx = books.findIndex(b => b.id === editingId);
+    if (idx !== -1) books[idx] = { ...books[idx], ...bookData };
+  } else {
+    bookData.id = 'b' + Date.now();
+    bookData.addedAt = Date.now();
+    books.unshift(bookData);
+    currentTab = selectedType; // switch to the tab we added to
+    document.querySelectorAll('.tab-btn').forEach((b, i) => {
+      b.classList.toggle('active', (i === 0 && currentTab === 'owned') || (i === 1 && currentTab === 'wishlist'));
+    });
+  }
+
+  save();
+  closeAddModal();
+  renderBooks();
+}
+
+// ─── Init ─────────────────────────────────────────────────────────────────────
+renderBooks();
+</script>
+</body>
+</html>
