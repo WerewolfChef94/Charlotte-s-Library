@@ -1693,6 +1693,28 @@ async function lookupISBN(isbnOverride) {
       if (info.imageLinks) {
         cover = (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://');
       }
+
+      // Extract series info from title, subtitle, or seriesInfo field
+      let detectedSeries = null;
+      let detectedPosition = null;
+      const fullTitle = (info.title || '') + ' ' + (info.subtitle || '');
+
+      // Pattern: "Title (Series Name, #3)" or "Title (Series Name Book 3)"
+      const m1 = fullTitle.match(/\(([^)]+?),?\s*(?:book\s*)?#?(\d+)\)/i);
+      if (m1) { detectedSeries = m1[1].trim(); detectedPosition = parseInt(m1[2]); }
+
+      // Google Books seriesInfo field (not always present but use when available)
+      if (!detectedSeries && info.seriesInfo) {
+        const si = info.seriesInfo;
+        if (si.bookSeries && si.bookSeries[0] && si.bookSeries[0].seriesId) {
+          detectedSeries = si.bookSeries[0].seriesId;
+        }
+        if (si.shortSeriesBookTitle) {
+          const m2 = si.shortSeriesBookTitle.match(/#?(\d+)/);
+          if (m2) detectedPosition = parseInt(m2[1]);
+        }
+      }
+
       currentBook = {
         id: null, isbn,
         title: info.title || 'Unknown Title',
@@ -1700,6 +1722,7 @@ async function lookupISBN(isbnOverride) {
         cover,
         year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
         pages: info.pageCount || '',
+        detectedSeries, detectedPosition,
         type: 'owned', status: 'unread', rating: 0, notes: '',
         addedAt: Date.now()
       };
@@ -1792,63 +1815,93 @@ async function checkBookSeries(book) {
   const hint = document.getElementById('series-hint');
   if (!hint) return;
 
-  try {
-    // Search Google Books for this title + author to get series info
-    const q = encodeURIComponent('"' + book.title + '" ' + book.author);
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + q + '&maxResults=3&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
-    if (!res.ok) return;
-    const data = await res.json();
-    if (!data.items) return;
+  // Step 1: check if Google Books already told us the series during lookup
+  let seriesName = book.detectedSeries || null;
+  let seriesPosition = book.detectedPosition || null;
 
-    // Look for a series name in the results
-    let seriesName = null;
-    let seriesNum = null;
-    for (const item of data.items) {
-      const info = item.volumeInfo;
-      // Google Books sometimes puts series in subtitle or title e.g. "(Harry Potter #3)"
-      const fullTitle = (info.title || '') + ' ' + (info.subtitle || '');
-      const seriesMatch = fullTitle.match(/\(([^)]+?)\s*[,#]?\s*(\d+)\)/i) ||
-                          fullTitle.match(/book\s+(\w+)\s+(?:of|in)\s+(?:the\s+)?([^,.(]+)/i);
-      if (seriesMatch) {
-        // pattern 1: (Series Name #N)
-        const m2 = fullTitle.match(/\(([^)#,]+?)\s*[,#]\s*(\d+)\)/i);
-        if (m2) { seriesName = m2[1].trim(); seriesNum = parseInt(m2[2]); break; }
+  // Step 2: if not, do a secondary search by title+author to find series info
+  if (!seriesName) {
+    try {
+      const q = encodeURIComponent(book.title + ' ' + book.author);
+      const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + q + '&maxResults=5&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
+      if (res.ok) {
+        const data = await res.json();
+        for (const item of (data.items || [])) {
+          const info = item.volumeInfo;
+          const fullTitle = (info.title || '') + ' ' + (info.subtitle || '');
+          const m = fullTitle.match(/\(([^)]+?),?\s*(?:book\s*)?#?(\d+)\)/i);
+          if (m) { seriesName = m[1].trim(); seriesPosition = parseInt(m[2]); break; }
+          if (info.seriesInfo && info.seriesInfo.bookSeries && info.seriesInfo.bookSeries[0]) {
+            seriesName = info.seriesInfo.bookSeries[0].seriesId;
+            if (info.seriesInfo.shortSeriesBookTitle) {
+              const m2 = info.seriesInfo.shortSeriesBookTitle.match(/#?(\d+)/);
+              if (m2) seriesPosition = parseInt(m2[1]);
+            }
+            if (seriesName) break;
+          }
+        }
       }
-      // Also check series field directly from Google Books (not always present)
-      if (info.seriesInfo && info.seriesInfo.bookSeries && info.seriesInfo.bookSeries[0]) {
-        seriesName = info.seriesInfo.bookSeries[0].seriesId || null;
-      }
-    }
+    } catch(e) { /* ignore */ }
+  }
 
-    // If no series found from title parsing, try searching by author for a known series
-    // cross-check against seriesList in library
-    const matchedSeries = seriesList.find(s => {
-      const sn = s.name.toLowerCase();
-      const bt = book.title.toLowerCase();
-      // Check if series name appears in book title, or book author matches books already in series
-      if (bt.includes(sn)) return true;
+  // Step 3: cross-check against existing series in library by name or author
+  let matchedSeries = null;
+  if (seriesName) {
+    matchedSeries = seriesList.find(s =>
+      s.name.toLowerCase() === seriesName.toLowerCase() ||
+      s.name.toLowerCase().includes(seriesName.toLowerCase()) ||
+      seriesName.toLowerCase().includes(s.name.toLowerCase())
+    );
+  }
+  // Also match by author even without a detected series name
+  if (!matchedSeries) {
+    matchedSeries = seriesList.find(s => {
       const seriesBooks = books.filter(b => b.seriesId === s.id);
-      return seriesBooks.some(b => b.author.toLowerCase() === book.author.toLowerCase());
+      return seriesBooks.some(b => b.author && book.author &&
+        b.author.toLowerCase() === book.author.toLowerCase());
     });
+    if (matchedSeries && !seriesName) seriesName = matchedSeries.name;
+  }
 
-    if (matchedSeries) {
-      showSeriesHint(matchedSeries, book, hint);
-      return;
-    }
+  if (matchedSeries) {
+    // Tag the book to existing series
+    currentBook.seriesId = matchedSeries.id;
+    if (seriesPosition) currentBook.seriesPosition = seriesPosition;
+    showSeriesHint(matchedSeries, book, hint, seriesPosition);
+    return;
+  }
 
-    // If we got a series name from Google Books title parsing, show generic hint
-    if (seriesName) {
-      hint.innerHTML = `<div style="background:var(--parchment-dark);border-radius:8px;padding:10px 12px;font-size:0.8rem;color:var(--ink-light)">
-        <span style="font-weight:700;color:var(--spine)">Part of a series?</span>
-        This looks like it may be part of <em>${esc(seriesName)}</em>.
-        You can tag it when you add it.
-      </div>`;
-    }
-
-  } catch(e) { /* silently ignore */ }
+  // Step 4: series detected but not in library yet - offer to create it
+  if (seriesName) {
+    currentBook.detectedSeries = seriesName;
+    currentBook.detectedPosition = seriesPosition;
+    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
+      <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:4px">
+        Part of a series: <em>${esc(seriesName)}</em>${seriesPosition ? ' (Book #' + seriesPosition + ')' : ''}
+      </div>
+      <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">This series is not in your library yet.</div>
+      <button onclick="autoCreateSeries(${JSON.stringify(seriesName)}, ${seriesPosition || 'null'})"
+        style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer">
+        + Create series &amp; tag this book
+      </button>
+    </div>`;
+  }
 }
 
-function showSeriesHint(series, scannedBook, hint) {
+function autoCreateSeries(name, position) {
+  // Create the series automatically
+  const newSeries = { id: 's' + Date.now(), name, status: 'ongoing', totalBooks: null };
+  seriesList.push(newSeries);
+  save();
+  currentBook.seriesId = newSeries.id;
+  if (position) currentBook.seriesPosition = position;
+  const hint = document.getElementById('series-hint');
+  if (hint) hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem;color:#2e7d32;font-weight:700">
+    Series "${esc(name)}" created! This book will be tagged automatically.
+  </div>`;
+}
+
+function showSeriesHint(series, scannedBook, hint, seriesPosition) {
   const seriesBooks = books.filter(b => b.seriesId === series.id);
   const ownedPositions = new Set(seriesBooks.filter(b => b.type === 'owned').map(b => b.seriesPosition).filter(Boolean));
   const wishPositions = new Set(seriesBooks.filter(b => b.type === 'wishlist').map(b => b.seriesPosition).filter(Boolean));
