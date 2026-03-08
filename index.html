@@ -103,21 +103,10 @@
   main { padding: 16px; max-width: 600px; margin: 0 auto; }
 
   /* Scan button */
-  .fab-group {
-    position: fixed;
-    bottom: 28px;
-    right: 16px;
-    display: flex;
-    flex-direction: row;
-    gap: 12px;
-    align-items: center;
-    z-index: 200;
-  }
-
   .scan-fab {
-    position: relative;
-    bottom: auto;
-    right: auto;
+    position: fixed;
+    bottom: 24px;
+    right: 20px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -130,14 +119,11 @@
     z-index: 200;
     transition: all 0.2s;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
   }
 
   .scan-fab:active { transform: scale(0.94); }
-  .kindle-fab { background: linear-gradient(135deg, #1a6b3c, #0f4a2a); }
-  .kindle-fab:hover { background: linear-gradient(135deg, #1e7d46, #145c33); }
 
   /* Search bar */
   .search-bar {
@@ -653,297 +639,47 @@
 
   .divider::before { left: 0; }
   .divider::after { right: 0; }
-
-  /* Series */
-  .series-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
-
-  .series-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    padding-bottom: 90px;
-  }
-
-  .series-card {
-    background: white;
-    border-radius: 10px;
-    padding: 16px;
-    box-shadow: 0 2px 8px var(--shadow);
-    border-left: 4px solid var(--spine);
-    cursor: pointer;
-    transition: transform 0.15s;
-    animation: slideIn 0.25s ease;
-  }
-
-  .series-card:active { transform: scale(0.98); }
-
-  .series-card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 10px;
-  }
-
-  .series-name {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.05rem;
-    font-weight: 600;
-    color: var(--ink);
-    flex: 1;
-  }
-
-  .series-status-badge {
-    padding: 3px 10px;
-    border-radius: 10px;
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-left: 8px;
-    white-space: nowrap;
-  }
-
-  .series-complete { background: #e8f5e9; color: #2e7d32; }
-  .series-ongoing { background: #fff8e1; color: #f57f17; }
-
-  .series-progress-bar {
-    height: 6px;
-    background: var(--parchment-dark);
-    border-radius: 3px;
-    margin: 8px 0 6px;
-    overflow: hidden;
-  }
-
-  .series-progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--spine), var(--gold));
-    border-radius: 3px;
-    transition: width 0.4s ease;
-  }
-
-  .series-progress-text {
-    font-size: 0.72rem;
-    color: var(--ink-light);
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .series-covers {
-    display: flex;
-    gap: 4px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  .series-cover-thumb {
-    width: 36px;
-    height: 52px;
-    border-radius: 3px;
-    object-fit: cover;
-    box-shadow: 1px 1px 4px var(--shadow);
-  }
-
-  .series-cover-placeholder {
-    width: 36px;
-    height: 52px;
-    border-radius: 3px;
-    background: linear-gradient(135deg, var(--spine), #5a1a10);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    color: var(--gold-light);
-    font-weight: 700;
-    box-shadow: 1px 1px 4px var(--shadow);
-  }
-
-  .series-missing-slot {
-    width: 36px;
-    height: 52px;
-    border-radius: 3px;
-    border: 2px dashed var(--parchment-dark);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.65rem;
-    color: #ccc;
-    font-weight: 700;
-  }
-
-  .series-detail-book {
-    display: flex;
-    gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--parchment-dark);
-    align-items: center;
-  }
-
-  .series-detail-book:last-child { border-bottom: none; }
-
-  .series-book-num {
-    width: 24px;
-    min-width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: var(--spine);
-    color: white;
-    font-size: 0.7rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .series-book-num.missing {
-    background: var(--parchment-dark);
-    color: #999;
-    border: 2px dashed #ccc;
-  }
-
-  .tag-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 8px;
-    background: #f0e8d8;
-    border: 1px solid #d4c4a8;
-    border-radius: 10px;
-    font-size: 0.68rem;
-    color: var(--ink-light);
-    font-weight: 700;
-    cursor: pointer;
-    transition: background 0.15s;
-    margin: 2px 2px 2px 0;
-  }
-
-  .tag-pill:hover { background: #e4d4c0; }
-
-  .series-filter-row {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    margin-bottom: 14px;
-  }
-
-  .filter-pill {
-    padding: 5px 12px;
-    border-radius: 14px;
-    border: 1.5px solid var(--parchment-dark);
-    background: white;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--ink-light);
-    cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-
-  .filter-pill.active {
-    background: var(--spine);
-    border-color: var(--spine);
-    color: white;
-  }
-
-  .add-series-btn {
-    padding: 7px 14px;
-    background: var(--spine);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-family: 'Lato', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.06em;
-  }
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.4</span></h1>
+  <h1>Charlotte's Library</h1>
   <p>A personal book collection</p>
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('owned')">&#9755; Owned</button>
-  <button class="tab-btn" onclick="switchTab('wishlist')">&#9733; Wishlist</button>
-  <button class="tab-btn" onclick="switchTab('series')">&#9782; Series</button>
+  <button class="tab-btn active" onclick="switchTab('owned')">ðŸ“š Owned</button>
+  <button class="tab-btn" onclick="switchTab('wishlist')">âœ¨ Wishlist</button>
 </div>
 
 <main>
   <div class="stats-bar" id="stats-bar"></div>
 
   <div class="search-bar">
-    <span class="icon">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b09070" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    </span>
-    <input type="text" id="search-input" placeholder="Search by title or author..." oninput="renderBooks()">
+    <span class="icon">ðŸ”</span>
+    <input type="text" id="search-input" placeholder="Search by title or authorâ€¦" oninput="renderBooks()">
   </div>
 
   <div class="sort-row">
     <label>Sort:</label>
     <select id="sort-select" onchange="renderBooks()">
       <option value="recent">Recently Added</option>
-      <option value="title">Title A-Z</option>
-      <option value="author">Author A-Z</option>
+      <option value="title">Title Aâ€“Z</option>
+      <option value="author">Author Aâ€“Z</option>
       <option value="rating">Highest Rated</option>
     </select>
   </div>
 
   <div class="book-list" id="book-list"></div>
-  <div id="series-view" style="display:none;padding-bottom:90px"></div>
 </main>
 
-<div class="fab-group">
-  <button class="scan-fab" onclick="openScanner()" title="Scan a physical book">
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-      <circle cx="12" cy="13" r="4"/>
-    </svg>
-    <span style="font-size:0.6rem;display:block;margin-top:2px">Scan</span>
-  </button>
-  <button class="scan-fab kindle-fab" onclick="openKindleSearch()" title="Add a Kindle book">
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="5" y="2" width="14" height="20" rx="2"/>
-      <line x1="9" y1="7" x2="15" y2="7"/>
-      <line x1="9" y1="11" x2="15" y2="11"/>
-      <line x1="9" y1="15" x2="13" y2="15"/>
-    </svg>
-    <span style="font-size:0.6rem;display:block;margin-top:2px">Kindle</span>
-  </button>
-</div>
-
-<!-- Kindle Search Modal -->
-<div class="modal-overlay" id="kindle-modal" style="display:none">
-  <div class="modal">
-    <h2>Add a Kindle Book</h2>
-    <div class="form-group">
-      <label>Search by Title or Author</label>
-      <div style="display:flex;gap:8px">
-        <input type="text" id="kindle-search-input" placeholder="e.g. Harry Potter, Tolkien..." 
-          style="flex:1;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none"
-          onkeydown="if(event.key==='Enter')searchKindle()">
-        <button class="btn-primary" style="flex:none;padding:10px 16px" onclick="searchKindle()">Search</button>
-      </div>
-    </div>
-    <div id="kindle-status"></div>
-    <div id="kindle-results"></div>
-    <div class="btn-row" style="margin-top:8px">
-      <button class="btn-secondary" onclick="closeKindleSearch()">Cancel</button>
-    </div>
-  </div>
-</div>
+<button class="scan-fab" onclick="openScanner()" title="Scan a book">ðŸ“·</button>
 
 <!-- Scanner Modal -->
 <div class="modal-overlay" id="scan-modal" style="display:none">
   <div class="modal">
-    <h2>Add a Book</h2>
+    <h2>ðŸ“· Add a Book</h2>
 
     <div id="scan-status"></div>
 
@@ -960,7 +696,9 @@
 
     <div id="lookup-result-area"></div>
 
-    <div id="scanner-cancel-row" style="display:none"></div>
+    <div class="btn-row" style="margin-top:0">
+      <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -972,28 +710,8 @@
     <div id="found-book-preview"></div>
 
     <div style="display:flex;gap:10px;margin-bottom:14px">
-      <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">Owned</button>
-      <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">Wishlist</button>
-    </div>
-
-    <div class="form-group">
-      <label>Format</label>
-      <select id="field-format" onchange="toggleKindleFields()" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none">
-        <option value="physical">Physical Book</option>
-        <option value="kindle">Kindle / eBook</option>
-        <option value="audiobook">Audiobook</option>
-      </select>
-    </div>
-
-    <div id="kindle-extra-fields" style="display:none">
-      <div class="form-group">
-        <label>Date Purchased</label>
-        <input type="date" id="field-date-purchased" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none">
-      </div>
-      <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
-        <input type="checkbox" id="field-also-physical" style="width:18px;height:18px;accent-color:var(--spine);cursor:pointer">
-        <label for="field-also-physical" style="margin:0;cursor:pointer;font-size:0.88rem">Also own a physical copy</label>
-      </div>
+      <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">ðŸ“š Owned</button>
+      <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">âœ¨ Wishlist</button>
     </div>
 
     <div class="form-group">
@@ -1008,33 +726,17 @@
     <div class="form-group">
       <label>Star Rating</label>
       <div class="star-picker" id="star-picker">
-        <span class="star" onclick="setRating(1)">&#9733;</span>
-        <span class="star" onclick="setRating(2)">&#9733;</span>
-        <span class="star" onclick="setRating(3)">&#9733;</span>
-        <span class="star" onclick="setRating(4)">&#9733;</span>
-        <span class="star" onclick="setRating(5)">&#9733;</span>
+        <span class="star" onclick="setRating(1)">â˜…</span>
+        <span class="star" onclick="setRating(2)">â˜…</span>
+        <span class="star" onclick="setRating(3)">â˜…</span>
+        <span class="star" onclick="setRating(4)">â˜…</span>
+        <span class="star" onclick="setRating(5)">â˜…</span>
       </div>
     </div>
 
     <div class="form-group">
       <label>Notes</label>
-      <textarea id="field-notes" placeholder="Thoughts, quotes, why she wants it..."></textarea>
-    </div>
-
-    <div class="form-group" style="margin-top:2px">
-      <label>Series / Collection</label>
-      <select id="field-series" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none">
-        <option value="">None</option>
-      </select>
-    </div>
-
-    <div class="form-group" style="margin-top:2px" id="series-position-group">
-      <label>Book Number in Series</label>
-      <input type="number" id="field-series-position" min="1" placeholder="e.g. 1 for first book" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none">
-    </div>
-
-    <div style="margin-bottom:14px">
-      <button class="action-btn btn-edit" style="font-size:0.72rem" onclick="openSeriesModal()">+ Create New Series</button>
+      <textarea id="field-notes" placeholder="Thoughts, quotes, why she wants itâ€¦"></textarea>
     </div>
 
     <div class="btn-row">
@@ -1044,179 +746,40 @@
   </div>
 </div>
 
-<!-- Manage Series Modal -->
-<div class="modal-overlay" id="series-modal" style="display:none">
-  <div class="modal">
-    <h2 id="series-modal-title">New Series</h2>
-    <div class="form-group">
-      <label>Series Name</label>
-      <input type="text" id="field-series-name" placeholder="e.g. Harry Potter" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none">
-    </div>
-    <div class="form-group" style="margin-top:12px">
-      <label>Status</label>
-      <select id="field-series-status" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none">
-        <option value="ongoing">Ongoing</option>
-        <option value="complete">Complete</option>
-      </select>
-    </div>
-    <div class="form-group" style="margin-top:12px">
-      <label>Total Books in Series (if known)</label>
-      <input type="number" id="field-series-total" placeholder="e.g. 7" min="1" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none">
-    </div>
-    <div class="btn-row" style="margin-top:16px">
-      <button class="btn-secondary" onclick="closeSeriesModal()">Cancel</button>
-      <button class="btn-primary" onclick="saveSeries()">Save Series</button>
-    </div>
-  </div>
-</div>
-
-<!-- Series Detail Modal -->
-<div class="modal-overlay" id="series-detail-modal" style="display:none">
-  <div class="modal">
-    <div id="series-detail-content"></div>
-    <div class="btn-row" style="margin-top:16px">
-      <button class="btn-secondary" onclick="closeSeriesDetail()">Close</button>
-      <button class="btn-primary" onclick="editCurrentSeries()">Edit Series</button>
-    </div>
-  </div>
-</div>
-
 <script>
-// --- State -------------------------------------------------------------------
+// â”€â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let books = JSON.parse(localStorage.getItem('herLibrary') || '[]');
-let seriesList = JSON.parse(localStorage.getItem('herLibrarySeries') || '[]');
 let currentTab = 'owned';
 let scannerRunning = false;
-let currentBook = null;
+let currentBook = null;  // book being added
 let editingId = null;
 let selectedType = 'owned';
 let selectedRating = 0;
-let activeSeriesFilter = null; // filter books by series
-let viewingSeriesId = null;
-let editingSeriesId = null;
 
-// --- Seed Series Database (loaded from series-db.json) ----------------------
-let SEED_SERIES_DB = [];
+function save() { localStorage.setItem('herLibrary', JSON.stringify(books)); }
 
-async function loadSeriesDB() {
-  try {
-    const res = await fetch('series-db.json');
-    if (res.ok) SEED_SERIES_DB = await res.json();
-  } catch(e) {
-    console.warn('Could not load series-db.json:', e);
-  }
-}
-// --- Series Lookup -----------------------------------------------------------
-function lookupSeriesFromDB(title, author) {
-  const titleLower = (title || '').toLowerCase().replace(/[''":,!?]/g, '').trim();
-  const authorLower = (author || '').toLowerCase().trim();
-
-  let bestMatch = null;
-  let bestScore = 0;
-
-  for (const s of SEED_SERIES_DB) {
-    // Check each book title in this series
-    for (const b of s.books) {
-      const dbTitle = b.t.toLowerCase().replace(/[''":,!?]/g, '').trim();
-      const titleScore = titleLower === dbTitle ? 100
-        : titleLower.includes(dbTitle) || dbTitle.includes(titleLower) ? 70
-        : titleLower.split(' ').filter(w => w.length > 3).every(w => dbTitle.includes(w)) ? 50
-        : 0;
-
-      if (titleScore > 0) {
-        // Author bonus
-        const authorBonus = s.authors.some(a =>
-          authorLower.includes(a.toLowerCase()) || a.toLowerCase().includes(authorLower.split(' ').slice(-1)[0])
-        ) ? 30 : 0;
-
-        const score = titleScore + authorBonus;
-        if (score > bestScore) {
-          bestScore = score;
-          bestMatch = { series: s, position: b.p };
-        }
-      }
-    }
-  }
-
-  // Require a reasonable confidence threshold
-  if (bestScore >= 70) {
-    return bestMatch;
-  }
-
-  // Fallback: author-only match if author is very well known in our DB
-  if (authorLower) {
-    for (const s of SEED_SERIES_DB) {
-      if (s.authors.some(a => authorLower.includes(a.toLowerCase()) || a.toLowerCase().includes(authorLower.split(' ').slice(-1)[0]))) {
-        // Only suggest if there's exactly one series for this author or it's a strong partial title match
-        const titleWords = titleLower.split(' ').filter(w => w.length > 3);
-        const anyBookMatch = s.books.some(b => {
-          const dbWords = b.t.toLowerCase().split(' ').filter(w => w.length > 3);
-          return titleWords.some(w => dbWords.includes(w));
-        });
-        if (anyBookMatch) {
-          const b = s.books.find(b => {
-            const dbWords = b.t.toLowerCase().split(' ').filter(w => w.length > 3);
-            return titleWords.some(w => dbWords.includes(w));
-          });
-          return { series: s, position: b ? b.p : null };
-        }
-      }
-    }
-  }
-
-  return null;
-}
-
-function save() {
-  localStorage.setItem('herLibrary', JSON.stringify(books));
-  localStorage.setItem('herLibrarySeries', JSON.stringify(seriesList));
-}
-
-// --- Tabs --------------------------------------------------------------------
+// â”€â”€â”€ Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function switchTab(tab) {
   currentTab = tab;
-  activeSeriesFilter = null;
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
-    b.classList.toggle('active',
-      (i === 0 && tab === 'owned') ||
-      (i === 1 && tab === 'wishlist') ||
-      (i === 2 && tab === 'series')
-    );
+    b.classList.toggle('active', (i === 0 && tab === 'owned') || (i === 1 && tab === 'wishlist'));
   });
-  document.getElementById('book-list').style.display = tab === 'series' ? 'none' : 'flex';
-  document.getElementById('series-view').style.display = tab === 'series' ? 'block' : 'none';
-  // Show/hide search+sort for non-series tabs
-  document.querySelector('.search-bar').style.display = tab === 'series' ? 'none' : '';
-  document.querySelector('.sort-row').style.display = tab === 'series' ? 'none' : '';
-
-  if (tab === 'series') renderSeriesView();
-  else renderBooks();
+  renderBooks();
 }
 
-// --- Render ------------------------------------------------------------------
+// â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderBooks() {
   const q = document.getElementById('search-input').value.toLowerCase();
   const sort = document.getElementById('sort-select').value;
 
   let list = books.filter(b => b.type === currentTab);
 
-  if (activeSeriesFilter) {
-    list = list.filter(b => b.seriesId === activeSeriesFilter);
-  }
-
   if (q) list = list.filter(b =>
     b.title.toLowerCase().includes(q) ||
-    b.author.toLowerCase().includes(q) ||
-    (b.seriesId && getSeriesName(b.seriesId).toLowerCase().includes(q))
+    b.author.toLowerCase().includes(q)
   );
 
   list = [...list].sort((a, b) => {
-    if (activeSeriesFilter) {
-      // Sort by series position when filtering by series
-      const posA = a.seriesPosition || 999;
-      const posB = b.seriesPosition || 999;
-      return posA - posB;
-    }
     if (sort === 'title') return a.title.localeCompare(b.title);
     if (sort === 'author') return a.author.localeCompare(b.author);
     if (sort === 'rating') return (b.rating || 0) - (a.rating || 0);
@@ -1225,52 +788,27 @@ function renderBooks() {
 
   const el = document.getElementById('book-list');
 
-  // Series filter pills
-  const seriesWithBooks = seriesList.filter(s =>
-    books.some(b => b.seriesId === s.id && b.type === currentTab)
-  );
-
-  let pillsHtml = '';
-  if (seriesWithBooks.length > 0) {
-    pillsHtml = `<div class="series-filter-row">
-      <button class="filter-pill ${!activeSeriesFilter ? 'active' : ''}" onclick="setSeriesFilter(null)">All</button>
-      ${seriesWithBooks.map(s =>
-        `<button class="filter-pill ${activeSeriesFilter === s.id ? 'active' : ''}" onclick="setSeriesFilter('${s.id}')">${esc(s.name)}</button>`
-      ).join('')}
-    </div>`;
-  }
-
   if (list.length === 0) {
-    el.innerHTML = pillsHtml + `<div class="empty">
-      <div class="icon" style="font-size:2.5rem;opacity:0.4">${currentTab === 'owned' ? '&#9755;' : '&#9733;'}</div>
-      <h3>${activeSeriesFilter ? 'No books in this series yet' : (currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty')}</h3>
-      <p>${currentTab === 'owned' ? 'Tap the camera button to scan a book barcode.' : 'Scan a book and add it to the wishlist.'}</p>
+    el.innerHTML = `<div class="empty">
+      <div class="icon">${currentTab === 'owned' ? 'ðŸ“š' : 'âœ¨'}</div>
+      <h3>${currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty'}</h3>
+      <p>${currentTab === 'owned' ? 'Tap the ðŸ“· button to scan a book spine barcode.' : 'Scan a book and add it to the wishlist.'}</p>
     </div>`;
   } else {
-    el.innerHTML = pillsHtml + list.map(b => bookCard(b)).join('');
+    el.innerHTML = list.map(b => bookCard(b)).join('');
   }
 
   renderStats();
 }
 
-function setSeriesFilter(id) {
-  activeSeriesFilter = id;
-  renderBooks();
-}
-
-function getSeriesName(id) {
-  const s = seriesList.find(s => s.id === id);
-  return s ? s.name : '';
-}
-
 function stars(rating) {
   return [1,2,3,4,5].map(i =>
-    `<span class="star ${i <= rating ? 'filled' : ''}">&#9733;</span>`
+    `<span class="star ${i <= rating ? 'filled' : ''}">â˜…</span>`
   ).join('');
 }
 
 function statusBadge(s) {
-  const map = { read: ['badge-read','Read'], unread: ['badge-unread','Unread'], reading: ['badge-reading','Reading'] };
+  const map = { read: ['badge-read','âœ“ Read'], unread: ['badge-unread','Unread'], reading: ['badge-reading','Reading'] };
   const [cls, label] = map[s] || map.unread;
   return `<span class="badge ${cls}">${label}</span>`;
 }
@@ -1278,15 +816,9 @@ function statusBadge(s) {
 function bookCard(b) {
   const coverHtml = b.cover
     ? `<img class="book-cover" src="${b.cover}" alt="">`
-    : `<div class="book-cover-placeholder">&#9776;</div>`;
+    : `<div class="book-cover-placeholder">ðŸ“–</div>`;
 
-  const moveLabel = b.type === 'owned' ? 'to Wishlist' : 'to Library';
-  const seriesName = b.seriesId ? getSeriesName(b.seriesId) : '';
-  const seriesTag = seriesName
-    ? `<span class="tag-pill" onclick="setSeriesFilter('${b.seriesId}');event.stopPropagation()">
-        &#9782; ${esc(seriesName)}${b.seriesPosition ? ' #' + b.seriesPosition : ''}
-       </span>`
-    : '';
+  const moveLabel = b.type === 'owned' ? 'â†’ Wishlist' : 'â†’ Library';
 
   return `<div class="book-card ${b.type === 'wishlist' ? 'wishlist' : ''}" id="card-${b.id}">
     ${coverHtml}
@@ -1295,12 +827,8 @@ function bookCard(b) {
       <div class="book-author">${esc(b.author)}</div>
       <div class="book-meta">
         ${statusBadge(b.status)}
-        <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? 'Owned' : 'Wishlist'}</span>
-        ${b.format === 'kindle' ? '<span class="badge" style="background:#1a6b3c;color:white">Kindle</span>' : ''}
-        ${b.format === 'audiobook' ? '<span class="badge" style="background:#4a3580;color:white">Audiobook</span>' : ''}
-        ${b.alsoPhysical ? '<span class="badge" style="background:var(--gold);color:var(--ink)">+ Physical</span>' : ''}
+        <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? 'ðŸ“š Owned' : 'âœ¨ Wishlist'}</span>
       </div>
-      ${seriesTag}
       <div class="stars">${stars(b.rating || 0)}</div>
       ${b.notes ? `<div class="book-notes">${esc(b.notes)}</div>` : ''}
       <div class="book-actions">
@@ -1327,242 +855,7 @@ function renderStats() {
   `;
 }
 
-// --- Series View --------------------------------------------------------------
-function renderSeriesView() {
-  const el = document.getElementById('series-view');
-
-  if (seriesList.length === 0) {
-    el.innerHTML = `
-      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
-        <button class="add-series-btn" onclick="openSeriesModal()">+ New Series</button>
-      </div>
-      <div class="empty">
-        <div class="icon" style="font-size:2.5rem;opacity:0.4">&#9782;</div>
-        <h3>No series yet</h3>
-        <p>Create a series like "Harry Potter" and tag your books to track your collection progress.</p>
-      </div>`;
-    return;
-  }
-
-  const cards = seriesList.map(s => {
-    const seriesBooks = books.filter(b => b.seriesId === s.id);
-    const ownedBooks = seriesBooks.filter(b => b.type === 'owned');
-    const readBooks = seriesBooks.filter(b => b.status === 'read');
-    const total = s.totalBooks || seriesBooks.length;
-    const owned = ownedBooks.length;
-    const pct = total > 0 ? Math.round((owned / total) * 100) : 0;
-    const readPct = owned > 0 ? Math.round((readBooks.length / owned) * 100) : 0;
-
-    // Show covers in order
-    const sortedBooks = [...seriesBooks].sort((a, b) => (a.seriesPosition || 99) - (b.seriesPosition || 99));
-    const thumbsHtml = sortedBooks.slice(0, 6).map(b =>
-      b.cover
-        ? `<img class="series-cover-thumb" src="${b.cover}" alt="">`
-        : `<div class="series-cover-placeholder">${b.seriesPosition || '?'}</div>`
-    ).join('');
-
-    // Show missing slots if total is known
-    const missingSlots = s.totalBooks
-      ? Math.max(0, Math.min(6 - sortedBooks.length, s.totalBooks - sortedBooks.length))
-      : 0;
-    const missingHtml = Array(missingSlots).fill(0).map(() =>
-      `<div class="series-missing-slot">?</div>`
-    ).join('');
-
-    return `<div class="series-card" onclick="openSeriesDetail('${s.id}')">
-      <div class="series-card-top">
-        <div class="series-name">${esc(s.name)}</div>
-        <span class="series-status-badge ${s.status === 'complete' ? 'series-complete' : 'series-ongoing'}">
-          ${s.status === 'complete' ? 'Complete' : 'Ongoing'}
-        </span>
-      </div>
-      <div class="series-progress-bar">
-        <div class="series-progress-fill" style="width:${pct}%"></div>
-      </div>
-      <div class="series-progress-text">
-        <span>${owned} of ${s.totalBooks ? s.totalBooks : owned} owned</span>
-        <span>${s.totalBooks && s.totalBooks > owned ? '<span style="color:#c0392b;font-weight:700">' + (s.totalBooks - owned) + ' missing</span>' : readBooks.length + ' read'}</span>
-      </div>
-      <div class="series-covers">${thumbsHtml}${missingHtml}</div>
-    </div>`;
-  }).join('');
-
-  el.innerHTML = `
-    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
-      <button class="add-series-btn" onclick="openSeriesModal()">+ New Series</button>
-    </div>
-    <div class="series-grid">${cards}</div>`;
-}
-
-function openSeriesDetail(id) {
-  viewingSeriesId = id;
-  const s = seriesList.find(x => x.id === id);
-  if (!s) return;
-
-  const seriesBooks = books.filter(b => b.seriesId === id);
-  const owned = seriesBooks.filter(b => b.type === 'owned');
-  const wished = seriesBooks.filter(b => b.type === 'wishlist');
-  const read = seriesBooks.filter(b => b.status === 'read');
-  const total = s.totalBooks || seriesBooks.length;
-  const pct = total > 0 ? Math.round((owned.length / total) * 100) : 0;
-
-  // Build numbered book list
-  const sorted = [...seriesBooks].sort((a, b) => (a.seriesPosition || 999) - (b.seriesPosition || 999));
-
-  // Find gaps if total books known
-  let bookRows = '';
-  if (s.totalBooks) {
-    for (let i = 1; i <= s.totalBooks; i++) {
-      const book = seriesBooks.find(b => b.seriesPosition === i);
-      if (book) {
-        bookRows += `<div class="series-detail-book">
-          <div class="series-book-num">${i}</div>
-          ${book.cover ? `<img style="width:36px;height:52px;border-radius:3px;object-fit:cover" src="${book.cover}" alt="">` : ''}
-          <div style="flex:1;min-width:0">
-            <div style="font-family:Playfair Display,serif;font-size:0.9rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(book.title)}</div>
-            <div style="font-size:0.75rem;color:var(--ink-light);font-style:italic">${esc(book.author)}</div>
-            <div style="display:flex;gap:4px;margin-top:3px">${statusBadge(book.status)}<span class="badge ${book.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${book.type === 'owned' ? 'Owned' : 'Wishlist'}</span></div>
-          </div>
-        </div>`;
-      } else {
-        bookRows += `<div class="series-detail-book" style="background:repeating-linear-gradient(135deg,var(--parchment) 0px,var(--parchment) 8px,var(--parchment-dark) 8px,var(--parchment-dark) 9px);border:1.5px dashed var(--parchment-dark)">
-          <div class="series-book-num missing">${i}</div>
-          <div style="width:36px;height:52px;border-radius:3px;border:2px dashed #ccc;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:1.1rem;flex-shrink:0">?</div>
-          <div style="flex:1;min-width:0">
-            <div style="font-family:Playfair Display,serif;font-size:0.88rem;font-weight:600;color:var(--ink-light);font-style:italic">Book ${i} - not yet owned</div>
-            <span class="badge" style="background:#e8c84a;color:#5a3e00;font-size:0.65rem;margin-top:4px;display:inline-block">Missing</span>
-          </div>
-          <button onclick="addMissingToWishlist('${s.id}',${i});event.stopPropagation()" 
-            style="flex-shrink:0;padding:6px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-size:0.72rem;font-weight:700;cursor:pointer;letter-spacing:0.03em">
-            + Wishlist
-          </button>
-        </div>`;
-      }
-    }
-  } else {
-    bookRows = sorted.map(book => `
-      <div class="series-detail-book">
-        <div class="series-book-num">${book.seriesPosition || '?'}</div>
-        ${book.cover ? `<img style="width:36px;height:52px;border-radius:3px;object-fit:cover" src="${book.cover}" alt="">` : ''}
-        <div style="flex:1;min-width:0">
-          <div style="font-family:Playfair Display,serif;font-size:0.9rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(book.title)}</div>
-          <div style="font-size:0.75rem;color:var(--ink-light);font-style:italic">${esc(book.author)}</div>
-          <div style="display:flex;gap:4px;margin-top:3px">${statusBadge(book.status)}<span class="badge ${book.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${book.type === 'owned' ? 'Owned' : 'Wishlist'}</span></div>
-        </div>
-      </div>`).join('');
-  }
-
-  document.getElementById('series-detail-content').innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
-      <h2 style="font-family:Playfair Display,serif;font-size:1.3rem">${esc(s.name)}</h2>
-      <span class="series-status-badge ${s.status === 'complete' ? 'series-complete' : 'series-ongoing'}" style="margin-top:4px">
-        ${s.status === 'complete' ? 'Complete' : 'Ongoing'}
-      </span>
-    </div>
-    <div style="display:flex;gap:16px;margin:12px 0;font-size:0.8rem;color:var(--ink-light)">
-      <span><strong style="color:var(--spine);font-size:1.1rem">${owned.length}</strong> owned</span>
-      <span><strong style="color:var(--sage);font-size:1.1rem">${wished.length}</strong> on wishlist</span>
-      <span><strong style="color:#3a5aaa;font-size:1.1rem">${read.length}</strong> read</span>
-      ${s.totalBooks ? `<span><strong style="color:var(--gold);font-size:1.1rem">${s.totalBooks - owned.length}</strong> missing</span>` : ''}
-    </div>
-    <div class="series-progress-bar" style="margin-bottom:6px">
-      <div class="series-progress-fill" style="width:${pct}%"></div>
-    </div>
-    <div style="font-size:0.72rem;color:var(--ink-light);margin-bottom:16px">${pct}% collected${s.totalBooks ? ' (' + owned.length + '/' + s.totalBooks + ')' : ''}</div>
-    <div style="border-top:1.5px solid var(--parchment-dark);padding-top:12px">
-      <div style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;margin-bottom:8px">Books</div>
-      ${bookRows || '<div style="color:#aaa;font-style:italic;font-size:0.85rem">No books tagged yet.</div>'}
-    </div>
-    <div style="margin-top:12px">
-      <button class="action-btn btn-delete" onclick="deleteSeries('${s.id}')">Delete Series</button>
-    </div>`;
-
-  document.getElementById('series-detail-modal').style.display = 'flex';
-}
-
-function addMissingToWishlist(seriesId, position) {
-  const s = seriesList.find(x => x.id === seriesId);
-  if (!s) return;
-  // Pre-fill a book stub for wishlist
-  currentBook = {
-    id: null, isbn: '',
-    title: s.name + ' #' + position,
-    author: '',
-    cover: '', year: '', pages: '',
-    format: 'physical',
-    type: 'wishlist', status: 'unread', rating: 0, notes: '',
-    seriesId,
-    seriesPosition: position,
-    addedAt: Date.now()
-  };
-  closeSeriesDetail();
-  editingId = null;
-  openAddModal(currentBook, false);
-}
-
-function closeSeriesDetail() {
-  document.getElementById('series-detail-modal').style.display = 'none';
-  viewingSeriesId = null;
-}
-
-function editCurrentSeries() {
-  closeSeriesDetail();
-  openSeriesModal(viewingSeriesId);
-}
-
-// --- Series CRUD --------------------------------------------------------------
-function openSeriesModal(id) {
-  editingSeriesId = id || null;
-  const s = id ? seriesList.find(x => x.id === id) : null;
-  document.getElementById('series-modal-title').textContent = s ? 'Edit Series' : 'New Series';
-  document.getElementById('field-series-name').value = s ? s.name : '';
-  document.getElementById('field-series-status').value = s ? s.status : 'ongoing';
-  document.getElementById('field-series-total').value = s && s.totalBooks ? s.totalBooks : '';
-  document.getElementById('series-modal').style.display = 'flex';
-}
-
-function closeSeriesModal() {
-  document.getElementById('series-modal').style.display = 'none';
-  editingSeriesId = null;
-}
-
-function saveSeries() {
-  const name = document.getElementById('field-series-name').value.trim();
-  if (!name) { alert('Please enter a series name.'); return; }
-  const status = document.getElementById('field-series-status').value;
-  const total = parseInt(document.getElementById('field-series-total').value) || null;
-
-  if (editingSeriesId) {
-    const s = seriesList.find(x => x.id === editingSeriesId);
-    if (s) { s.name = name; s.status = status; s.totalBooks = total; }
-  } else {
-    seriesList.push({ id: 's' + Date.now(), name, status, totalBooks: total });
-  }
-  save();
-  closeSeriesModal();
-
-  // If we're in the add/edit book modal, refresh the series dropdown
-  if (document.getElementById('add-modal').style.display !== 'none' && currentBook) {
-    const sel = document.getElementById('field-series');
-    const newId = editingSeriesId || seriesList[seriesList.length - 1].id;
-    sel.innerHTML = '<option value="">None</option>' +
-      seriesList.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
-    sel.value = newId;
-    document.getElementById('series-position-group').style.display = 'block';
-  } else {
-    renderSeriesView();
-  }
-}
-
-function deleteSeries(id) {
-  if (!confirm('Delete this series? Books will keep their data but lose the series tag.')) return;
-  // Untag all books
-  books.forEach(b => { if (b.seriesId === id) { b.seriesId = null; b.seriesPosition = null; } });
-  seriesList = seriesList.filter(s => s.id !== id);
-  save();
-  closeSeriesDetail();
-  renderSeriesView();
-}
+// â”€â”€â”€ Book actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function deleteBook(id) {
   if (!confirm('Remove this book?')) return;
   books = books.filter(b => b.id !== id);
@@ -1584,7 +877,7 @@ function editBook(id) {
   openAddModal(b, true);
 }
 
-// --- Scanner (Native BarcodeDetector) ----------------------------------------
+// â”€â”€â”€ Scanner (Native BarcodeDetector) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let cameraStream = null;
 let scanInterval = null;
 let barcodeDetector = null;
@@ -1629,7 +922,7 @@ async function startCamera() {
 
   // Check BarcodeDetector support
   if (!('BarcodeDetector' in window)) {
-    setScanStatus('! Auto-scan not supported on this browser. Please type the ISBN number from the back of the book into the field below.', 'err');
+    setScanStatus('âš ï¸ Auto-scan not supported on this browser. Please type the ISBN number from the back of the book into the field below.', 'err');
     return;
   }
 
@@ -1648,7 +941,7 @@ async function startCamera() {
       formats: formatsToUse.length > 0 ? formatsToUse : ['ean_13', 'ean_8', 'upc_a', 'upc_e']
     });
   } catch(e) {
-    setScanStatus('! Barcode detection unavailable. Please enter ISBN manually below.', 'err');
+    setScanStatus('âš ï¸ Barcode detection unavailable. Please enter ISBN manually below.', 'err');
     return;
   }
 
@@ -1675,7 +968,7 @@ async function startCamera() {
     video.srcObject = cameraStream;
     await video.play();
     scannerRunning = true;
-    setScanStatus('> Hold the barcode steady inside the box - keep it well lit', 'loading');
+    setScanStatus('ðŸ“· Hold the barcode steady inside the box â€” keep it well lit', 'loading');
 
     // Require same barcode detected twice in a row to avoid false positives
     let lastCode = null;
@@ -1703,7 +996,7 @@ async function startCamera() {
               if (confirmCount >= 2) {
                 stopCamera();
                 document.getElementById('isbn-input').value = code;
-                setScanStatus('OK: Barcode detected! Looking up book...', 'ok');
+                setScanStatus('âœ… Barcode detected! Looking up bookâ€¦', 'ok');
                 lookupISBN(code);
               }
             } else {
@@ -1722,9 +1015,9 @@ async function startCamera() {
   } catch(e) {
     scannerRunning = false;
     if (e.name === 'NotAllowedError') {
-      setScanStatus('X Camera permission denied. In Chrome tap the padlock lock icon in the address bar - Site settings > Camera > Allow, then reload.', 'err');
+      setScanStatus('ðŸ“µ Camera permission denied. In Chrome tap the ðŸ”’ lock icon in the address bar â†’ Site settings â†’ Camera â†’ Allow, then reload.', 'err');
     } else {
-      setScanStatus('! Could not start camera (' + e.message + '). Please enter the ISBN manually below.', 'err');
+      setScanStatus('âš ï¸ Could not start camera (' + e.message + '). Please enter the ISBN manually below.', 'err');
     }
   }
 }
@@ -1741,568 +1034,59 @@ function setScanStatus(msg, type) {
 }
 
 async function lookupISBN(isbnOverride) {
-  let isbn = (isbnOverride || document.getElementById('isbn-input').value).replace(/[^\d]/g, '').trim();
-  if (!isbn || isbn.length < 8) {
+  const isbn = isbnOverride || document.getElementById('isbn-input').value.trim();
+  if (!isbn || isbn.length < 10) {
     setScanStatus('Please enter a valid ISBN (10 or 13 digits).', 'err');
     return;
   }
 
-  document.getElementById('isbn-input').value = isbn;
-  setScanStatus('Looking up book...', 'loading');
+  setScanStatus('Looking up bookâ€¦', 'loading');
 
-  // Try Google Books API - most reliable with HTTPS
   try {
-    
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
-    
+    const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
     const data = await res.json();
-    
-    if (data.items && data.items.length > 0) {
-      const info = data.items[0].volumeInfo;
-      let cover = '';
-      if (info.imageLinks) {
-        cover = (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://');
-      }
 
-      // Extract series info from title, subtitle, or seriesInfo field
-      let detectedSeries = null;
-      let detectedPosition = null;
-      const fullTitle = (info.title || '') + ' ' + (info.subtitle || '');
-
-      // Pattern: "Title (Series Name, #3)" or "Title (Series Name Book 3)"
-      const m1 = fullTitle.match(/\(([^)]+?),?\s*(?:book\s*)?#?(\d+)\)/i);
-      if (m1) { detectedSeries = m1[1].trim(); detectedPosition = parseInt(m1[2]); }
-
-      // Google Books seriesInfo field (not always present but use when available)
-      if (!detectedSeries && info.seriesInfo) {
-        const si = info.seriesInfo;
-        if (si.bookSeries && si.bookSeries[0] && si.bookSeries[0].seriesId) {
-          detectedSeries = si.bookSeries[0].seriesId;
-        }
-        if (si.shortSeriesBookTitle) {
-          const m2 = si.shortSeriesBookTitle.match(/#?(\d+)/);
-          if (m2) detectedPosition = parseInt(m2[1]);
-        }
-      }
-
-      currentBook = {
-        id: null, isbn,
-        title: info.title || 'Unknown Title',
-        author: (info.authors || ['Unknown Author']).join(', '),
-        cover,
-        year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
-        pages: info.pageCount || '',
-        detectedSeries, detectedPosition,
-        type: 'owned', status: 'unread', rating: 0, notes: '',
-        addedAt: Date.now()
-      };
-      setScanStatus('', 'ok');
-      showLookupResult(currentBook);
+    if (!data.items || data.items.length === 0) {
+      setScanStatus('Book not found. Try a different ISBN.', 'err');
       return;
     }
-  } catch(e) {
-    
-  }
 
-  // Try Open Library
-  try {
-    setScanStatus('Trying backup database...', 'loading');
-    const res = await fetch('https://openlibrary.org/search.json?isbn=' + isbn + '&limit=1');
-    
-    const data = await res.json();
-    
-    if (data.docs && data.docs.length > 0) {
-      const doc = data.docs[0];
-      const cover = doc.cover_i
-        ? 'https://covers.openlibrary.org/b/id/' + doc.cover_i + '-M.jpg'
-        : '';
-      currentBook = {
-        id: null, isbn,
-        title: doc.title || 'Unknown Title',
-        author: doc.author_name ? doc.author_name.join(', ') : 'Unknown Author',
-        cover,
-        year: doc.first_publish_year ? String(doc.first_publish_year) : '',
-        pages: doc.number_of_pages_median || '',
-        type: 'owned', status: 'unread', rating: 0, notes: '',
-        addedAt: Date.now()
-      };
-      setScanStatus('', 'ok');
-      showLookupResult(currentBook);
-      return;
-    }
-  } catch(e) {
-    
-  }
+    const info = data.items[0].volumeInfo;
+    currentBook = {
+      id: null,
+      isbn,
+      title: info.title || 'Unknown Title',
+      author: (info.authors || ['Unknown Author']).join(', '),
+      cover: info.imageLinks ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '') : '',
+      year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
+      pages: info.pageCount || '',
+      type: 'owned',
+      status: 'unread',
+      rating: 0,
+      notes: '',
+      addedAt: Date.now()
+    };
 
-  // Show debug info and manual entry
-  setScanStatus('Book not found. Please enter details manually below.', 'err');
-  document.getElementById('lookup-result-area').innerHTML =
-    '<div style="margin-bottom:10px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>' +
-    '<input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
-    '<div style="margin-bottom:12px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Author</label>' +
-    '<input type="text" id="manual-author" placeholder="Author name" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
-    '<div class="btn-row">' +
-    '<button class="btn-secondary" onclick="closeScanner()">Cancel</button>' +
-    '<button class="btn-primary" onclick="addManualBook()">Add Book</button></div>';
-}
-function addManualBook() {
-  const title = document.getElementById('manual-title').value.trim();
-  const author = document.getElementById('manual-author').value.trim();
-  if (!title) { alert('Please enter a title.'); return; }
-  const isbn = document.getElementById('isbn-input').value;
-  currentBook = {
-    id: null, isbn,
-    title, author: author || 'Unknown Author',
-    cover: '', year: '', pages: '',
-    type: 'owned', status: 'unread', rating: 0, notes: '',
-    addedAt: Date.now()
-  };
-  closeScanner();
-  editingId = null;
-  openAddModal(currentBook, false);
+    setScanStatus('', 'ok');
+    showLookupResult(currentBook);
+  } catch(e) {
+    setScanStatus('Network error. Check your connection.', 'err');
+  }
 }
 
 function showLookupResult(book) {
   const area = document.getElementById('lookup-result-area');
   area.innerHTML = `<div class="lookup-result">
-    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">&#9776;</div>'}
+    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">ðŸ“–</div>'}
     <div class="details">
       <h3>${esc(book.title)}</h3>
       <p>${esc(book.author)}</p>
-      <small>${book.year}${book.pages ? ' - ' + book.pages + ' pages' : ''}</small>
+      <small>${book.year}${book.pages ? ' Â· ' + book.pages + ' pages' : ''}</small>
     </div>
-  </div>
-  <div id="series-hint" style="margin:6px 0 10px 0">
-    <div style="font-size:0.75rem;color:var(--ink-light);font-style:italic;padding:4px 0">Checking for series info...</div>
   </div>
   <div class="btn-row">
     <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
-    <button class="btn-primary" onclick="proceedToAdd()">Add to Library</button>
-  </div>`;
-  // Kick off series check in background
-  checkBookSeries(book);
-}
-
-// Fetch series info from Open Library using a two-step approach:
-// 1. Search by ISBN/title to get the Work ID
-// 2. Fetch the work's JSON directly - this reliably contains series data
-async function fetchOpenLibrarySeries(isbn, title, author) {
-  const OL_AGENT = "CharlottesLibrary/1.0 (personal book tracker; contact via github.com/werewolfchef94)";
-
-  try {
-    // Step A: find the work key
-    let workKey = null;
-    let searchUrl;
-    if (isbn) {
-      searchUrl = 'https://openlibrary.org/search.json?isbn=' + isbn + '&fields=key,title,author_name,series,series_number&limit=1';
-    } else {
-      searchUrl = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
-        (author ? '&author=' + encodeURIComponent(author) : '') +
-        '&fields=key,title,author_name,series,series_number&limit=1';
-    }
-
-    const searchRes = await fetch(searchUrl, { headers: { 'User-Agent': OL_AGENT } });
-    if (searchRes.ok) {
-      const searchData = await searchRes.json();
-      const doc = searchData.docs && searchData.docs[0];
-      if (doc) {
-        // If series is already in search results, use it directly
-        if (doc.series && doc.series.length > 0) {
-          return {
-            series: doc.series[0],
-            series_number: doc.series_number ? doc.series_number[0] : null
-          };
-        }
-        // Otherwise grab the work key for step B
-        workKey = doc.key; // e.g. "/works/OL28852929W"
-      }
-    }
-
-    // Step B: fetch the work JSON directly - contains series info not always in search index
-    if (workKey) {
-      const workRes = await fetch('https://openlibrary.org' + workKey + '.json', {
-        headers: { 'User-Agent': OL_AGENT }
-      });
-      if (workRes.ok) {
-        const work = await workRes.json();
-        // Series lives in work.series or work.subject_series
-        if (work.series && work.series.length > 0) {
-          return { series: work.series[0], series_number: null };
-        }
-      }
-    }
-  } catch(e) { /* CORS or network error - fall through to JSONP */ }
-
-  // JSONP fallback if fetch is blocked by CORS
-  return new Promise((resolve) => {
-    const cbName = '_olcb_' + Date.now();
-    const timeout = setTimeout(() => {
-      delete window[cbName];
-      if (script && script.parentNode) script.parentNode.removeChild(script);
-      resolve(null);
-    }, 6000);
-
-    window[cbName] = function(data) {
-      clearTimeout(timeout);
-      delete window[cbName];
-      if (script && script.parentNode) script.parentNode.removeChild(script);
-      try {
-        if (isbn) {
-          const key = 'ISBN:' + isbn;
-          const book = data[key];
-          if (book && book.series) {
-            resolve({ series: Array.isArray(book.series) ? book.series[0] : book.series });
-            return;
-          }
-        } else if (data.docs && data.docs[0] && data.docs[0].series) {
-          const doc = data.docs[0];
-          resolve({
-            series: doc.series[0],
-            series_number: doc.series_number ? doc.series_number[0] : null
-          });
-          return;
-        }
-        resolve(null);
-      } catch(e) { resolve(null); }
-    };
-
-    const script = document.createElement('script');
-    let url;
-    if (isbn) {
-      url = 'https://openlibrary.org/api/books?bibkeys=ISBN:' + isbn + '&jscmd=data&format=javascript&callback=' + cbName;
-    } else {
-      url = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
-        (author ? '&author=' + encodeURIComponent(author) : '') +
-        '&fields=key,title,author_name,series,series_number&limit=1&callback=' + cbName;
-    }
-    script.src = url;
-    script.onerror = () => { clearTimeout(timeout); resolve(null); };
-    document.head.appendChild(script);
-  });
-}
-
-async function checkBookSeries(book) {
-  const hint = document.getElementById('series-hint');
-  if (!hint) return;
-
-  // Step 1: check local seed database (instant, offline, covers 500+ romance/fantasy series)
-  let seriesName = book.detectedSeries || null;
-  let seriesPosition = book.detectedPosition || null;
-
-  if (!seriesName) {
-    const dbResult = lookupSeriesFromDB(book.title, book.author);
-    if (dbResult) {
-      seriesName = dbResult.series.name;
-      seriesPosition = dbResult.position;
-      // also pre-populate totalBooks if we create the series later
-      book._dbSeriesRef = dbResult.series;
-    }
-  }
-
-  // Step 2: check if Google Books already gave us series info
-
-  // Step 2: ask Open Library by ISBN - best source for series data
-  if (!seriesName && book.isbn) {
-    try {
-      const olData = await fetchOpenLibrarySeries(book.isbn, null, null);
-      if (olData && olData.series) {
-        seriesName = olData.series;
-        if (olData.series_number) seriesPosition = parseInt(olData.series_number);
-      }
-    } catch(e) { /* ignore */ }
-  }
-
-  // Step 3: ask Open Library by title+author if ISBN gave nothing
-  if (!seriesName) {
-    try {
-      const olData = await fetchOpenLibrarySeries(null, book.title, book.author);
-      if (olData && olData.series) {
-        seriesName = olData.series;
-        if (olData.series_number) seriesPosition = parseInt(olData.series_number);
-      }
-    } catch(e) { /* ignore */ }
-  }
-
-  // Step 4: Google Books title pattern matching as last resort
-  if (!seriesName) {
-    try {
-      const q = encodeURIComponent(book.title + ' ' + book.author);
-      const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + q + '&maxResults=5&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
-      if (res.ok) {
-        const data = await res.json();
-        for (const item of (data.items || [])) {
-          const info = item.volumeInfo;
-          const fullTitle = (info.title || '') + ' ' + (info.subtitle || '');
-          const m = fullTitle.match(/\(([^)]+?),?\s*(?:book\s*)?#?(\d+)\)/i);
-          if (m) { seriesName = m[1].trim(); seriesPosition = parseInt(m[2]); break; }
-          if (info.seriesInfo && info.seriesInfo.bookSeries && info.seriesInfo.bookSeries[0]) {
-            seriesName = info.seriesInfo.bookSeries[0].seriesId;
-            if (info.seriesInfo.shortSeriesBookTitle) {
-              const m2 = info.seriesInfo.shortSeriesBookTitle.match(/#?(\d+)/);
-              if (m2) seriesPosition = parseInt(m2[1]);
-            }
-            if (seriesName) break;
-          }
-        }
-      }
-    } catch(e) { /* ignore */ }
-  }
-
-  // Step 5: cross-check against existing series in library by name or author
-  let matchedSeries = null;
-  if (seriesName) {
-    matchedSeries = seriesList.find(s =>
-      s.name.toLowerCase() === seriesName.toLowerCase() ||
-      s.name.toLowerCase().includes(seriesName.toLowerCase()) ||
-      seriesName.toLowerCase().includes(s.name.toLowerCase())
-    );
-  }
-  // Also match by author even without a detected series name
-  if (!matchedSeries) {
-    matchedSeries = seriesList.find(s => {
-      const seriesBooks = books.filter(b => b.seriesId === s.id);
-      return seriesBooks.some(b => b.author && book.author &&
-        b.author.toLowerCase() === book.author.toLowerCase());
-    });
-    if (matchedSeries && !seriesName) seriesName = matchedSeries.name;
-  }
-
-  if (matchedSeries) {
-    // Tag the book to existing series
-    currentBook.seriesId = matchedSeries.id;
-    if (seriesPosition) currentBook.seriesPosition = seriesPosition;
-    showSeriesHint(matchedSeries, book, hint, seriesPosition);
-    return;
-  }
-
-  // Step 6: series detected but not in library yet - offer to create it
-  if (seriesName) {
-    currentBook.detectedSeries = seriesName;
-    currentBook.detectedPosition = seriesPosition;
-    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
-      <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:4px">
-        Part of a series: <em>${esc(seriesName)}</em>${seriesPosition ? ' (Book #' + seriesPosition + ')' : ''}
-      </div>
-      <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">This series is not in your library yet.</div>
-      <button onclick="autoCreateSeries(${JSON.stringify(seriesName)}, ${seriesPosition || 'null'})"
-        style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer">
-        + Create series &amp; tag this book
-      </button>
-    </div>`;
-  } else {
-    // No series found - show standalone badge
-    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
-      <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:8px">Part of a series? Tag it here:</div>
-      <div id="series-quick-tag" style="display:block">
-        ${seriesList.length > 0 ? `<select id="quick-series-select" style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);margin-bottom:6px">
-          <option value="">-- Pick existing series --</option>
-          ${seriesList.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}
-          <option value="__new__">+ Create new series...</option>
-        </select>` : ''}
-        <input type="text" id="quick-series-name" placeholder="Series name (e.g. Chestnut Springs)"
-          style="display:${seriesList.length > 0 ? 'none' : 'block'};width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:6px">
-        <input type="number" id="quick-series-pos" placeholder="Book number (e.g. 3)" min="1"
-          style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:6px">
-        <button onclick="applyQuickSeriesTag()"
-          style="width:100%;padding:7px;background:#4a7c5e;color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer">
-          Tag this book
-        </button>
-      </div>
-    </div>`;
-  }
-}
-
-
-
-function applyQuickSeriesTag() {
-  const sel = document.getElementById('quick-series-select');
-  const nameInput = document.getElementById('quick-series-name');
-  const posInput = document.getElementById('quick-series-pos');
-  const position = parseInt(posInput && posInput.value) || null;
-
-  let seriesId = null;
-
-  if (sel && sel.value && sel.value !== '__new__') {
-    seriesId = sel.value;
-  } else {
-    const name = (nameInput && nameInput.value.trim()) || (sel && sel.value === '__new__' && nameInput ? nameInput.value.trim() : '');
-    if (!name) { alert('Please enter a series name.'); return; }
-    const existing = seriesList.find(s => s.name.toLowerCase() === name.toLowerCase());
-    if (existing) {
-      seriesId = existing.id;
-    } else {
-      const newSeries = { id: 's' + Date.now(), name, status: 'ongoing', totalBooks: null };
-      seriesList.push(newSeries);
-      save();
-      seriesId = newSeries.id;
-    }
-  }
-
-  if (seriesId && currentBook) {
-    currentBook.seriesId = seriesId;
-    currentBook.seriesPosition = position;
-    const s = seriesList.find(x => x.id === seriesId);
-    save();
-
-    // If series has no total book count yet, ask for it so we can show missing books
-    if (s && !s.totalBooks) {
-      const hint = document.getElementById('series-hint');
-      if (hint) hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
-        <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:6px">Tagged as: ${esc(s.name)}${position ? ' #' + position : ''}</div>
-        <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">How many books are in this series? (so we can show what you're missing)</div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input type="number" id="quick-total-books" placeholder="e.g. 5" min="1"
-            style="flex:1;padding:8px;border:1.5px solid var(--gold);border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none">
-          <button onclick="applySeriesTotal('${s.id}')"
-            style="padding:8px 14px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer">Show missing</button>
-          <button onclick="skipSeriesTotal('${s.id}')"
-            style="padding:8px 10px;background:none;border:1.5px solid #ccc;border-radius:6px;font-family:Lato,sans-serif;font-size:0.75rem;color:#888;cursor:pointer">Skip</button>
-        </div>
-      </div>`;
-    } else {
-      // Series already has total - show missing panel immediately
-      const hint = document.getElementById('series-hint');
-      if (hint && s) showSeriesHint(s, currentBook, hint, position);
-    }
-  }
-}
-
-function applySeriesTotal(seriesId) {
-  const input = document.getElementById('quick-total-books');
-  const total = parseInt(input && input.value);
-  const s = seriesList.find(x => x.id === seriesId);
-  if (!s) return;
-  if (total && total > 0) {
-    s.totalBooks = total;
-    save();
-  }
-  const hint = document.getElementById('series-hint');
-  if (hint && s) showSeriesHint(s, currentBook, hint, currentBook.seriesPosition);
-}
-
-function skipSeriesTotal(seriesId) {
-  const s = seriesList.find(x => x.id === seriesId);
-  const hint = document.getElementById('series-hint');
-  if (hint && s) hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:0.8rem;font-weight:700;color:var(--spine)">
-    Tagged as: ${esc(s.name)}${currentBook.seriesPosition ? ' #' + currentBook.seriesPosition : ''} â€” saved when you add the book.
-  </div>`;
-}
-
-function autoCreateSeries(name, position) {
-  // Pull total book count from seed DB if available
-  const dbRef = (currentBook && currentBook._dbSeriesRef) ||
-    SEED_SERIES_DB.find(s => s.name.toLowerCase() === name.toLowerCase());
-  const totalBooks = dbRef ? dbRef.totalBooks : null;
-  const newSeries = { id: 's' + Date.now(), name, status: totalBooks ? 'ongoing' : 'ongoing', totalBooks };
-  seriesList.push(newSeries);
-  save();
-  currentBook.seriesId = newSeries.id;
-  if (position) currentBook.seriesPosition = position;
-  const hint = document.getElementById('series-hint');
-  // Show the full missing-books panel immediately using seed DB data
-  if (hint) showSeriesHint(newSeries, currentBook, hint, position);
-}
-
-function showSeriesHint(series, scannedBook, hint, seriesPosition) {
-  const seriesBooks = books.filter(b => b.seriesId === series.id);
-  const ownedPositions = new Set(seriesBooks.filter(b => b.type === 'owned').map(b => b.seriesPosition).filter(Boolean));
-  const wishPositions = new Set(seriesBooks.filter(b => b.type === 'wishlist').map(b => b.seriesPosition).filter(Boolean));
-  const total = series.totalBooks;
-
-  if (!total) {
-    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:0.8rem">
-      <span style="font-weight:700;color:var(--spine)">Series match:</span>
-      This book looks like it belongs to your <em>${esc(series.name)}</em> series.
-      It will be tagged automatically when you add it.
-    </div>`;
-    // Auto-set seriesId on currentBook
-    currentBook.seriesId = series.id;
-    return;
-  }
-
-  // Look up seed DB for this series to get real book titles
-  const dbRef = SEED_SERIES_DB.find(s => s.name.toLowerCase() === series.name.toLowerCase());
-  const dbBooks = dbRef ? dbRef.books.filter(b => b.p === Math.floor(b.p)) : [];
-  const titleByPos = {};
-  dbBooks.forEach(b => { titleByPos[Math.floor(b.p)] = b.t; });
-
-  // Build missing list
-  const missing = [];
-  for (let i = 1; i <= total; i++) {
-    if (!ownedPositions.has(i) && !wishPositions.has(i)) missing.push(i);
-  }
-
-  if (missing.length === 0) {
-    hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem">
-      <span style="font-weight:700;color:#2e7d32">Complete series!</span>
-      You own all ${total} books in <em>${esc(series.name)}</em>.
-    </div>`;
-    currentBook.seriesId = series.id;
-    return;
-  }
-
-  const missingLabels = missing.map(n => {
-    const title = titleByPos[n];
-    return `<div style="display:flex;align-items:baseline;gap:6px;padding:3px 0;border-bottom:1px solid rgba(201,150,58,0.2)">
-      <span style="background:#e8c84a;color:#5a3e00;border-radius:4px;padding:1px 6px;font-weight:700;font-size:0.7rem;white-space:nowrap">#${n}</span>
-      <span style="font-size:0.78rem;color:var(--ink);font-style:${title ? "italic" : "normal"}">${title ? esc(title) : "Unknown title"}</span>
-    </div>`;
-  }).join('');
-
-  hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
-    <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:2px">Part of: ${esc(series.name)}</div>
-    <div style="font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">You own ${ownedPositions.size} of ${total} â€” missing ${missing.length} book${missing.length > 1 ? "s" : ""}:</div>
-    <div style="margin-bottom:8px;max-height:140px;overflow-y:auto">${missingLabels}</div>
-    <button onclick="addAllMissingToWishlist('${series.id}')"
-      style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer">
-      + Add all missing to Wishlist
-    </button>
-  </div>`;
-  currentBook.seriesId = series.id;
-}
-
-function addAllMissingToWishlist(seriesId) {
-  const s = seriesList.find(x => x.id === seriesId);
-  if (!s) return;
-
-  // Build missing positions â€” exclude current unsaved book so it doesn't get wishlist-added too
-  const currentPos = currentBook && currentBook.seriesId === seriesId ? currentBook.seriesPosition : null;
-  const seriesBooks = books.filter(b => b.seriesId === seriesId);
-  const ownedPos = new Set(seriesBooks.filter(b => b.type === 'owned').map(b => b.seriesPosition).filter(Boolean));
-  const wishPos = new Set(seriesBooks.filter(b => b.type === 'wishlist').map(b => b.seriesPosition).filter(Boolean));
-  const missing = [];
-  for (let i = 1; i <= (s.totalBooks || 0); i++) {
-    if (!ownedPos.has(i) && !wishPos.has(i) && i !== currentPos) missing.push(i);
-  }
-
-  // Get real titles from seed DB
-  const dbRef = SEED_SERIES_DB.find(d => d.name.toLowerCase() === s.name.toLowerCase());
-  const titleByPos = {};
-  if (dbRef) dbRef.books.forEach(b => { if (b.p === Math.floor(b.p)) titleByPos[Math.floor(b.p)] = b.t; });
-
-  // Also get author from an existing series book
-  const existingBook = seriesBooks[0];
-  const author = existingBook ? existingBook.author : (dbRef ? dbRef.authors[0] : '');
-
-  let added = 0;
-  missing.forEach(pos => {
-    const exists = books.some(b => b.seriesId === seriesId && b.seriesPosition === pos);
-    if (!exists) {
-      const title = titleByPos[pos] || (s.name + ' #' + pos);
-      books.push({
-        id: 'b' + Date.now() + '_' + pos,
-        isbn: '', title, author,
-        cover: '', year: '', pages: '', format: 'physical',
-        type: 'wishlist', status: 'unread', rating: 0, notes: '',
-        seriesId, seriesPosition: pos, addedAt: Date.now()
-      });
-      added++;
-    }
-  });
-  save();
-  const hint = document.getElementById('series-hint');
-  if (hint) hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem;color:#2e7d32;font-weight:700">
-    Added ${added} missing book${added !== 1 ? 's' : ''} to your Wishlist with real titles!
+    <button class="btn-primary" onclick="proceedToAdd()">Add to Library â†’</button>
   </div>`;
 }
 
@@ -2312,36 +1096,21 @@ function proceedToAdd() {
   openAddModal(currentBook, false);
 }
 
-// --- Add/Edit Modal -----------------------------------------------------------
+// â”€â”€â”€ Add/Edit Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openAddModal(book, isEdit) {
   document.getElementById('add-modal-title').textContent = isEdit ? 'Edit Book' : 'Add to Library';
   document.getElementById('add-modal').style.display = 'flex';
 
   // Preview
   document.getElementById('found-book-preview').innerHTML = `<div class="lookup-result" style="margin-bottom:16px">
-    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">&#9776;</div>'}
+    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">ðŸ“–</div>'}
     <div class="details"><h3>${esc(book.title)}</h3><p>${esc(book.author)}</p></div>
   </div>`;
 
   selectType(book.type || 'owned');
-  document.getElementById('field-format').value = book.format || 'physical';
-  toggleKindleFields();
-  if (book.datePurchased) document.getElementById('field-date-purchased').value = book.datePurchased;
-  else document.getElementById('field-date-purchased').value = '';
-  document.getElementById('field-also-physical').checked = book.alsoPhysical || false;
   document.getElementById('field-status').value = book.status || 'unread';
   document.getElementById('field-notes').value = book.notes || '';
   setRating(book.rating || 0);
-
-  // Populate series dropdown
-  const sel = document.getElementById('field-series');
-  sel.innerHTML = '<option value="">None</option>' +
-    seriesList.map(s => `<option value="${s.id}" ${book.seriesId === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('');
-  document.getElementById('field-series-position').value = book.seriesPosition || '';
-  document.getElementById('series-position-group').style.display = sel.value ? 'block' : 'none';
-  sel.onchange = () => {
-    document.getElementById('series-position-group').style.display = sel.value ? 'block' : 'none';
-  };
 }
 
 function closeAddModal() {
@@ -2363,102 +1132,15 @@ function setRating(r) {
   });
 }
 
-function openKindleSearch() {
-  document.getElementById('kindle-modal').style.display = 'flex';
-  document.getElementById('kindle-search-input').value = '';
-  document.getElementById('kindle-results').innerHTML = '';
-  document.getElementById('kindle-status').innerHTML = '';
-  setTimeout(() => document.getElementById('kindle-search-input').focus(), 100);
-}
-
-function closeKindleSearch() {
-  document.getElementById('kindle-modal').style.display = 'none';
-}
-
-async function searchKindle() {
-  const q = document.getElementById('kindle-search-input').value.trim();
-  if (!q) return;
-  document.getElementById('kindle-status').innerHTML = '<div class="status-message status-loading">Searching...</div>';
-  document.getElementById('kindle-results').innerHTML = '';
-  try {
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
-    const data = await res.json();
-    document.getElementById('kindle-status').innerHTML = '';
-    if (!data.items || data.items.length === 0) {
-      document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">No results found. Try different search terms.</div>';
-      return;
-    }
-    document.getElementById('kindle-results').innerHTML = data.items.map((item, i) => {
-      const info = item.volumeInfo;
-      const cover = info.imageLinks
-        ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://')
-        : '';
-      const author = (info.authors || ['Unknown Author']).join(', ');
-      const year = info.publishedDate ? info.publishedDate.substring(0, 4) : '';
-      return `<div class="book-card" style="cursor:pointer;margin-bottom:8px" onclick="selectKindleBook(${i})">
-        ${cover ? `<img class="book-cover" src="${cover}" alt="" style="width:44px;height:64px">` : '<div class="book-cover-placeholder" style="width:44px;height:64px">&#9776;</div>'}
-        <div class="book-info">
-          <div class="book-title" style="font-size:0.9rem">${esc(info.title)}</div>
-          <div class="book-author">${esc(author)}</div>
-          <div class="book-meta"><span class="badge badge-owned">${year}</span></div>
-        </div>
-      </div>`;
-    }).join('');
-    // Store results for selection
-    window._kindleResults = data.items;
-  } catch(e) {
-    document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">Search failed. Please check your connection.</div>';
-  }
-}
-
-function selectKindleBook(i) {
-  const info = window._kindleResults[i].volumeInfo;
-  const isbn = info.industryIdentifiers
-    ? (info.industryIdentifiers.find(x => x.type === 'ISBN_13') || info.industryIdentifiers[0] || {}).identifier || ''
-    : '';
-  const cover = info.imageLinks
-    ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://')
-    : '';
-  currentBook = {
-    id: null,
-    isbn,
-    title: info.title || 'Unknown Title',
-    author: (info.authors || ['Unknown Author']).join(', '),
-    cover,
-    year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
-    pages: info.pageCount || '',
-    format: 'kindle',
-    type: 'owned', status: 'unread', rating: 0, notes: '',
-    addedAt: Date.now()
-  };
-  closeKindleSearch();
-  editingId = null;
-  openAddModal(currentBook, false);
-}
-
-function toggleKindleFields() {
-  const fmt = document.getElementById('field-format').value;
-  document.getElementById('kindle-extra-fields').style.display = (fmt === 'kindle' || fmt === 'audiobook') ? 'block' : 'none';
-}
-
 function saveBook() {
   if (!currentBook) return;
 
-  const seriesId = document.getElementById('field-series').value || null;
-  const seriesPosition = parseInt(document.getElementById('field-series-position').value) || null;
-
-  const fmt = document.getElementById('field-format').value;
   const bookData = {
     ...currentBook,
     type: selectedType,
-    format: fmt,
-    datePurchased: (fmt === 'kindle' || fmt === 'audiobook') ? document.getElementById('field-date-purchased').value : '',
-    alsoPhysical: fmt === 'kindle' ? document.getElementById('field-also-physical').checked : false,
     status: document.getElementById('field-status').value,
     rating: selectedRating,
     notes: document.getElementById('field-notes').value.trim(),
-    seriesId,
-    seriesPosition,
   };
 
   if (editingId) {
@@ -2468,7 +1150,7 @@ function saveBook() {
     bookData.id = 'b' + Date.now();
     bookData.addedAt = Date.now();
     books.unshift(bookData);
-    currentTab = selectedType;
+    currentTab = selectedType; // switch to the tab we added to
     document.querySelectorAll('.tab-btn').forEach((b, i) => {
       b.classList.toggle('active', (i === 0 && currentTab === 'owned') || (i === 1 && currentTab === 'wishlist'));
     });
@@ -2476,18 +1158,11 @@ function saveBook() {
 
   save();
   closeAddModal();
-
-  // If on series tab, go back to owned/wishlist
-  if (currentTab === 'series') switchTab('owned');
-  else renderBooks();
-}
-
-// --- Init ---------------------------------------------------------------------
-async function init() {
-  await loadSeriesDB();
   renderBooks();
 }
-init();
+
+// â”€â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+renderBooks();
 </script>
 </body>
 </html>
