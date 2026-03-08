@@ -1088,6 +1088,7 @@ let seriesList = JSON.parse(localStorage.getItem('herLibrarySeries') || '[]');
 let currentTab = 'owned';
 let scannerRunning = false;
 let currentBook = null;
+let scanningFor = 'owned'; // 'owned' or 'wishlist' â€” set when scanner opens
 let editingId = null;
 let selectedType = 'owned';
 let selectedRating = 0;
@@ -1632,6 +1633,7 @@ let scanInterval = null;
 let barcodeDetector = null;
 
 function openScanner() {
+  scanningFor = (currentTab === 'wishlist') ? 'wishlist' : 'owned';
   document.getElementById('scan-modal').style.display = 'flex';
   document.getElementById('scan-status').innerHTML = '';
   document.getElementById('isbn-input').value = '';
@@ -1815,7 +1817,7 @@ async function lookupISBN(isbnOverride) {
         pages: info.pageCount || '',
         detectedSeries: null, detectedPosition: null,
         seriesId: null, seriesPosition: null, _dbSeriesRef: null,
-        type: 'owned', status: 'unread', rating: 0, notes: '',
+        type: scanningFor, status: 'unread', rating: 0, notes: '',
         addedAt: Date.now()
       };
       setScanStatus('', 'ok');
@@ -1847,7 +1849,7 @@ async function lookupISBN(isbnOverride) {
         pages: doc.number_of_pages_median || '',
         detectedSeries: null, detectedPosition: null,
         seriesId: null, seriesPosition: null, _dbSeriesRef: null,
-        type: 'owned', status: 'unread', rating: 0, notes: '',
+        type: scanningFor, status: 'unread', rating: 0, notes: '',
         addedAt: Date.now()
       };
       setScanStatus('', 'ok');
@@ -2189,39 +2191,70 @@ function showSeriesHint(series, scannedBook, hint, seriesPosition) {
   const seriesBooks = books.filter(b => b.seriesId === series.id);
   const ownedPositions = new Set(seriesBooks.filter(b => b.type === 'owned').map(b => b.seriesPosition).filter(Boolean));
   const wishPositions = new Set(seriesBooks.filter(b => b.type === 'wishlist').map(b => b.seriesPosition).filter(Boolean));
-  // Include the currently-scanned (not yet saved) book in the owned count for display
-  if (seriesPosition) ownedPositions.add(seriesPosition);
-  const total = series.totalBooks;
+  const isWishlistScan = scanningFor === 'wishlist';
 
-  if (!total) {
-    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:0.8rem">
-      <span style="font-weight:700;color:var(--spine)">Series match:</span>
-      This book looks like it belongs to your <em>${esc(series.name)}</em> series.
-      It will be tagged automatically when you add it.
-    </div>`;
-    // Auto-set seriesId on currentBook
-    currentBook.seriesId = series.id;
-    return;
+  // Count the scanned book in the right set for display purposes
+  if (seriesPosition) {
+    if (isWishlistScan) wishPositions.add(seriesPosition);
+    else ownedPositions.add(seriesPosition);
   }
 
-  // Look up seed DB for this series to get real book titles
+  currentBook.seriesId = series.id;
+  const total = series.totalBooks;
+
+  // Look up seed DB for real book titles
   const dbRef = SEED_SERIES_DB.find(s => s.name.toLowerCase() === series.name.toLowerCase());
-  const dbBooks = dbRef ? dbRef.books.filter(b => b.p === Math.floor(b.p)) : [];
+  const dbBooks = dbRef ? dbRef.books.filter(b => b.p != null && b.p === Math.floor(b.p)) : [];
   const titleByPos = {};
   dbBooks.forEach(b => { titleByPos[Math.floor(b.p)] = b.t; });
 
-  // Build missing list
+  if (!total) {
+    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:0.8rem">
+      <span style="font-weight:700;color:var(--spine)">Part of: ${esc(series.name)}</span><br>
+      <span style="color:var(--ink-light)">This book will be tagged to the series when you add it.</span>
+    </div>`;
+    return;
+  }
+
+  // Build missing list â€” exclude both owned and wishlisted
   const missing = [];
   for (let i = 1; i <= total; i++) {
     if (!ownedPositions.has(i) && !wishPositions.has(i)) missing.push(i);
   }
 
+  // â”€â”€ WISHLIST SCAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  if (isWishlistScan) {
+    if (missing.length === 0) {
+      hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem">
+        <span style="font-weight:700;color:#2e7d32">&#10003; All ${total} books already wishlisted or owned!</span>
+      </div>`;
+      return;
+    }
+    const missingLabels = missing.map(n => {
+      const title = titleByPos[n];
+      return `<div style="display:flex;align-items:baseline;gap:6px;padding:3px 0;border-bottom:1px solid rgba(201,150,58,0.2)">
+        <span style="background:#e8c84a;color:#5a3e00;border-radius:4px;padding:1px 6px;font-weight:700;font-size:0.7rem;white-space:nowrap">#${n}</span>
+        <span style="font-size:0.78rem;color:var(--ink);font-style:${title ? "italic" : "normal"}">${title ? esc(title) : "Unknown title"}</span>
+      </div>`;
+    }).join('');
+    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
+      <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:2px">&#9733; Part of: ${esc(series.name)}</div>
+      <div style="font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">${missing.length} more book${missing.length > 1 ? 's' : ''} in this series not on your wishlist:</div>
+      <div style="margin-bottom:8px;max-height:120px;overflow-y:auto">${missingLabels}</div>
+      <button onclick="addAllMissingToWishlist('${series.id}')"
+        style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer;width:100%">
+        + Add all ${missing.length} to Wishlist
+      </button>
+    </div>`;
+    return;
+  }
+
+  // â”€â”€ OWNED SCAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (missing.length === 0) {
     hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem">
-      <span style="font-weight:700;color:#2e7d32">Complete series!</span>
+      <span style="font-weight:700;color:#2e7d32">&#10003; Complete series!</span>
       You own all ${total} books in <em>${esc(series.name)}</em>.
     </div>`;
-    currentBook.seriesId = series.id;
     return;
   }
 
@@ -2235,14 +2268,13 @@ function showSeriesHint(series, scannedBook, hint, seriesPosition) {
 
   hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
     <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:2px">Part of: ${esc(series.name)}</div>
-    <div style="font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">You own ${ownedPositions.size} of ${total}, missing ${missing.length} book${missing.length > 1 ? "s" : ""}:</div>
-    <div style="margin-bottom:8px;max-height:140px;overflow-y:auto">${missingLabels}</div>
+    <div style="font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">You own ${ownedPositions.size} of ${total} â€” ${missing.length} missing:</div>
+    <div style="margin-bottom:8px;max-height:120px;overflow-y:auto">${missingLabels}</div>
     <button onclick="addAllMissingToWishlist('${series.id}')"
-      style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer">
-      + Add all missing to Wishlist
+      style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer;width:100%">
+      + Add ${missing.length} missing to Wishlist
     </button>
   </div>`;
-  currentBook.seriesId = series.id;
 }
 
 function addAllMissingToWishlist(seriesId) {
@@ -2293,6 +2325,28 @@ function addAllMissingToWishlist(seriesId) {
 function proceedToAdd() {
   closeScanner();
   editingId = null;
+
+  // Check if this book already exists on the wishlist
+  if (scanningFor === 'owned' && currentBook) {
+    const isbn = currentBook.isbn;
+    const titleLower = (currentBook.title || '').toLowerCase();
+    const existing = books.find(b =>
+      b.type === 'wishlist' && (
+        (isbn && b.isbn && b.isbn === isbn) ||
+        (b.title && b.title.toLowerCase() === titleLower)
+      )
+    );
+    if (existing) {
+      if (confirm(`"${currentBook.title}" is already on your Wishlist. Move it to Owned?`)) {
+        existing.type = 'owned';
+        save();
+        currentTab = 'owned';
+        renderBooks();
+        return;
+      }
+    }
+  }
+
   openAddModal(currentBook, false);
 }
 
