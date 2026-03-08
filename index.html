@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Charlotte's Library</title>
-<script src="https://unpkg.com/@zxing/library@0.19.1/umd/index.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -650,24 +649,24 @@
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('owned')">📚 Owned</button>
-  <button class="tab-btn" onclick="switchTab('wishlist')">✨ Wishlist</button>
+  <button class="tab-btn active" onclick="switchTab('owned')">ðŸ“š Owned</button>
+  <button class="tab-btn" onclick="switchTab('wishlist')">âœ¨ Wishlist</button>
 </div>
 
 <main>
   <div class="stats-bar" id="stats-bar"></div>
 
   <div class="search-bar">
-    <span class="icon">🔍</span>
-    <input type="text" id="search-input" placeholder="Search by title or author…" oninput="renderBooks()">
+    <span class="icon">ðŸ”</span>
+    <input type="text" id="search-input" placeholder="Search by title or authorâ€¦" oninput="renderBooks()">
   </div>
 
   <div class="sort-row">
     <label>Sort:</label>
     <select id="sort-select" onchange="renderBooks()">
       <option value="recent">Recently Added</option>
-      <option value="title">Title A–Z</option>
-      <option value="author">Author A–Z</option>
+      <option value="title">Title Aâ€“Z</option>
+      <option value="author">Author Aâ€“Z</option>
       <option value="rating">Highest Rated</option>
     </select>
   </div>
@@ -675,12 +674,12 @@
   <div class="book-list" id="book-list"></div>
 </main>
 
-<button class="scan-fab" onclick="openScanner()" title="Scan a book">📷</button>
+<button class="scan-fab" onclick="openScanner()" title="Scan a book">ðŸ“·</button>
 
 <!-- Scanner Modal -->
 <div class="modal-overlay" id="scan-modal" style="display:none">
   <div class="modal">
-    <h2>📷 Add a Book</h2>
+    <h2>ðŸ“· Add a Book</h2>
 
     <div id="scan-status"></div>
 
@@ -711,8 +710,8 @@
     <div id="found-book-preview"></div>
 
     <div style="display:flex;gap:10px;margin-bottom:14px">
-      <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">📚 Owned</button>
-      <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">✨ Wishlist</button>
+      <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">ðŸ“š Owned</button>
+      <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">âœ¨ Wishlist</button>
     </div>
 
     <div class="form-group">
@@ -727,17 +726,17 @@
     <div class="form-group">
       <label>Star Rating</label>
       <div class="star-picker" id="star-picker">
-        <span class="star" onclick="setRating(1)">★</span>
-        <span class="star" onclick="setRating(2)">★</span>
-        <span class="star" onclick="setRating(3)">★</span>
-        <span class="star" onclick="setRating(4)">★</span>
-        <span class="star" onclick="setRating(5)">★</span>
+        <span class="star" onclick="setRating(1)">â˜…</span>
+        <span class="star" onclick="setRating(2)">â˜…</span>
+        <span class="star" onclick="setRating(3)">â˜…</span>
+        <span class="star" onclick="setRating(4)">â˜…</span>
+        <span class="star" onclick="setRating(5)">â˜…</span>
       </div>
     </div>
 
     <div class="form-group">
       <label>Notes</label>
-      <textarea id="field-notes" placeholder="Thoughts, quotes, why she wants it…"></textarea>
+      <textarea id="field-notes" placeholder="Thoughts, quotes, why she wants itâ€¦"></textarea>
     </div>
 
     <div class="btn-row">
@@ -748,7 +747,7 @@
 </div>
 
 <script>
-// ─── State ───────────────────────────────────────────────────────────────────
+// â”€â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let books = JSON.parse(localStorage.getItem('herLibrary') || '[]');
 let currentTab = 'owned';
 let scannerRunning = false;
@@ -759,7 +758,7 @@ let selectedRating = 0;
 
 function save() { localStorage.setItem('herLibrary', JSON.stringify(books)); }
 
-// ─── Tabs ────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
@@ -768,7 +767,7 @@ function switchTab(tab) {
   renderBooks();
 }
 
-// ─── Render ──────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderBooks() {
   const q = document.getElementById('search-input').value.toLowerCase();
   const sort = document.getElementById('sort-select').value;
@@ -791,9 +790,9 @@ function renderBooks() {
 
   if (list.length === 0) {
     el.innerHTML = `<div class="empty">
-      <div class="icon">${currentTab === 'owned' ? '📚' : '✨'}</div>
+      <div class="icon">${currentTab === 'owned' ? 'ðŸ“š' : 'âœ¨'}</div>
       <h3>${currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty'}</h3>
-      <p>${currentTab === 'owned' ? 'Tap the 📷 button to scan a book spine barcode.' : 'Scan a book and add it to the wishlist.'}</p>
+      <p>${currentTab === 'owned' ? 'Tap the ðŸ“· button to scan a book spine barcode.' : 'Scan a book and add it to the wishlist.'}</p>
     </div>`;
   } else {
     el.innerHTML = list.map(b => bookCard(b)).join('');
@@ -804,12 +803,12 @@ function renderBooks() {
 
 function stars(rating) {
   return [1,2,3,4,5].map(i =>
-    `<span class="star ${i <= rating ? 'filled' : ''}">★</span>`
+    `<span class="star ${i <= rating ? 'filled' : ''}">â˜…</span>`
   ).join('');
 }
 
 function statusBadge(s) {
-  const map = { read: ['badge-read','✓ Read'], unread: ['badge-unread','Unread'], reading: ['badge-reading','Reading'] };
+  const map = { read: ['badge-read','âœ“ Read'], unread: ['badge-unread','Unread'], reading: ['badge-reading','Reading'] };
   const [cls, label] = map[s] || map.unread;
   return `<span class="badge ${cls}">${label}</span>`;
 }
@@ -817,9 +816,9 @@ function statusBadge(s) {
 function bookCard(b) {
   const coverHtml = b.cover
     ? `<img class="book-cover" src="${b.cover}" alt="">`
-    : `<div class="book-cover-placeholder">📖</div>`;
+    : `<div class="book-cover-placeholder">ðŸ“–</div>`;
 
-  const moveLabel = b.type === 'owned' ? '→ Wishlist' : '→ Library';
+  const moveLabel = b.type === 'owned' ? 'â†’ Wishlist' : 'â†’ Library';
 
   return `<div class="book-card ${b.type === 'wishlist' ? 'wishlist' : ''}" id="card-${b.id}">
     ${coverHtml}
@@ -828,7 +827,7 @@ function bookCard(b) {
       <div class="book-author">${esc(b.author)}</div>
       <div class="book-meta">
         ${statusBadge(b.status)}
-        <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? '📚 Owned' : '✨ Wishlist'}</span>
+        <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? 'ðŸ“š Owned' : 'âœ¨ Wishlist'}</span>
       </div>
       <div class="stars">${stars(b.rating || 0)}</div>
       ${b.notes ? `<div class="book-notes">${esc(b.notes)}</div>` : ''}
@@ -856,7 +855,7 @@ function renderStats() {
   `;
 }
 
-// ─── Book actions ─────────────────────────────────────────────────────────────
+// â”€â”€â”€ Book actions â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function deleteBook(id) {
   if (!confirm('Remove this book?')) return;
   books = books.filter(b => b.id !== id);
@@ -878,78 +877,112 @@ function editBook(id) {
   openAddModal(b, true);
 }
 
-// ─── Scanner (ZXing) ──────────────────────────────────────────────────────────
-let zxingReader = null;
+// â”€â”€â”€ Scanner (Native BarcodeDetector) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+let cameraStream = null;
+let scanInterval = null;
+let barcodeDetector = null;
 
 function openScanner() {
   document.getElementById('scan-modal').style.display = 'flex';
   document.getElementById('scan-status').innerHTML = '';
   document.getElementById('isbn-input').value = '';
   document.getElementById('lookup-result-area').innerHTML = '';
-  startZXing();
+  startCamera();
 }
 
 function closeScanner() {
-  stopZXing();
+  stopCamera();
   document.getElementById('scan-modal').style.display = 'none';
 }
 
-async function startZXing() {
+async function startCamera() {
   if (scannerRunning) return;
 
-  // Ensure video element exists
   const container = document.getElementById('scanner-container');
+
+  // Create video element
   let video = container.querySelector('video');
   if (!video) {
     video = document.createElement('video');
     video.setAttribute('playsinline', 'true');
-    video.style.cssText = 'width:100%;border-radius:10px;display:block;';
+    video.setAttribute('autoplay', 'true');
+    video.setAttribute('muted', 'true');
+    video.style.cssText = 'width:100%;border-radius:10px 10px 0 0;display:block;max-height:260px;object-fit:cover;';
     container.insertBefore(video, container.firstChild);
   }
 
+  // Create hidden canvas for frame capture
+  let canvas = container.querySelector('canvas.capture-canvas');
+  if (!canvas) {
+    canvas = document.createElement('canvas');
+    canvas.className = 'capture-canvas';
+    canvas.style.display = 'none';
+    container.appendChild(canvas);
+  }
+
+  // Check BarcodeDetector support
+  if (!('BarcodeDetector' in window)) {
+    setScanStatus('âš ï¸ Your browser doesn\'t support automatic scanning. Please type the ISBN number from the back of the book into the field below.', 'err');
+    return;
+  }
+
   try {
-    const hints = new Map();
-    const formats = [
-      ZXing.BarcodeFormat.EAN_13,
-      ZXing.BarcodeFormat.EAN_8,
-      ZXing.BarcodeFormat.UPC_A,
-      ZXing.BarcodeFormat.UPC_E
-    ];
-    hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, formats);
-
-    zxingReader = new ZXing.BrowserMultiFormatReader(hints);
-
-    const devices = await ZXing.BrowserMultiFormatReader.listVideoInputDevices();
-    // Prefer back camera
-    const backCam = devices.find(d => /back|rear|environment/i.test(d.label)) || devices[devices.length - 1];
-    const deviceId = backCam ? backCam.deviceId : undefined;
-
-    scannerRunning = true;
-    setScanStatus('📷 Point camera at the barcode on the back of the book', 'loading');
-
-    await zxingReader.decodeFromVideoDevice(deviceId, video, (result, err) => {
-      if (result) {
-        const code = result.getText();
-        if (code && code.length >= 10) {
-          stopZXing();
-          document.getElementById('isbn-input').value = code;
-          lookupISBN(code);
-        }
-      }
-      // Ignore NotFoundException - it fires continuously while scanning
+    barcodeDetector = new BarcodeDetector({
+      formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e']
     });
+  } catch(e) {
+    setScanStatus('âš ï¸ Barcode detection unavailable. Please enter ISBN manually below.', 'err');
+    return;
+  }
+
+  try {
+    cameraStream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: { ideal: 'environment' },
+        width: { ideal: 1280 },
+        height: { ideal: 720 }
+      },
+      audio: false
+    });
+
+    video.srcObject = cameraStream;
+    await video.play();
+    scannerRunning = true;
+    setScanStatus('ðŸ“· Point the camera at the barcode on the back of the book', 'loading');
+
+    // Scan a frame every 400ms
+    scanInterval = setInterval(async () => {
+      if (!scannerRunning || video.readyState < 2) return;
+      try {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0);
+        const barcodes = await barcodeDetector.detect(canvas);
+        if (barcodes.length > 0) {
+          const code = barcodes[0].rawValue;
+          if (code && code.length >= 10) {
+            stopCamera();
+            document.getElementById('isbn-input').value = code;
+            lookupISBN(code);
+          }
+        }
+      } catch(e) { /* continue scanning */ }
+    }, 400);
 
   } catch(e) {
     scannerRunning = false;
-    setScanStatus('Could not access camera. Please enter the ISBN manually below, or check that camera permissions are enabled for this site in Chrome settings.', 'err');
+    if (e.name === 'NotAllowedError') {
+      setScanStatus('ðŸ“µ Camera permission denied. Please allow camera access in Chrome: tap the ðŸ”’ icon in the address bar â†’ Site settings â†’ Camera â†’ Allow. Then reload the page.', 'err');
+    } else {
+      setScanStatus('âš ï¸ Could not start camera. Please enter the ISBN manually below.', 'err');
+    }
   }
 }
 
-function stopZXing() {
-  if (zxingReader) {
-    try { zxingReader.reset(); } catch(e) {}
-    zxingReader = null;
-  }
+function stopCamera() {
+  if (scanInterval) { clearInterval(scanInterval); scanInterval = null; }
+  if (cameraStream) { cameraStream.getTracks().forEach(t => t.stop()); cameraStream = null; }
   scannerRunning = false;
 }
 
@@ -965,7 +998,7 @@ async function lookupISBN(isbnOverride) {
     return;
   }
 
-  setScanStatus('Looking up book…', 'loading');
+  setScanStatus('Looking up bookâ€¦', 'loading');
 
   try {
     const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
@@ -1002,16 +1035,16 @@ async function lookupISBN(isbnOverride) {
 function showLookupResult(book) {
   const area = document.getElementById('lookup-result-area');
   area.innerHTML = `<div class="lookup-result">
-    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">📖</div>'}
+    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">ðŸ“–</div>'}
     <div class="details">
       <h3>${esc(book.title)}</h3>
       <p>${esc(book.author)}</p>
-      <small>${book.year}${book.pages ? ' · ' + book.pages + ' pages' : ''}</small>
+      <small>${book.year}${book.pages ? ' Â· ' + book.pages + ' pages' : ''}</small>
     </div>
   </div>
   <div class="btn-row">
     <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
-    <button class="btn-primary" onclick="proceedToAdd()">Add to Library →</button>
+    <button class="btn-primary" onclick="proceedToAdd()">Add to Library â†’</button>
   </div>`;
 }
 
@@ -1021,14 +1054,14 @@ function proceedToAdd() {
   openAddModal(currentBook, false);
 }
 
-// ─── Add/Edit Modal ───────────────────────────────────────────────────────────
+// â”€â”€â”€ Add/Edit Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openAddModal(book, isEdit) {
   document.getElementById('add-modal-title').textContent = isEdit ? 'Edit Book' : 'Add to Library';
   document.getElementById('add-modal').style.display = 'flex';
 
   // Preview
   document.getElementById('found-book-preview').innerHTML = `<div class="lookup-result" style="margin-bottom:16px">
-    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">📖</div>'}
+    ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">ðŸ“–</div>'}
     <div class="details"><h3>${esc(book.title)}</h3><p>${esc(book.author)}</p></div>
   </div>`;
 
@@ -1086,7 +1119,7 @@ function saveBook() {
   renderBooks();
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
+// â”€â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 renderBooks();
 </script>
 </body>
