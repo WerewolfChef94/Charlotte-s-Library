@@ -866,7 +866,7 @@
 <body>
 
 <header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.5</span></h1>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.6</span></h1>
   <p>A personal book collection</p>
 </header>
 
@@ -1310,6 +1310,25 @@ function renderStats() {
 }
 
 // --- Series View --------------------------------------------------------------
+function fixCorruptSeries() {
+  if (!confirm('This will remove any series with no books, and fix books incorrectly tagged to the wrong series. Continue?')) return;
+  // Remove series that have no books tagged to them
+  const usedSeriesIds = new Set(books.map(b => b.seriesId).filter(Boolean));
+  const before = seriesList.length;
+  seriesList = seriesList.filter(s => usedSeriesIds.has(s.id));
+  const removed = before - seriesList.length;
+  // Clear seriesId from books where the series no longer exists
+  let fixed = 0;
+  books.forEach(b => {
+    if (b.seriesId && !seriesList.find(s => s.id === b.seriesId)) {
+      b.seriesId = null; b.seriesPosition = null; fixed++;
+    }
+  });
+  save();
+  renderSeriesView();
+  alert(`Done! Removed ${removed} empty series, fixed ${fixed} orphaned book tags.`);
+}
+
 function renderSeriesView() {
   const el = document.getElementById('series-view');
 
@@ -1335,18 +1354,19 @@ function renderSeriesView() {
     const pct = total > 0 ? Math.round((owned / total) * 100) : 0;
     const readPct = owned > 0 ? Math.round((readBooks.length / owned) * 100) : 0;
 
-    // Show covers in order
+    // Show covers in order, max 6 slots total shared between owned and missing
     const sortedBooks = [...seriesBooks].sort((a, b) => (a.seriesPosition || 99) - (b.seriesPosition || 99));
-    const thumbsHtml = sortedBooks.slice(0, 6).map(b =>
+    const MAX_THUMBS = 6;
+    const thumbsHtml = sortedBooks.slice(0, MAX_THUMBS).map(b =>
       b.cover
         ? `<img class="series-cover-thumb" src="${b.cover}" alt="">`
         : `<div class="series-cover-placeholder">${b.seriesPosition || '?'}</div>`
     ).join('');
 
-    // Show missing slots if total is known
-    const missingSlots = s.totalBooks
-      ? Math.max(0, Math.min(6 - sortedBooks.length, s.totalBooks - sortedBooks.length))
-      : 0;
+    // Remaining slots (up to MAX_THUMBS total) show missing placeholders
+    const remainingSlots = Math.max(0, MAX_THUMBS - sortedBooks.length);
+    const missingInSeries = s.totalBooks ? Math.max(0, s.totalBooks - sortedBooks.length) : 0;
+    const missingSlots = Math.min(remainingSlots, missingInSeries);
     const missingHtml = Array(missingSlots).fill(0).map(() =>
       `<div class="series-missing-slot">?</div>`
     ).join('');
@@ -1370,7 +1390,8 @@ function renderSeriesView() {
   }).join('');
 
   el.innerHTML = `
-    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <button onclick="fixCorruptSeries()" style="font-size:0.7rem;padding:4px 8px;background:transparent;border:1px solid #c0392b;color:#c0392b;border-radius:5px;font-family:Lato,sans-serif;cursor:pointer">Fix errors</button>
       <button class="add-series-btn" onclick="openSeriesModal()">+ New Series</button>
     </div>
     <div class="series-grid">${cards}</div>`;
@@ -1775,6 +1796,7 @@ async function lookupISBN(isbnOverride) {
         year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
         pages: info.pageCount || '',
         detectedSeries, detectedPosition,
+        seriesId: null, seriesPosition: null, _dbSeriesRef: null,
         type: 'owned', status: 'unread', rating: 0, notes: '',
         addedAt: Date.now()
       };
@@ -1805,6 +1827,8 @@ async function lookupISBN(isbnOverride) {
         cover,
         year: doc.first_publish_year ? String(doc.first_publish_year) : '',
         pages: doc.number_of_pages_median || '',
+        detectedSeries: null, detectedPosition: null,
+        seriesId: null, seriesPosition: null, _dbSeriesRef: null,
         type: 'owned', status: 'unread', rating: 0, notes: '',
         addedAt: Date.now()
       };
@@ -2188,6 +2212,8 @@ function showSeriesHint(series, scannedBook, hint, seriesPosition) {
   const seriesBooks = books.filter(b => b.seriesId === series.id);
   const ownedPositions = new Set(seriesBooks.filter(b => b.type === 'owned').map(b => b.seriesPosition).filter(Boolean));
   const wishPositions = new Set(seriesBooks.filter(b => b.type === 'wishlist').map(b => b.seriesPosition).filter(Boolean));
+  // Include the currently-scanned (not yet saved) book in the owned count for display
+  if (seriesPosition) ownedPositions.add(seriesPosition);
   const total = series.totalBooks;
 
   if (!total) {
