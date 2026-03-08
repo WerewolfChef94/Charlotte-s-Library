@@ -917,6 +917,7 @@
     </svg>
     <span style="font-size:0.6rem;display:block;margin-top:2px">Kindle</span>
   </button>
+
 </div>
 
 <!-- Kindle Search Modal -->
@@ -1102,6 +1103,8 @@ let seriesList = JSON.parse(localStorage.getItem('herLibrarySeries') || '[]');
 let currentTab = 'owned';
 let scannerRunning = false;
 let currentBook = null;
+let activeFormatFilter = null; // null = all, 'physical', 'kindle', 'audiobook'
+let showSeriesFilters = false; // series pills collapsed by default
 let scanningFor = 'owned'; // 'owned' or 'wishlist' â€” set when scanner opens
 let editingId = null;
 let selectedType = 'owned';
@@ -1211,6 +1214,8 @@ function save() {
 // --- Tabs --------------------------------------------------------------------
 function switchTab(tab) {
   currentTab = tab;
+  activeFormatFilter = null;
+  showSeriesFilters = false;
   activeSeriesFilter = null;
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
     b.classList.toggle('active',
@@ -1240,6 +1245,15 @@ function renderBooks() {
     list = list.filter(b => b.seriesId === activeSeriesFilter);
   }
 
+  // Format filter (owned tab only)
+  if (currentTab === 'owned' && activeFormatFilter) {
+    if (activeFormatFilter === 'physical') {
+      list = list.filter(b => b.format !== 'kindle' && b.format !== 'audiobook');
+    } else {
+      list = list.filter(b => b.format === activeFormatFilter);
+    }
+  }
+
   if (q) list = list.filter(b =>
     b.title.toLowerCase().includes(q) ||
     b.author.toLowerCase().includes(q) ||
@@ -1266,24 +1280,63 @@ function renderBooks() {
     books.some(b => b.seriesId === s.id && b.type === currentTab)
   );
 
-  let pillsHtml = '';
-  if (seriesWithBooks.length > 0) {
-    pillsHtml = `<div class="series-filter-row">
-      <button class="filter-pill ${!activeSeriesFilter ? 'active' : ''}" onclick="setSeriesFilter(null)">All</button>
-      ${seriesWithBooks.map(s =>
-        `<button class="filter-pill ${activeSeriesFilter === s.id ? 'active' : ''}" onclick="setSeriesFilter('${s.id}')">${esc(s.name)}</button>`
-      ).join('')}
+  // â”€â”€ Format filter pills (owned tab) â€” always visible, compact â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  let formatPillsHtml = '';
+  if (currentTab === 'owned') {
+    const owned = books.filter(b => b.type === 'owned');
+    const nKindle   = owned.filter(b => b.format === 'kindle').length;
+    const nAudio    = owned.filter(b => b.format === 'audiobook').length;
+    const nPhysical = owned.filter(b => b.format !== 'kindle' && b.format !== 'audiobook').length;
+    formatPillsHtml = `<div class="series-filter-row" style="margin-top:0">
+      <button class="filter-pill ${!activeFormatFilter ? 'active' : ''}" onclick="setFormatFilter(null)">
+        All <span style="opacity:0.7;font-size:0.75em">(${owned.length})</span>
+      </button>
+      <button class="filter-pill ${activeFormatFilter === 'physical' ? 'active' : ''}" onclick="setFormatFilter('physical')">
+        &#128218; Physical <span style="opacity:0.7;font-size:0.75em">(${nPhysical})</span>
+      </button>
+      <button class="filter-pill ${activeFormatFilter === 'kindle' ? 'active' : ''}" onclick="setFormatFilter('kindle')">
+        &#128214; Kindle <span style="opacity:0.7;font-size:0.75em">(${nKindle})</span>
+      </button>
+      ${nAudio > 0 ? `<button class="filter-pill ${activeFormatFilter === 'audiobook' ? 'active' : ''}" onclick="setFormatFilter('audiobook')">
+        &#127911; Audio <span style="opacity:0.7;font-size:0.75em">(${nAudio})</span>
+      </button>` : ''}
     </div>`;
   }
 
+  // â”€â”€ Series filter pills â€” collapsed by default, toggle to reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  let pillsHtml = '';
+  if (seriesWithBooks.length > 0) {
+    const activeLabel = activeSeriesFilter
+      ? esc(seriesList.find(s => s.id === activeSeriesFilter)?.name || 'Series')
+      : null;
+    const toggleLabel = activeLabel
+      ? `&#9782; ${activeLabel} &#9660;`
+      : `&#9782; Filter by Series (${seriesWithBooks.length}) ${showSeriesFilters ? '&#9650;' : '&#9660;'}`;
+    pillsHtml = `
+      <div style="margin-bottom:${showSeriesFilters ? '4px' : '6px'}">
+        <button onclick="toggleSeriesFilters()"
+          style="background:${activeLabel ? 'var(--spine)' : 'transparent'};color:${activeLabel ? 'white' : 'var(--spine)'};border:1.5px solid var(--spine);border-radius:20px;padding:5px 12px;font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer">
+          ${toggleLabel}
+        </button>
+        ${activeLabel ? `<button onclick="setSeriesFilter(null)" style="background:transparent;border:none;color:var(--ink-light);font-size:0.75rem;cursor:pointer;padding:5px 6px">&#10005; Clear</button>` : ''}
+      </div>
+      ${showSeriesFilters ? `<div class="series-filter-row" style="margin-bottom:6px">
+        <button class="filter-pill ${!activeSeriesFilter ? 'active' : ''}" onclick="setSeriesFilter(null)">All</button>
+        ${seriesWithBooks.map(s =>
+          `<button class="filter-pill ${activeSeriesFilter === s.id ? 'active' : ''}" onclick="setSeriesFilter('${s.id}');toggleSeriesFilters()">${esc(s.name)}</button>`
+        ).join('')}
+      </div>` : ''}
+    `;
+  }
+
   if (list.length === 0) {
-    el.innerHTML = pillsHtml + `<div class="empty">
+    el.innerHTML = pillsHtml + formatPillsHtml + `<div class="empty">
       <div class="icon" style="font-size:2.5rem;opacity:0.4">${currentTab === 'owned' ? '&#9755;' : '&#9733;'}</div>
       <h3>${activeSeriesFilter ? 'No books in this series yet' : (currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty')}</h3>
       <p>${currentTab === 'owned' ? 'Tap the camera button to scan a book barcode.' : 'Scan a book and add it to the wishlist.'}</p>
     </div>`;
   } else {
-    el.innerHTML = pillsHtml + list.map(b => bookCard(b)).join('');
+    el.innerHTML = pillsHtml + formatPillsHtml + list.map(b => bookCard(b)).join('');
   }
 
   renderStats();
@@ -1291,6 +1344,16 @@ function renderBooks() {
 
 function setSeriesFilter(id) {
   activeSeriesFilter = id;
+  renderBooks();
+}
+
+function setFormatFilter(fmt) {
+  activeFormatFilter = fmt;
+  renderBooks();
+}
+
+function toggleSeriesFilters() {
+  showSeriesFilters = !showSeriesFilters;
   renderBooks();
 }
 
@@ -1354,12 +1417,24 @@ function esc(s) {
 
 function renderStats() {
   const owned = books.filter(b => b.type === 'owned');
-  const wish = books.filter(b => b.type === 'wishlist');
-  const read = owned.filter(b => b.status === 'read');
+  const wish  = books.filter(b => b.type === 'wishlist');
+  const read  = owned.filter(b => b.status === 'read');
+  const kindle   = owned.filter(b => b.format === 'kindle').length;
+  const physical = owned.filter(b => b.format !== 'kindle' && b.format !== 'audiobook').length;
+  const audio    = owned.filter(b => b.format === 'audiobook').length;
   document.getElementById('stats-bar').innerHTML = `
-    <div class="stat-pill"><div class="num">${owned.length}</div><div class="label">Owned</div></div>
+    <div class="stat-pill" onclick="setFormatFilter(null)" style="cursor:pointer" title="All owned">
+      <div class="num">${owned.length}</div><div class="label">Owned</div>
+    </div>
+    <div class="stat-pill" onclick="setFormatFilter('physical'); switchTab('owned')" style="cursor:pointer" title="Physical books">
+      <div class="num">${physical}</div><div class="label">&#128218; Physical</div>
+    </div>
+    <div class="stat-pill" onclick="setFormatFilter('kindle'); switchTab('owned')" style="cursor:pointer" title="Kindle books">
+      <div class="num">${kindle}</div><div class="label">&#128214; Kindle</div>
+    </div>
     <div class="stat-pill"><div class="num">${read.length}</div><div class="label">Read</div></div>
     <div class="stat-pill"><div class="num">${wish.length}</div><div class="label">Wishlist</div></div>
+    ${audio > 0 ? `<div class="stat-pill" onclick="setFormatFilter('audiobook'); switchTab('owned')" style="cursor:pointer" title="Audiobooks"><div class="num">${audio}</div><div class="label">&#127911; Audio</div></div>` : ''}
   `;
 }
 
