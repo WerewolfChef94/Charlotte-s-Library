@@ -103,6 +103,17 @@
   main { padding: 16px; max-width: 600px; margin: 0 auto; }
 
   /* Scan button */
+  .fab-group {
+    position: fixed;
+    bottom: 28px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+    z-index: 100;
+  }
+
   .scan-fab {
     position: fixed;
     bottom: 24px;
@@ -124,6 +135,8 @@
   }
 
   .scan-fab:active { transform: scale(0.94); }
+  .kindle-fab { background: linear-gradient(135deg, #1a6b3c, #0f4a2a); }
+  .kindle-fab:hover { background: linear-gradient(135deg, #1e7d46, #145c33); }
 
   /* Search bar */
   .search-bar {
@@ -886,12 +899,45 @@
   <div id="series-view" style="display:none;padding-bottom:90px"></div>
 </main>
 
-<button class="scan-fab" onclick="openScanner()" title="Scan a book">
-  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-    <circle cx="12" cy="13" r="4"/>
-  </svg>
-</button>
+<div class="fab-group">
+  <button class="scan-fab" onclick="openScanner()" title="Scan a physical book">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+      <circle cx="12" cy="13" r="4"/>
+    </svg>
+    <span style="font-size:0.6rem;display:block;margin-top:2px">Scan</span>
+  </button>
+  <button class="scan-fab kindle-fab" onclick="openKindleSearch()" title="Add a Kindle book">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="2" width="14" height="20" rx="2"/>
+      <line x1="9" y1="7" x2="15" y2="7"/>
+      <line x1="9" y1="11" x2="15" y2="11"/>
+      <line x1="9" y1="15" x2="13" y2="15"/>
+    </svg>
+    <span style="font-size:0.6rem;display:block;margin-top:2px">Kindle</span>
+  </button>
+</div>
+
+<!-- Kindle Search Modal -->
+<div class="modal-overlay" id="kindle-modal" style="display:none">
+  <div class="modal">
+    <h2>Add a Kindle Book</h2>
+    <div class="form-group">
+      <label>Search by Title or Author</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="kindle-search-input" placeholder="e.g. Harry Potter, Tolkien..." 
+          style="flex:1;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none"
+          onkeydown="if(event.key==='Enter')searchKindle()">
+        <button class="btn-primary" style="flex:none;padding:10px 16px" onclick="searchKindle()">Search</button>
+      </div>
+    </div>
+    <div id="kindle-status"></div>
+    <div id="kindle-results"></div>
+    <div class="btn-row" style="margin-top:8px">
+      <button class="btn-secondary" onclick="closeKindleSearch()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <!-- Scanner Modal -->
 <div class="modal-overlay" id="scan-modal" style="display:none">
@@ -929,6 +975,26 @@
     <div style="display:flex;gap:10px;margin-bottom:14px">
       <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">Owned</button>
       <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">Wishlist</button>
+    </div>
+
+    <div class="form-group">
+      <label>Format</label>
+      <select id="field-format" onchange="toggleKindleFields()" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none">
+        <option value="physical">Physical Book</option>
+        <option value="kindle">Kindle / eBook</option>
+        <option value="audiobook">Audiobook</option>
+      </select>
+    </div>
+
+    <div id="kindle-extra-fields" style="display:none">
+      <div class="form-group">
+        <label>Date Purchased</label>
+        <input type="date" id="field-date-purchased" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none">
+      </div>
+      <div class="form-group" style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <input type="checkbox" id="field-also-physical" style="width:18px;height:18px;accent-color:var(--spine);cursor:pointer">
+        <label for="field-also-physical" style="margin:0;cursor:pointer;font-size:0.88rem">Also own a physical copy</label>
+      </div>
     </div>
 
     <div class="form-group">
@@ -1159,6 +1225,9 @@ function bookCard(b) {
       <div class="book-meta">
         ${statusBadge(b.status)}
         <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? 'Owned' : 'Wishlist'}</span>
+        ${b.format === 'kindle' ? '<span class="badge" style="background:#1a6b3c;color:white">Kindle</span>' : ''}
+        ${b.format === 'audiobook' ? '<span class="badge" style="background:#4a3580;color:white">Audiobook</span>' : ''}
+        ${b.alsoPhysical ? '<span class="badge" style="background:var(--gold);color:var(--ink)">+ Physical</span>' : ''}
       </div>
       ${seriesTag}
       <div class="stars">${stars(b.rating || 0)}</div>
@@ -1705,6 +1774,11 @@ function openAddModal(book, isEdit) {
   </div>`;
 
   selectType(book.type || 'owned');
+  document.getElementById('field-format').value = book.format || 'physical';
+  toggleKindleFields();
+  if (book.datePurchased) document.getElementById('field-date-purchased').value = book.datePurchased;
+  else document.getElementById('field-date-purchased').value = '';
+  document.getElementById('field-also-physical').checked = book.alsoPhysical || false;
   document.getElementById('field-status').value = book.status || 'unread';
   document.getElementById('field-notes').value = book.notes || '';
   setRating(book.rating || 0);
@@ -1739,15 +1813,97 @@ function setRating(r) {
   });
 }
 
+function openKindleSearch() {
+  document.getElementById('kindle-modal').style.display = 'flex';
+  document.getElementById('kindle-search-input').value = '';
+  document.getElementById('kindle-results').innerHTML = '';
+  document.getElementById('kindle-status').innerHTML = '';
+  setTimeout(() => document.getElementById('kindle-search-input').focus(), 100);
+}
+
+function closeKindleSearch() {
+  document.getElementById('kindle-modal').style.display = 'none';
+}
+
+async function searchKindle() {
+  const q = document.getElementById('kindle-search-input').value.trim();
+  if (!q) return;
+  document.getElementById('kindle-status').innerHTML = '<div class="status-message status-loading">Searching...</div>';
+  document.getElementById('kindle-results').innerHTML = '';
+  try {
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
+    const data = await res.json();
+    document.getElementById('kindle-status').innerHTML = '';
+    if (!data.items || data.items.length === 0) {
+      document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">No results found. Try different search terms.</div>';
+      return;
+    }
+    document.getElementById('kindle-results').innerHTML = data.items.map((item, i) => {
+      const info = item.volumeInfo;
+      const cover = info.imageLinks
+        ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://')
+        : '';
+      const author = (info.authors || ['Unknown Author']).join(', ');
+      const year = info.publishedDate ? info.publishedDate.substring(0, 4) : '';
+      return `<div class="book-card" style="cursor:pointer;margin-bottom:8px" onclick="selectKindleBook(${i})">
+        ${cover ? `<img class="book-cover" src="${cover}" alt="" style="width:44px;height:64px">` : '<div class="book-cover-placeholder" style="width:44px;height:64px">&#9776;</div>'}
+        <div class="book-info">
+          <div class="book-title" style="font-size:0.9rem">${esc(info.title)}</div>
+          <div class="book-author">${esc(author)}</div>
+          <div class="book-meta"><span class="badge badge-owned">${year}</span></div>
+        </div>
+      </div>`;
+    }).join('');
+    // Store results for selection
+    window._kindleResults = data.items;
+  } catch(e) {
+    document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">Search failed. Please check your connection.</div>';
+  }
+}
+
+function selectKindleBook(i) {
+  const info = window._kindleResults[i].volumeInfo;
+  const isbn = info.industryIdentifiers
+    ? (info.industryIdentifiers.find(x => x.type === 'ISBN_13') || info.industryIdentifiers[0] || {}).identifier || ''
+    : '';
+  const cover = info.imageLinks
+    ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://')
+    : '';
+  currentBook = {
+    id: null,
+    isbn,
+    title: info.title || 'Unknown Title',
+    author: (info.authors || ['Unknown Author']).join(', '),
+    cover,
+    year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
+    pages: info.pageCount || '',
+    format: 'kindle',
+    type: 'owned', status: 'unread', rating: 0, notes: '',
+    addedAt: Date.now()
+  };
+  closeKindleSearch();
+  editingId = null;
+  openAddModal(currentBook, false);
+}
+
+function toggleKindleFields() {
+  const fmt = document.getElementById('field-format').value;
+  document.getElementById('kindle-extra-fields').style.display = (fmt === 'kindle' || fmt === 'audiobook') ? 'block' : 'none';
+}
+
 function saveBook() {
   if (!currentBook) return;
 
   const seriesId = document.getElementById('field-series').value || null;
   const seriesPosition = parseInt(document.getElementById('field-series-position').value) || null;
 
+  const fmt = document.getElementById('field-format').value;
   const bookData = {
     ...currentBook,
     type: selectedType,
+    format: fmt,
+    datePurchased: (fmt === 'kindle' || fmt === 'audiobook') ? document.getElementById('field-date-purchased').value : '',
+    alsoPhysical: fmt === 'kindle' ? document.getElementById('field-also-physical').checked : false,
     status: document.getElementById('field-status').value,
     rating: selectedRating,
     notes: document.getElementById('field-notes').value.trim(),
