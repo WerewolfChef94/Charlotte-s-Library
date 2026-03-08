@@ -1,0 +1,5379 @@
+[
+  {
+    "name": "A Court of Thorns and Roses",
+    "authors": [
+      "Sarah J. Maas"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "A Court of Thorns and Roses",
+        "p": 1
+      },
+      {
+        "t": "A Court of Mist and Fury",
+        "p": 2
+      },
+      {
+        "t": "A Court of Wings and Ruin",
+        "p": 3
+      },
+      {
+        "t": "A Court of Frost and Starlight",
+        "p": 4
+      },
+      {
+        "t": "A Court of Silver Flames",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "A Touch of Darkness",
+    "authors": [
+      "Scarlett St. Clair"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "romantasy",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "A Touch of Darkness",
+        "p": 1
+      },
+      {
+        "t": "A Touch of Ruin",
+        "p": 2
+      },
+      {
+        "t": "A Touch of Malice",
+        "p": 3
+      },
+      {
+        "t": "A Touch of Death",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "All Saints High",
+    "authors": [
+      "L.J. Shen"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Pretty Reckless",
+        "p": 1
+      },
+      {
+        "t": "Broken Knight",
+        "p": 2
+      },
+      {
+        "t": "Angry God",
+        "p": 3
+      },
+      {
+        "t": "Heaven and Hell",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Alpha and Omega",
+    "authors": [
+      "Patricia Briggs"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "paranormal",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Cry Wolf",
+        "p": 1
+      },
+      {
+        "t": "Hunting Ground",
+        "p": 2
+      },
+      {
+        "t": "Fair Game",
+        "p": 3
+      },
+      {
+        "t": "Dead Heat",
+        "p": 4
+      },
+      {
+        "t": "Burn Bright",
+        "p": 5
+      },
+      {
+        "t": "Wild Sign",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "An Ember in the Ashes",
+    "authors": [
+      "Sabaa Tahir"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "An Ember in the Ashes",
+        "p": 1
+      },
+      {
+        "t": "A Torch Against the Night",
+        "p": 2
+      },
+      {
+        "t": "A Reaper at the Gates",
+        "p": 3
+      },
+      {
+        "t": "A Sky Beyond the Storm",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Artefacts of Ouranos",
+    "authors": [
+      "Nisha J. Tuli"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Trial of the Sun Queen",
+        "p": 1
+      },
+      {
+        "t": "Rule of the Aurora King",
+        "p": 2
+      },
+      {
+        "t": "Crown of the Broken Queen",
+        "p": 3
+      },
+      {
+        "t": "Song of the Leashed Dragon",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Assistant to the Villain",
+    "authors": [
+      "Hannah Nicole Maehrer"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Assistant to the Villain",
+        "p": 1
+      },
+      {
+        "t": "The Villain",
+        "p": 2
+      },
+      {
+        "t": "The Villain's Masquerade",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Bellinger Sisters",
+    "authors": [
+      "Tessa Bailey"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "It Happened One Summer",
+        "p": 1
+      },
+      {
+        "t": "Hook, Line, and Sinker",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Benevolence",
+    "authors": [
+      "Lucy Score"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance",
+      "small town romance"
+    ],
+    "books": [
+      {
+        "t": "Pretend You're Mine",
+        "p": 1
+      },
+      {
+        "t": "Finally Mine",
+        "p": 2
+      },
+      {
+        "t": "Protecting What's Mine",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Black Dagger Brotherhood",
+    "authors": [
+      "J.R. Ward"
+    ],
+    "totalBooks": 20,
+    "genres": [
+      "paranormal",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Dark Lover",
+        "p": 1
+      },
+      {
+        "t": "Lover Eternal",
+        "p": 2
+      },
+      {
+        "t": "Lover Awakened",
+        "p": 3
+      },
+      {
+        "t": "Lover Revealed",
+        "p": 4
+      },
+      {
+        "t": "Lover Unbound",
+        "p": 5
+      },
+      {
+        "t": "Lover Enshrined",
+        "p": 6
+      },
+      {
+        "t": "Lover Avenged",
+        "p": 7
+      },
+      {
+        "t": "Lover Mine",
+        "p": 8
+      },
+      {
+        "t": "Lover Unleashed",
+        "p": 9
+      },
+      {
+        "t": "Lover Reborn",
+        "p": 10
+      },
+      {
+        "t": "Lover at Last",
+        "p": 11
+      },
+      {
+        "t": "The King",
+        "p": 12
+      },
+      {
+        "t": "The Shadows",
+        "p": 13
+      },
+      {
+        "t": "The Beast",
+        "p": 14
+      },
+      {
+        "t": "The Chosen",
+        "p": 15
+      },
+      {
+        "t": "The Thief",
+        "p": 16
+      },
+      {
+        "t": "The Savior",
+        "p": 17
+      },
+      {
+        "t": "The Sinner",
+        "p": 18
+      },
+      {
+        "t": "The Jackal",
+        "p": 19
+      },
+      {
+        "t": "The Viper",
+        "p": 20
+      }
+    ]
+  },
+  {
+    "name": "Blood and Ash",
+    "authors": [
+      "Jennifer L. Armentrout"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "From Blood and Ash",
+        "p": 1
+      },
+      {
+        "t": "A Kingdom of Flesh and Fire",
+        "p": 2
+      },
+      {
+        "t": "The Crown of Gilded Bones",
+        "p": 3
+      },
+      {
+        "t": "The War of Two Queens",
+        "p": 4
+      },
+      {
+        "t": "A Soul of Ash and Blood",
+        "p": 5
+      },
+      {
+        "t": "A Fire in the Flesh",
+        "p": 6
+      },
+      {
+        "t": "Mercy: A Blood and Ash Story",
+        "p": 6.5
+      }
+    ]
+  },
+  {
+    "name": "Boston Belles",
+    "authors": [
+      "L.J. Shen"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "The Hunter",
+        "p": 1
+      },
+      {
+        "t": "The Villain",
+        "p": 2
+      },
+      {
+        "t": "The Monster",
+        "p": 3
+      },
+      {
+        "t": "The Rake",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Bow Street Runners",
+    "authors": [
+      "Lisa Kleypas"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "historical romance"
+    ],
+    "books": [
+      {
+        "t": "Someone to Watch Over Me",
+        "p": 1
+      },
+      {
+        "t": "Lady Sophia's Lover",
+        "p": 2
+      },
+      {
+        "t": "Worth Any Price",
+        "p": 3
+      },
+      {
+        "t": "Again the Magic",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Boys of Brayshaw High",
+    "authors": [
+      "Meagan Brandy"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Boys of Brayshaw High",
+        "p": 1
+      },
+      {
+        "t": "Trouble at Brayshaw High",
+        "p": 2
+      },
+      {
+        "t": "Reign of Brayshaw",
+        "p": 3
+      },
+      {
+        "t": "Be My Brayshaw",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Briar U",
+    "authors": [
+      "Elle Kennedy"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "sports romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "The Chase",
+        "p": 1
+      },
+      {
+        "t": "The Risk",
+        "p": 2
+      },
+      {
+        "t": "The Play",
+        "p": 3
+      },
+      {
+        "t": "The Dare",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Bridgertons",
+    "authors": [
+      "Julia Quinn"
+    ],
+    "totalBooks": 9,
+    "genres": [
+      "historical romance"
+    ],
+    "books": [
+      {
+        "t": "The Duke and I",
+        "p": 1
+      },
+      {
+        "t": "The Viscount Who Loved Me",
+        "p": 2
+      },
+      {
+        "t": "An Offer from a Gentleman",
+        "p": 3
+      },
+      {
+        "t": "Romancing Mister Bridgerton",
+        "p": 4
+      },
+      {
+        "t": "To Sir Phillip, with Love",
+        "p": 5
+      },
+      {
+        "t": "When He Was Wicked",
+        "p": 6
+      },
+      {
+        "t": "It's in His Kiss",
+        "p": 7
+      },
+      {
+        "t": "On the Way to the Wedding",
+        "p": 8
+      },
+      {
+        "t": "The Bridgertons: Happily Ever After",
+        "p": 9
+      }
+    ]
+  },
+  {
+    "name": "Brown Sisters",
+    "authors": [
+      "Talia Hibbert"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Get a Life, Chloe Brown",
+        "p": 1
+      },
+      {
+        "t": "Take a Hint, Dani Brown",
+        "p": 2
+      },
+      {
+        "t": "Act Your Age, Eve Brown",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Brutal Boys of Everlake Prep",
+    "authors": [
+      "Caroline Peckham",
+      "Susanne Valenti"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "romantasy",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Kings of Quarantine",
+        "p": 1
+      },
+      {
+        "t": "Kings of Lockdown",
+        "p": 2
+      },
+      {
+        "t": "Kings of Anarchy",
+        "p": 3
+      },
+      {
+        "t": "Queen of Quarantine",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Calamity Montana",
+    "authors": [
+      "Devney Perry"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "small town romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Juniper Hill",
+        "p": 1
+      },
+      {
+        "t": "Garnet Flats",
+        "p": 2
+      },
+      {
+        "t": "Jasper Vale",
+        "p": 3
+      },
+      {
+        "t": "Crimson River",
+        "p": 4
+      },
+      {
+        "t": "Sable Peak",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Caraval",
+    "authors": [
+      "Stephanie Garber"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Caraval",
+        "p": 1
+      },
+      {
+        "t": "Legendary",
+        "p": 2
+      },
+      {
+        "t": "Finale",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Chestnut Springs",
+    "authors": [
+      "Elsie Silver"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "small town romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Flawless",
+        "p": 1
+      },
+      {
+        "t": "Heartless",
+        "p": 2
+      },
+      {
+        "t": "Powerless",
+        "p": 3
+      },
+      {
+        "t": "Reckless",
+        "p": 4
+      },
+      {
+        "t": "Hopeless",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Children of Blood and Bone",
+    "authors": [
+      "Tomi Adeyemi"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "young adult",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Children of Blood and Bone",
+        "p": 1
+      },
+      {
+        "t": "Children of Virtue and Vengeance",
+        "p": 2
+      },
+      {
+        "t": "Children of Anguish and Anarchy",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Cosa Nostra",
+    "authors": [
+      "Clarissa Wild"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "mafia",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Dirty Wife",
+        "p": 1
+      },
+      {
+        "t": "Filthy Husband",
+        "p": 2
+      },
+      {
+        "t": "Corrupt Union",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Covenant",
+    "authors": [
+      "Jennifer L. Armentrout"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "paranormal",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Daimon",
+        "p": 0.5
+      },
+      {
+        "t": "Half-Blood",
+        "p": 1
+      },
+      {
+        "t": "Pure",
+        "p": 2
+      },
+      {
+        "t": "Deity",
+        "p": 3
+      },
+      {
+        "t": "Apollyon",
+        "p": 4
+      },
+      {
+        "t": "Sentinel",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Crescent City",
+    "authors": [
+      "Sarah J. Maas"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "House of Earth and Blood",
+        "p": 1
+      },
+      {
+        "t": "House of Sky and Breath",
+        "p": 2
+      },
+      {
+        "t": "House of Flame and Shadow",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Crowns of Nyaxia",
+    "authors": [
+      "Carissa Broadbent"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "The Serpent and the Wings of Night",
+        "p": 1
+      },
+      {
+        "t": "The Ashes and the Star-Cursed King",
+        "p": 2
+      },
+      {
+        "t": "The Songbird and the Heart of Stone",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Cursed Luck",
+    "authors": [
+      "Eva Chase"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "why choose",
+      "paranormal"
+    ],
+    "books": [
+      {
+        "t": "Wolf's Calling",
+        "p": 1
+      },
+      {
+        "t": "Wolf's Hunger",
+        "p": 2
+      },
+      {
+        "t": "Wolf's Challenge",
+        "p": 3
+      },
+      {
+        "t": "Wolf's Heart",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Dark Shores",
+    "authors": [
+      "Danielle L. Jensen"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "romantasy",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Dark Shores",
+        "p": 1
+      },
+      {
+        "t": "Dark Skies",
+        "p": 2
+      },
+      {
+        "t": "Dark Stars",
+        "p": 3
+      },
+      {
+        "t": "Dark Deeds",
+        "p": 4
+      },
+      {
+        "t": "Dark Dreams",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Darkside Saints",
+    "authors": [
+      "Eva Chase"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "why choose",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Crooked Games",
+        "p": 1
+      },
+      {
+        "t": "Crooked Heart",
+        "p": 2
+      },
+      {
+        "t": "Crooked Love",
+        "p": 3
+      },
+      {
+        "t": "Crooked Lies",
+        "p": 4
+      },
+      {
+        "t": "Crooked Rules",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Demonica",
+    "authors": [
+      "Larissa Ione"
+    ],
+    "totalBooks": 9,
+    "genres": [
+      "paranormal",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Pleasure Unbound",
+        "p": 1
+      },
+      {
+        "t": "Desire Unchained",
+        "p": 2
+      },
+      {
+        "t": "Passion Unleashed",
+        "p": 3
+      },
+      {
+        "t": "Ecstasy Unveiled",
+        "p": 4
+      },
+      {
+        "t": "Sin Undone",
+        "p": 5
+      },
+      {
+        "t": "Eternal Rider",
+        "p": 6
+      },
+      {
+        "t": "Immortal Rider",
+        "p": 7
+      },
+      {
+        "t": "Lethal Rider",
+        "p": 8
+      },
+      {
+        "t": "Rogue Rider",
+        "p": 9
+      }
+    ]
+  },
+  {
+    "name": "Devil's Night",
+    "authors": [
+      "Penelope Douglas"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Corrupt",
+        "p": 1
+      },
+      {
+        "t": "Hideaway",
+        "p": 2
+      },
+      {
+        "t": "Kill Switch",
+        "p": 3
+      },
+      {
+        "t": "Nightfall",
+        "p": 4
+      },
+      {
+        "t": "Fire Night",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Divergent",
+    "authors": [
+      "Veronica Roth"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "young adult",
+      "science fiction",
+      "dystopian"
+    ],
+    "books": [
+      {
+        "t": "Divergent",
+        "p": 1
+      },
+      {
+        "t": "Insurgent",
+        "p": 2
+      },
+      {
+        "t": "Allegiant",
+        "p": 3
+      },
+      {
+        "t": "Four",
+        "p": 3.5
+      }
+    ]
+  },
+  {
+    "name": "Eirah Chronicles",
+    "authors": [
+      "Raven Kennedy"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Monster",
+        "p": 1
+      },
+      {
+        "t": "Malice",
+        "p": 2
+      },
+      {
+        "t": "Mayhem",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Elantris",
+    "authors": [
+      "Brandon Sanderson"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Elantris",
+        "p": 1
+      },
+      {
+        "t": "The Hope of Elantris",
+        "p": 1.5
+      },
+      {
+        "t": "The Emperor's Soul",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Emily Henry",
+    "authors": [
+      "Emily Henry"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Beach Read",
+        "p": 1
+      },
+      {
+        "t": "People We Meet on Vacation",
+        "p": 2
+      },
+      {
+        "t": "Book Lovers",
+        "p": 3
+      },
+      {
+        "t": "Happy Place",
+        "p": 4
+      },
+      {
+        "t": "Funny Story",
+        "p": 5
+      },
+      {
+        "t": "Great Big Beautiful Life",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Fae Chronicles",
+    "authors": [
+      "Amelia Hutchins"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "paranormal",
+      "dark romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Fighting Destiny",
+        "p": 1
+      },
+      {
+        "t": "Taunting Destiny",
+        "p": 2
+      },
+      {
+        "t": "Escaping Destiny",
+        "p": 3
+      },
+      {
+        "t": "Seducing Destiny",
+        "p": 4
+      },
+      {
+        "t": "Unraveling Destiny",
+        "p": 5
+      },
+      {
+        "t": "Midnight Chronicles",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Fall Away",
+    "authors": [
+      "Penelope Douglas"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Bully",
+        "p": 1
+      },
+      {
+        "t": "Until You",
+        "p": 1.5
+      },
+      {
+        "t": "Rival",
+        "p": 2
+      },
+      {
+        "t": "Falling Away",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Fever",
+    "authors": [
+      "Karen Marie Moning"
+    ],
+    "totalBooks": 10,
+    "genres": [
+      "paranormal",
+      "dark romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Darkfever",
+        "p": 1
+      },
+      {
+        "t": "Bloodfever",
+        "p": 2
+      },
+      {
+        "t": "Faefever",
+        "p": 3
+      },
+      {
+        "t": "Dreamfever",
+        "p": 4
+      },
+      {
+        "t": "Shadowfever",
+        "p": 5
+      },
+      {
+        "t": "Iced",
+        "p": 6
+      },
+      {
+        "t": "Burned",
+        "p": 7
+      },
+      {
+        "t": "Feverborn",
+        "p": 8
+      },
+      {
+        "t": "Feversong",
+        "p": 9
+      },
+      {
+        "t": "High Voltage",
+        "p": 10
+      }
+    ]
+  },
+  {
+    "name": "Flesh and Fire",
+    "authors": [
+      "Jennifer L. Armentrout"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "A Shadow in the Ember",
+        "p": 1
+      },
+      {
+        "t": "A Light in the Flame",
+        "p": 2
+      },
+      {
+        "t": "A Dawn of Gods and Fury",
+        "p": 3
+      },
+      {
+        "t": "A Tide of Flames and Fury",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Foul Lady Fortune",
+    "authors": [
+      "Chloe Gong"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Foul Lady Fortune",
+        "p": 1
+      },
+      {
+        "t": "Last Violent Call",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Gilded City",
+    "authors": [
+      "Ana Huang"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "If We Ever Meet Again",
+        "p": 1
+      },
+      {
+        "t": "If the Sun Never Sets",
+        "p": 2
+      },
+      {
+        "t": "If Love Had a Price",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Gold Rush Ranch",
+    "authors": [
+      "Elsie Silver"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "small town romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Off to the Races",
+        "p": 1
+      },
+      {
+        "t": "A Photo Finish",
+        "p": 2
+      },
+      {
+        "t": "The Front Runner",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Guild Codex: Spellbound",
+    "authors": [
+      "Annette Marie"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "paranormal",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Three Mages and a Margarita",
+        "p": 1
+      },
+      {
+        "t": "Dark Arts and a Daiquiri",
+        "p": 2
+      },
+      {
+        "t": "Two Witches and a Whiskey",
+        "p": 3
+      },
+      {
+        "t": "Demon Magic and a Martini",
+        "p": 4
+      },
+      {
+        "t": "The Alchemist and an Amaretto",
+        "p": 5
+      },
+      {
+        "t": "Druid Vices and a Vodka",
+        "p": 6
+      },
+      {
+        "t": "Lost Talismans and a Tequila",
+        "p": 7
+      }
+    ]
+  },
+  {
+    "name": "Hellbent",
+    "authors": [
+      "Penelope Douglas"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Birthday Girl",
+        "p": 1
+      },
+      {
+        "t": "Credence",
+        "p": 2
+      },
+      {
+        "t": "Tryst Six Venom",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Hidden Legacy",
+    "authors": [
+      "Ilona Andrews"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "paranormal",
+      "romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Burn for Me",
+        "p": 1
+      },
+      {
+        "t": "White Hot",
+        "p": 2
+      },
+      {
+        "t": "Wildfire",
+        "p": 3
+      },
+      {
+        "t": "Diamond Fire",
+        "p": 3.5
+      },
+      {
+        "t": "Sapphire Flames",
+        "p": 4
+      },
+      {
+        "t": "Emerald Blaze",
+        "p": 5
+      },
+      {
+        "t": "Ruby Fever",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Him",
+    "authors": [
+      "Sarina Bowen",
+      "Elle Kennedy"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "sports romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Him",
+        "p": 1
+      },
+      {
+        "t": "Us",
+        "p": 2
+      },
+      {
+        "t": "Epic",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "In Death",
+    "authors": [
+      "J.D. Robb"
+    ],
+    "totalBooks": 58,
+    "genres": [
+      "mystery",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Naked in Death",
+        "p": 1
+      },
+      {
+        "t": "Glory in Death",
+        "p": 2
+      },
+      {
+        "t": "Immortal in Death",
+        "p": 3
+      },
+      {
+        "t": "Rapture in Death",
+        "p": 4
+      },
+      {
+        "t": "Ceremony in Death",
+        "p": 5
+      },
+      {
+        "t": "Vengeance in Death",
+        "p": 6
+      },
+      {
+        "t": "Holiday in Death",
+        "p": 7
+      },
+      {
+        "t": "Conspiracy in Death",
+        "p": 9
+      },
+      {
+        "t": "Loyalty in Death",
+        "p": 10
+      },
+      {
+        "t": "Witness in Death",
+        "p": 11
+      }
+    ]
+  },
+  {
+    "name": "Innkeeper Chronicles",
+    "authors": [
+      "Ilona Andrews"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "paranormal",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Clean Sweep",
+        "p": 1
+      },
+      {
+        "t": "Sweep in Peace",
+        "p": 2
+      },
+      {
+        "t": "One Fell Sweep",
+        "p": 3
+      },
+      {
+        "t": "Sweep of the Blade",
+        "p": 4
+      },
+      {
+        "t": "Sweep with Me",
+        "p": 4.5
+      },
+      {
+        "t": "Sweep of the Heart",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "It Ends with Us",
+    "authors": [
+      "Colleen Hoover"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "It Ends with Us",
+        "p": 1
+      },
+      {
+        "t": "It Starts with Us",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Jamison Valley",
+    "authors": [
+      "Devney Perry"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "small town romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "The Coppersmith Farmhouse",
+        "p": 1
+      },
+      {
+        "t": "The Clover Chapel",
+        "p": 2
+      },
+      {
+        "t": "The Lucky Heart",
+        "p": 3
+      },
+      {
+        "t": "The Outpost",
+        "p": 4
+      },
+      {
+        "t": "The Bitterroot Inn",
+        "p": 5
+      },
+      {
+        "t": "The Candle Palace",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Kate Daniels",
+    "authors": [
+      "Ilona Andrews"
+    ],
+    "totalBooks": 11,
+    "genres": [
+      "paranormal",
+      "romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Magic Bites",
+        "p": 1
+      },
+      {
+        "t": "Magic Burns",
+        "p": 2
+      },
+      {
+        "t": "Magic Strikes",
+        "p": 3
+      },
+      {
+        "t": "Magic Bleeds",
+        "p": 4
+      },
+      {
+        "t": "Magic Slays",
+        "p": 5
+      },
+      {
+        "t": "Magic Rises",
+        "p": 6
+      },
+      {
+        "t": "Magic Breaks",
+        "p": 7
+      },
+      {
+        "t": "Magic Shifts",
+        "p": 8
+      },
+      {
+        "t": "Magic Binds",
+        "p": 9
+      },
+      {
+        "t": "Magic Triumphs",
+        "p": 10
+      },
+      {
+        "t": "Magic Claimed",
+        "p": 11
+      }
+    ]
+  },
+  {
+    "name": "King of Scars",
+    "authors": [
+      "Leigh Bardugo"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "King of Scars",
+        "p": 1
+      },
+      {
+        "t": "Rule of Wolves",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "King of the Underworld",
+    "authors": [
+      "Scarlett St. Clair"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "romantasy",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "King of the Underworld",
+        "p": 1
+      },
+      {
+        "t": "A Game of Fate",
+        "p": 2
+      },
+      {
+        "t": "A Game of Retribution",
+        "p": 3
+      },
+      {
+        "t": "A Touch of Death",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Kingdom of the Wicked",
+    "authors": [
+      "Kerri Maniscalco"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Kingdom of the Wicked",
+        "p": 1
+      },
+      {
+        "t": "Kingdom of the Cursed",
+        "p": 2
+      },
+      {
+        "t": "Kingdom of the Feared",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Kings of Sin",
+    "authors": [
+      "Ana Huang"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "King of Wrath",
+        "p": 1
+      },
+      {
+        "t": "King of Pride",
+        "p": 2
+      },
+      {
+        "t": "King of Greed",
+        "p": 3
+      },
+      {
+        "t": "King of Sloth",
+        "p": 4
+      },
+      {
+        "t": "King of Envy",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Knives Out",
+    "authors": [
+      "Rian Johnson"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "mystery",
+      "thriller"
+    ],
+    "books": [
+      {
+        "t": "Knives Out",
+        "p": 1
+      },
+      {
+        "t": "Glass Onion",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Knockemout",
+    "authors": [
+      "Lucy Score"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance",
+      "small town romance"
+    ],
+    "books": [
+      {
+        "t": "Things We Never Got Over",
+        "p": 1
+      },
+      {
+        "t": "Things We Hide from the Light",
+        "p": 2
+      },
+      {
+        "t": "Things We Left Behind",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Lore Olympus",
+    "authors": [
+      "Rachel Smythe"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "graphic novel",
+      "romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Lore Olympus: Volume One",
+        "p": 1
+      },
+      {
+        "t": "Lore Olympus: Volume Two",
+        "p": 2
+      },
+      {
+        "t": "Lore Olympus: Volume Three",
+        "p": 3
+      },
+      {
+        "t": "Lore Olympus: Volume Four",
+        "p": 4
+      },
+      {
+        "t": "Lore Olympus: Volume Five",
+        "p": 5
+      },
+      {
+        "t": "Lore Olympus: Volume Six",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Lux",
+    "authors": [
+      "Jennifer L. Armentrout"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "paranormal",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Shadows",
+        "p": 0.5
+      },
+      {
+        "t": "Obsidian",
+        "p": 1
+      },
+      {
+        "t": "Onyx",
+        "p": 2
+      },
+      {
+        "t": "Opal",
+        "p": 3
+      },
+      {
+        "t": "Origin",
+        "p": 4
+      },
+      {
+        "t": "Opposition",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Mariani Crime Family",
+    "authors": [
+      "Bella J"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "mafia",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Cruel Enforcer",
+        "p": 1
+      },
+      {
+        "t": "Vicious Oath",
+        "p": 2
+      },
+      {
+        "t": "Brutal Vow",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Maybe Someday",
+    "authors": [
+      "Colleen Hoover"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Maybe Someday",
+        "p": 1
+      },
+      {
+        "t": "Maybe Now",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Mercy Thompson",
+    "authors": [
+      "Patricia Briggs"
+    ],
+    "totalBooks": 13,
+    "genres": [
+      "paranormal",
+      "romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Moon Called",
+        "p": 1
+      },
+      {
+        "t": "Blood Bound",
+        "p": 2
+      },
+      {
+        "t": "Iron Kissed",
+        "p": 3
+      },
+      {
+        "t": "Bone Crossed",
+        "p": 4
+      },
+      {
+        "t": "Silver Borne",
+        "p": 5
+      },
+      {
+        "t": "River Marked",
+        "p": 6
+      },
+      {
+        "t": "Frost Burned",
+        "p": 7
+      },
+      {
+        "t": "Night Broken",
+        "p": 8
+      },
+      {
+        "t": "Fire Touched",
+        "p": 9
+      },
+      {
+        "t": "Silence Fallen",
+        "p": 10
+      },
+      {
+        "t": "Storm Cursed",
+        "p": 11
+      },
+      {
+        "t": "Smoke Bitten",
+        "p": 12
+      },
+      {
+        "t": "Soul Taken",
+        "p": 13
+      }
+    ]
+  },
+  {
+    "name": "Mistborn",
+    "authors": [
+      "Brandon Sanderson"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Final Empire",
+        "p": 1
+      },
+      {
+        "t": "The Well of Ascension",
+        "p": 2
+      },
+      {
+        "t": "The Hero of Ages",
+        "p": 3
+      },
+      {
+        "t": "The Alloy of Law",
+        "p": 4
+      },
+      {
+        "t": "Shadows of Self",
+        "p": 5
+      },
+      {
+        "t": "The Bands of Mourning",
+        "p": 6
+      },
+      {
+        "t": "The Lost Metal",
+        "p": 7
+      }
+    ]
+  },
+  {
+    "name": "Never Never",
+    "authors": [
+      "Colleen Hoover",
+      "Tarryn Fisher"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance",
+      "mystery"
+    ],
+    "books": [
+      {
+        "t": "Never Never: Part One",
+        "p": 1
+      },
+      {
+        "t": "Never Never: Part Two",
+        "p": 2
+      },
+      {
+        "t": "Never Never: Part Three",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Off Campus",
+    "authors": [
+      "Elle Kennedy"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "sports romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "The Deal",
+        "p": 1
+      },
+      {
+        "t": "The Mistake",
+        "p": 2
+      },
+      {
+        "t": "The Score",
+        "p": 3
+      },
+      {
+        "t": "The Goal",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Once Upon a Broken Heart",
+    "authors": [
+      "Stephanie Garber"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Once Upon a Broken Heart",
+        "p": 1
+      },
+      {
+        "t": "The Ballad of Never After",
+        "p": 2
+      },
+      {
+        "t": "A Curse for True Love",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Outlander",
+    "authors": [
+      "Diana Gabaldon"
+    ],
+    "totalBooks": 9,
+    "genres": [
+      "historical romance",
+      "fantasy",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Outlander",
+        "p": 1
+      },
+      {
+        "t": "Dragonfly in Amber",
+        "p": 2
+      },
+      {
+        "t": "Voyager",
+        "p": 3
+      },
+      {
+        "t": "Drums of Autumn",
+        "p": 4
+      },
+      {
+        "t": "The Fiery Cross",
+        "p": 5
+      },
+      {
+        "t": "A Breath of Snow and Ashes",
+        "p": 6
+      },
+      {
+        "t": "An Echo in the Bone",
+        "p": 7
+      },
+      {
+        "t": "Written in My Own Heart's Blood",
+        "p": 8
+      },
+      {
+        "t": "Go Tell the Bees That I Am Gone",
+        "p": 9
+      }
+    ]
+  },
+  {
+    "name": "Percy Jackson and the Olympians",
+    "authors": [
+      "Rick Riordan"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "young adult",
+      "fantasy",
+      "mythology"
+    ],
+    "books": [
+      {
+        "t": "The Lightning Thief",
+        "p": 1
+      },
+      {
+        "t": "The Sea of Monsters",
+        "p": 2
+      },
+      {
+        "t": "The Titan's Curse",
+        "p": 3
+      },
+      {
+        "t": "The Battle of the Labyrinth",
+        "p": 4
+      },
+      {
+        "t": "The Last Olympian",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Powerless",
+    "authors": [
+      "Lauren Roberts"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Powerless",
+        "p": 1
+      },
+      {
+        "t": "Reckless",
+        "p": 2
+      },
+      {
+        "t": "Fearless",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Priory of the Orange Tree",
+    "authors": [
+      "Samantha Shannon"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Priory of the Orange Tree",
+        "p": 1
+      },
+      {
+        "t": "A Day of Fallen Night",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Psy-Changeling",
+    "authors": [
+      "Nalini Singh"
+    ],
+    "totalBooks": 15,
+    "genres": [
+      "paranormal",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Slave to Sensation",
+        "p": 1
+      },
+      {
+        "t": "Visions of Heat",
+        "p": 2
+      },
+      {
+        "t": "Caressed by Ice",
+        "p": 3
+      },
+      {
+        "t": "Mine to Possess",
+        "p": 4
+      },
+      {
+        "t": "Hostage to Pleasure",
+        "p": 5
+      },
+      {
+        "t": "Branded by Fire",
+        "p": 6
+      },
+      {
+        "t": "Blaze of Memory",
+        "p": 7
+      },
+      {
+        "t": "Bonds of Justice",
+        "p": 8
+      },
+      {
+        "t": "Play of Passion",
+        "p": 9
+      },
+      {
+        "t": "Kiss of Snow",
+        "p": 10
+      },
+      {
+        "t": "Tangle of Need",
+        "p": 11
+      },
+      {
+        "t": "Heart of Obsidian",
+        "p": 12
+      },
+      {
+        "t": "Shield of Winter",
+        "p": 13
+      },
+      {
+        "t": "Shards of Hope",
+        "p": 14
+      },
+      {
+        "t": "Allegiance of Honor",
+        "p": 15
+      }
+    ]
+  },
+  {
+    "name": "Red Queen",
+    "authors": [
+      "Victoria Aveyard"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Red Queen",
+        "p": 1
+      },
+      {
+        "t": "Glass Sword",
+        "p": 2
+      },
+      {
+        "t": "King's Cage",
+        "p": 3
+      },
+      {
+        "t": "War Storm",
+        "p": 4
+      },
+      {
+        "t": "Broken Throne",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Riley Thorn",
+    "authors": [
+      "Lucy Score"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "contemporary",
+      "romance",
+      "mystery"
+    ],
+    "books": [
+      {
+        "t": "The Dead Guy Next Door",
+        "p": 1
+      },
+      {
+        "t": "The Mistletoe Kisser",
+        "p": 2
+      },
+      {
+        "t": "The Body in the Backyard",
+        "p": 3
+      },
+      {
+        "t": "The Proposal Plot",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Romancing the Clarksons",
+    "authors": [
+      "Tessa Bailey"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Too Hot to Handle",
+        "p": 1
+      },
+      {
+        "t": "Too Wild to Tame",
+        "p": 2
+      },
+      {
+        "t": "Too Hard to Forget",
+        "p": 3
+      },
+      {
+        "t": "Too Beautiful to Break",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Rose Hill",
+    "authors": [
+      "Elsie Silver"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "small town romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Wild Eyes",
+        "p": 1
+      },
+      {
+        "t": "Wild Love",
+        "p": 2
+      },
+      {
+        "t": "Wild Heart",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Ruthless People",
+    "authors": [
+      "J.J. McAvoy"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "mafia",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Ruthless People",
+        "p": 1
+      },
+      {
+        "t": "The Untouchables",
+        "p": 2
+      },
+      {
+        "t": "American Savages",
+        "p": 3
+      },
+      {
+        "t": "A Bloody Kingdom",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Serpent and Dove",
+    "authors": [
+      "Shelby Mahurin"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy",
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Serpent and Dove",
+        "p": 1
+      },
+      {
+        "t": "Blood and Honey",
+        "p": 2
+      },
+      {
+        "t": "Gods and Monsters",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Shadow and Bone",
+    "authors": [
+      "Leigh Bardugo"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Shadow and Bone",
+        "p": 1
+      },
+      {
+        "t": "Siege and Storm",
+        "p": 2
+      },
+      {
+        "t": "Ruin and Rising",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Shadowrun",
+    "authors": [
+      "Jaymin Eve",
+      "Jane Washington"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "why choose",
+      "paranormal",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Reclaimed",
+        "p": 1
+      },
+      {
+        "t": "Reborn",
+        "p": 2
+      },
+      {
+        "t": "Reawakened",
+        "p": 3
+      },
+      {
+        "t": "Redeemed",
+        "p": 4
+      },
+      {
+        "t": "Released",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Sinners of Saint",
+    "authors": [
+      "L.J. Shen"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Vicious",
+        "p": 1
+      },
+      {
+        "t": "Defy",
+        "p": 2
+      },
+      {
+        "t": "Ruckus",
+        "p": 3
+      },
+      {
+        "t": "Scandalous",
+        "p": 4
+      },
+      {
+        "t": "Bane",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Six of Crows",
+    "authors": [
+      "Leigh Bardugo"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Six of Crows",
+        "p": 1
+      },
+      {
+        "t": "Crooked Kingdom",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Slammed",
+    "authors": [
+      "Colleen Hoover"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Slammed",
+        "p": 1
+      },
+      {
+        "t": "Point of Retreat",
+        "p": 2
+      },
+      {
+        "t": "This Girl",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Sookie Stackhouse",
+    "authors": [
+      "Charlaine Harris"
+    ],
+    "totalBooks": 13,
+    "genres": [
+      "paranormal",
+      "mystery",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Dead Until Dark",
+        "p": 1
+      },
+      {
+        "t": "Living Dead in Dallas",
+        "p": 2
+      },
+      {
+        "t": "Club Dead",
+        "p": 3
+      },
+      {
+        "t": "Dead to the World",
+        "p": 4
+      },
+      {
+        "t": "Dead as a Doornail",
+        "p": 5
+      },
+      {
+        "t": "Definitely Dead",
+        "p": 6
+      },
+      {
+        "t": "All Together Dead",
+        "p": 7
+      },
+      {
+        "t": "From Dead to Worse",
+        "p": 8
+      },
+      {
+        "t": "Dead and Gone",
+        "p": 9
+      },
+      {
+        "t": "Dead in the Family",
+        "p": 10
+      },
+      {
+        "t": "Dead Reckoning",
+        "p": 11
+      },
+      {
+        "t": "Deadlocked",
+        "p": 12
+      },
+      {
+        "t": "Dead Ever After",
+        "p": 13
+      }
+    ]
+  },
+  {
+    "name": "Stalking Jack the Ripper",
+    "authors": [
+      "Kerri Maniscalco"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "fantasy",
+      "historical romance",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Stalking Jack the Ripper",
+        "p": 1
+      },
+      {
+        "t": "Hunting Prince Dracula",
+        "p": 2
+      },
+      {
+        "t": "Escaping from Houdini",
+        "p": 3
+      },
+      {
+        "t": "Capturing the Devil",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Steel and Stone",
+    "authors": [
+      "Annette Marie"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "paranormal",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Chase the Dark",
+        "p": 1
+      },
+      {
+        "t": "Bind the Soul",
+        "p": 2
+      },
+      {
+        "t": "Yield the Night",
+        "p": 3
+      },
+      {
+        "t": "Feed the Flames",
+        "p": 4
+      },
+      {
+        "t": "Reap the Shadows",
+        "p": 5
+      },
+      {
+        "t": "Unleash the Storm",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Supernatural Prison",
+    "authors": [
+      "Jaymin Eve"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "paranormal",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Dragon Marked",
+        "p": 1
+      },
+      {
+        "t": "Dragon Mystics",
+        "p": 2
+      },
+      {
+        "t": "Dragon Mated",
+        "p": 3
+      },
+      {
+        "t": "Broken Compass",
+        "p": 4
+      },
+      {
+        "t": "Magical Compass",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "The Atlas Series",
+    "authors": [
+      "Olivie Blake"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "fantasy",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "The Atlas Six",
+        "p": 1
+      },
+      {
+        "t": "The Atlas Paradox",
+        "p": 2
+      },
+      {
+        "t": "The Atlas Complex",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Aurora Cycle",
+    "authors": [
+      "Jay Kristoff",
+      "Amie Kaufman"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy",
+      "science fiction",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Aurora Rising",
+        "p": 1
+      },
+      {
+        "t": "Aurora Burning",
+        "p": 2
+      },
+      {
+        "t": "Aurora's End",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Bone Season",
+    "authors": [
+      "Samantha Shannon"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Bone Season",
+        "p": 1
+      },
+      {
+        "t": "The Mime Order",
+        "p": 2
+      },
+      {
+        "t": "The Song Rising",
+        "p": 3
+      },
+      {
+        "t": "The Mask Falling",
+        "p": 4
+      },
+      {
+        "t": "The House in the Cerulean Sea",
+        "p": 5
+      },
+      {
+        "t": "A Day of Fallen Night",
+        "p": 6
+      },
+      {
+        "t": "The Priory of the Orange Tree",
+        "p": 7
+      }
+    ]
+  },
+  {
+    "name": "The Bridge Kingdom",
+    "authors": [
+      "Danielle L. Jensen"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "The Bridge Kingdom",
+        "p": 1
+      },
+      {
+        "t": "The Traitor Queen",
+        "p": 2
+      },
+      {
+        "t": "The Inadequate Heir",
+        "p": 3
+      },
+      {
+        "t": "The Endless War",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "The Empyrean",
+    "authors": [
+      "Rebecca Yarros"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Fourth Wing",
+        "p": 1
+      },
+      {
+        "t": "Iron Flame",
+        "p": 2
+      },
+      {
+        "t": "Onyx Storm",
+        "p": 3
+      },
+      {
+        "t": "Untitled Empyrean Book 4",
+        "p": 4
+      },
+      {
+        "t": "Untitled Empyrean Book 5",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "The Folk of the Air",
+    "authors": [
+      "Holly Black"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "The Cruel Prince",
+        "p": 1
+      },
+      {
+        "t": "The Wicked King",
+        "p": 2
+      },
+      {
+        "t": "The Queen of Nothing",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Heroes of Olympus",
+    "authors": [
+      "Rick Riordan"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "young adult",
+      "fantasy",
+      "mythology"
+    ],
+    "books": [
+      {
+        "t": "The Lost Hero",
+        "p": 1
+      },
+      {
+        "t": "The Son of Neptune",
+        "p": 2
+      },
+      {
+        "t": "The Mark of Athena",
+        "p": 3
+      },
+      {
+        "t": "The House of Hades",
+        "p": 4
+      },
+      {
+        "t": "The Blood of Olympus",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "The Hunger Games",
+    "authors": [
+      "Suzanne Collins"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "young adult",
+      "science fiction",
+      "dystopian"
+    ],
+    "books": [
+      {
+        "t": "The Hunger Games",
+        "p": 1
+      },
+      {
+        "t": "Catching Fire",
+        "p": 2
+      },
+      {
+        "t": "Mockingjay",
+        "p": 3
+      },
+      {
+        "t": "The Ballad of Songbirds and Snakes",
+        "p": 0
+      }
+    ]
+  },
+  {
+    "name": "The Kingkiller Chronicle",
+    "authors": [
+      "Patrick Rothfuss"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Name of the Wind",
+        "p": 1
+      },
+      {
+        "t": "The Wise Man's Fear",
+        "p": 2
+      },
+      {
+        "t": "The Doors of Stone",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Locked Tomb",
+    "authors": [
+      "Tamsyn Muir"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "fantasy",
+      "science fiction"
+    ],
+    "books": [
+      {
+        "t": "Gideon the Ninth",
+        "p": 1
+      },
+      {
+        "t": "Harrow the Ninth",
+        "p": 2
+      },
+      {
+        "t": "Nona the Ninth",
+        "p": 3
+      },
+      {
+        "t": "Alecto the Ninth",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "The Lunar Chronicles",
+    "authors": [
+      "Marissa Meyer"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "fantasy",
+      "science fiction",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Cinder",
+        "p": 1
+      },
+      {
+        "t": "Scarlet",
+        "p": 2
+      },
+      {
+        "t": "Cress",
+        "p": 3
+      },
+      {
+        "t": "Fairest",
+        "p": 3.5
+      },
+      {
+        "t": "Winter",
+        "p": 4
+      },
+      {
+        "t": "Stars Above",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "The Maze Runner",
+    "authors": [
+      "James Dashner"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "young adult",
+      "science fiction",
+      "dystopian"
+    ],
+    "books": [
+      {
+        "t": "The Maze Runner",
+        "p": 1
+      },
+      {
+        "t": "The Scorch Trials",
+        "p": 2
+      },
+      {
+        "t": "The Death Cure",
+        "p": 3
+      },
+      {
+        "t": "The Kill Order",
+        "p": 0.5
+      },
+      {
+        "t": "The Fever Code",
+        "p": 0.6
+      }
+    ]
+  },
+  {
+    "name": "The Nevernight Chronicle",
+    "authors": [
+      "Jay Kristoff"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Nevernight",
+        "p": 1
+      },
+      {
+        "t": "Godsgrave",
+        "p": 2
+      },
+      {
+        "t": "Darkdawn",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Plated Prisoner",
+    "authors": [
+      "Raven Kennedy"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Gild",
+        "p": 1
+      },
+      {
+        "t": "Glint",
+        "p": 2
+      },
+      {
+        "t": "Gleam",
+        "p": 3
+      },
+      {
+        "t": "Glow",
+        "p": 4
+      },
+      {
+        "t": "Gold",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "The Poppy War",
+    "authors": [
+      "R.F. Kuang"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Poppy War",
+        "p": 1
+      },
+      {
+        "t": "The Dragon Republic",
+        "p": 2
+      },
+      {
+        "t": "The Burning God",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Ravenels",
+    "authors": [
+      "Lisa Kleypas"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "historical romance"
+    ],
+    "books": [
+      {
+        "t": "Cold-Hearted Rake",
+        "p": 1
+      },
+      {
+        "t": "Marrying Winterborne",
+        "p": 2
+      },
+      {
+        "t": "Devil in Spring",
+        "p": 3
+      },
+      {
+        "t": "Hello Stranger",
+        "p": 4
+      },
+      {
+        "t": "Devil's Daughter",
+        "p": 5
+      },
+      {
+        "t": "Chasing Cassandra",
+        "p": 6
+      },
+      {
+        "t": "Devil in Disguise",
+        "p": 7
+      }
+    ]
+  },
+  {
+    "name": "The Shepherd King",
+    "authors": [
+      "Rachel Gillig"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "One Dark Window",
+        "p": 1
+      },
+      {
+        "t": "Two Twisted Crowns",
+        "p": 2
+      },
+      {
+        "t": "The Shepherd King",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Stolen Heir",
+    "authors": [
+      "Holly Black"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Stolen Heir",
+        "p": 1
+      },
+      {
+        "t": "The Book of Night",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "The Stormlight Archive",
+    "authors": [
+      "Brandon Sanderson"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Way of Kings",
+        "p": 1
+      },
+      {
+        "t": "Words of Radiance",
+        "p": 2
+      },
+      {
+        "t": "Oathbringer",
+        "p": 3
+      },
+      {
+        "t": "Rhythm of War",
+        "p": 4
+      },
+      {
+        "t": "Wind and Truth",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "The Summer I Turned Pretty",
+    "authors": [
+      "Jenny Han"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "young adult",
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "The Summer I Turned Pretty",
+        "p": 1
+      },
+      {
+        "t": "It's Not Summer Without You",
+        "p": 2
+      },
+      {
+        "t": "We'll Always Have Summer",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "The Wallflowers",
+    "authors": [
+      "Lisa Kleypas"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "historical romance"
+    ],
+    "books": [
+      {
+        "t": "Secrets of a Summer Night",
+        "p": 1
+      },
+      {
+        "t": "It Happened One Autumn",
+        "p": 2
+      },
+      {
+        "t": "The Devil in Winter",
+        "p": 3
+      },
+      {
+        "t": "Scandal in Spring",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "The Witchlands",
+    "authors": [
+      "Susan Dennard"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "Truthwitch",
+        "p": 1
+      },
+      {
+        "t": "Windwitch",
+        "p": 2
+      },
+      {
+        "t": "Sightwitch",
+        "p": 2.5
+      },
+      {
+        "t": "Bloodwitch",
+        "p": 3
+      },
+      {
+        "t": "Witchshadow",
+        "p": 4
+      },
+      {
+        "t": "Dawnbreaker",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "These Violent Delights",
+    "authors": [
+      "Chloe Gong"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "These Violent Delights",
+        "p": 1
+      },
+      {
+        "t": "Our Violent Ends",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Throne of Glass",
+    "authors": [
+      "Sarah J. Maas"
+    ],
+    "totalBooks": 8,
+    "genres": [
+      "romantasy",
+      "fantasy",
+      "young adult"
+    ],
+    "books": [
+      {
+        "t": "The Assassin's Blade",
+        "p": 0.1
+      },
+      {
+        "t": "Throne of Glass",
+        "p": 1
+      },
+      {
+        "t": "Crown of Midnight",
+        "p": 2
+      },
+      {
+        "t": "Heir of Fire",
+        "p": 3
+      },
+      {
+        "t": "Queen of Shadows",
+        "p": 4
+      },
+      {
+        "t": "Empire of Storms",
+        "p": 5
+      },
+      {
+        "t": "Tower of Dawn",
+        "p": 6
+      },
+      {
+        "t": "Kingdom of the Wicked",
+        "p": 7
+      },
+      {
+        "t": "Kingdom of the Cursed",
+        "p": 8
+      }
+    ]
+  },
+  {
+    "name": "Thursday Murder Club",
+    "authors": [
+      "Richard Osman"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "mystery",
+      "cozy mystery"
+    ],
+    "books": [
+      {
+        "t": "The Thursday Murder Club",
+        "p": 1
+      },
+      {
+        "t": "The Man Who Died Twice",
+        "p": 2
+      },
+      {
+        "t": "The Bullet That Missed",
+        "p": 3
+      },
+      {
+        "t": "The Last Devil to Die",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "To All the Boys I've Loved Before",
+    "authors": [
+      "Jenny Han"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "young adult",
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "To All the Boys I've Loved Before",
+        "p": 1
+      },
+      {
+        "t": "P.S. I Still Love You",
+        "p": 2
+      },
+      {
+        "t": "Always and Forever, Lara Jean",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Treasure State",
+    "authors": [
+      "Devney Perry"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "small town romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Indigo Ridge",
+        "p": 1
+      },
+      {
+        "t": "Hailstorm",
+        "p": 2
+      },
+      {
+        "t": "Cherry Hollow",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "True North",
+    "authors": [
+      "Sarina Bowen"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "sports romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Bittersweet",
+        "p": 1
+      },
+      {
+        "t": "Steadfast",
+        "p": 2
+      },
+      {
+        "t": "Keepsake",
+        "p": 3
+      },
+      {
+        "t": "Bountiful",
+        "p": 4
+      },
+      {
+        "t": "Speakeasy",
+        "p": 5
+      },
+      {
+        "t": "Fireworks",
+        "p": 6
+      },
+      {
+        "t": "Heartland",
+        "p": 7
+      }
+    ]
+  },
+  {
+    "name": "Twisted",
+    "authors": [
+      "Ana Huang"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Twisted Love",
+        "p": 1
+      },
+      {
+        "t": "Twisted Games",
+        "p": 2
+      },
+      {
+        "t": "Twisted Hate",
+        "p": 3
+      },
+      {
+        "t": "Twisted Lies",
+        "p": 4
+      },
+      {
+        "t": "Twisted Temptation",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Vine Mess",
+    "authors": [
+      "Tessa Bailey"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Secretly Yours",
+        "p": 1
+      },
+      {
+        "t": "Unfortunately Yours",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "War of Lost Hearts",
+    "authors": [
+      "Carissa Broadbent"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "romantasy",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Daughter of No Worlds",
+        "p": 1
+      },
+      {
+        "t": "Children of Fallen Gods",
+        "p": 2
+      },
+      {
+        "t": "Mother of Death and Dawn",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Wicked",
+    "authors": [
+      "Jennifer L. Armentrout"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "paranormal",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Wicked",
+        "p": 1
+      },
+      {
+        "t": "Torn",
+        "p": 2
+      },
+      {
+        "t": "Brave",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Woven in Moonlight",
+    "authors": [
+      "Isabel Iba\u00f1ez"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "romantasy",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Woven in Moonlight",
+        "p": 1
+      },
+      {
+        "t": "Written in Starlight",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Zodiac Academy",
+    "authors": [
+      "Caroline Peckham",
+      "Susanne Valenti"
+    ],
+    "totalBooks": 9,
+    "genres": [
+      "romantasy",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "The Awakening",
+        "p": 1
+      },
+      {
+        "t": "Ruthless Fae",
+        "p": 2
+      },
+      {
+        "t": "The Reckoning",
+        "p": 3
+      },
+      {
+        "t": "Shadow Princess",
+        "p": 4
+      },
+      {
+        "t": "Cursed Fates",
+        "p": 5
+      },
+      {
+        "t": "Fated Thrones",
+        "p": 6
+      },
+      {
+        "t": "Restless Stars",
+        "p": 7
+      },
+      {
+        "t": "Beyond the Veil",
+        "p": 8
+      },
+      {
+        "t": "Heartless Sky",
+        "p": 9
+      }
+    ]
+  },
+  {
+    "name": "Into Darkness",
+    "authors": [
+      "Navessa Allen"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Lights Out",
+        "p": 1
+      },
+      {
+        "t": "Caught Up",
+        "p": 2
+      },
+      {
+        "t": "Game On",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Love Hypothesis",
+    "authors": [
+      "Ali Hazelwood"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "The Love Hypothesis",
+        "p": 1
+      },
+      {
+        "t": "Love on the Brain",
+        "p": 2
+      },
+      {
+        "t": "Love, Theoretically",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "STEMinist Novellas",
+    "authors": [
+      "Ali Hazelwood"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Under One Roof",
+        "p": 1
+      },
+      {
+        "t": "Stuck with You",
+        "p": 2
+      },
+      {
+        "t": "Below Zero",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Bride",
+    "authors": [
+      "Ali Hazelwood"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "paranormal romance"
+    ],
+    "books": [
+      {
+        "t": "Bride",
+        "p": 1
+      },
+      {
+        "t": "Mate",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Not in Love",
+    "authors": [
+      "Ali Hazelwood"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Not in Love",
+        "p": 1
+      },
+      {
+        "t": "Problematic Summer Romance",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Brayshaw High",
+    "authors": [
+      "Meagan Brandy"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "new adult romance",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Boys of Brayshaw High",
+        "p": 1
+      },
+      {
+        "t": "Trouble at Brayshaw High",
+        "p": 2
+      },
+      {
+        "t": "Reign of Brayshaw",
+        "p": 3
+      },
+      {
+        "t": "Be My Brayshaw",
+        "p": 4
+      },
+      {
+        "t": "Break Me, Brayshaw",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Boys of Avix",
+    "authors": [
+      "Meagan Brandy"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "new adult romance",
+      "sports romance"
+    ],
+    "books": [
+      {
+        "t": "Say You Swear",
+        "p": 1
+      },
+      {
+        "t": "Promise Me Not",
+        "p": 2
+      },
+      {
+        "t": "Trust Me Always",
+        "p": 3
+      },
+      {
+        "t": "Keep Me Never",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Tender Hearts",
+    "authors": [
+      "Meagan Brandy"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "new adult romance",
+      "sports romance"
+    ],
+    "books": [
+      {
+        "t": "Fumbled Hearts",
+        "p": 1
+      },
+      {
+        "t": "Defenseless Hearts",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Royal Elite",
+    "authors": [
+      "Rina Kent"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "dark romance",
+      "new adult romance"
+    ],
+    "books": [
+      {
+        "t": "Cruel King",
+        "p": 0
+      },
+      {
+        "t": "Deviant King",
+        "p": 1
+      },
+      {
+        "t": "Steel Princess",
+        "p": 2
+      },
+      {
+        "t": "Twisted Kingdom",
+        "p": 3
+      },
+      {
+        "t": "Black Knight",
+        "p": 4
+      },
+      {
+        "t": "Vicious Prince",
+        "p": 5
+      },
+      {
+        "t": "Ruthless Empire",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Legacy of Gods",
+    "authors": [
+      "Rina Kent"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "dark romance",
+      "new adult romance"
+    ],
+    "books": [
+      {
+        "t": "God of Malice",
+        "p": 1
+      },
+      {
+        "t": "God of Pain",
+        "p": 2
+      },
+      {
+        "t": "God of Wrath",
+        "p": 3
+      },
+      {
+        "t": "God of Ruin",
+        "p": 4
+      },
+      {
+        "t": "God of Fury",
+        "p": 5
+      },
+      {
+        "t": "God of War",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Empire",
+    "authors": [
+      "Rina Kent"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Empire of Desire",
+        "p": 1
+      },
+      {
+        "t": "Empire of Sin",
+        "p": 2
+      },
+      {
+        "t": "Empire of Hate",
+        "p": 3
+      },
+      {
+        "t": "Empire of Lust",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Deception",
+    "authors": [
+      "Rina Kent"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Vow of Deception",
+        "p": 1
+      },
+      {
+        "t": "Tempted by Deception",
+        "p": 2
+      },
+      {
+        "t": "Consumed by Deception",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Thorns Duet",
+    "authors": [
+      "Rina Kent"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Red Thorns",
+        "p": 1
+      },
+      {
+        "t": "Black Thorns",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Monster Trilogy",
+    "authors": [
+      "Rina Kent"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Blood of My Monster",
+        "p": 1
+      },
+      {
+        "t": "Lies of My Monster",
+        "p": 2
+      },
+      {
+        "t": "Heart of My Monster",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Off-Campus",
+    "authors": [
+      "Elle Kennedy"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "new adult romance",
+      "sports romance"
+    ],
+    "books": [
+      {
+        "t": "The Deal",
+        "p": 1
+      },
+      {
+        "t": "The Mistake",
+        "p": 2
+      },
+      {
+        "t": "The Score",
+        "p": 3
+      },
+      {
+        "t": "The Goal",
+        "p": 4
+      },
+      {
+        "t": "The Legacy",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Avalon Bay",
+    "authors": [
+      "Elle Kennedy"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary",
+      "small town romance"
+    ],
+    "books": [
+      {
+        "t": "Good Girl Complex",
+        "p": 1
+      },
+      {
+        "t": "Bad Girl Reputation",
+        "p": 2
+      },
+      {
+        "t": "The Summer Girl",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Prep",
+    "authors": [
+      "Elle Kennedy"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "new adult romance",
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Misfit",
+        "p": 1
+      },
+      {
+        "t": "Rogue",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Campus Diaries",
+    "authors": [
+      "Elle Kennedy"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "new adult romance",
+      "sports romance"
+    ],
+    "books": [
+      {
+        "t": "The Graham Effect",
+        "p": 1
+      },
+      {
+        "t": "The Dixon Rule",
+        "p": 2
+      },
+      {
+        "t": "The Charlie Method",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "My Vampires",
+    "authors": [
+      "Jenna Levine"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "paranormal romance"
+    ],
+    "books": [
+      {
+        "t": "My Roommate Is a Vampire",
+        "p": 1
+      },
+      {
+        "t": "My Vampire Plus-One",
+        "p": 2
+      },
+      {
+        "t": "Road Trip with a Vampire",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Hades x Persephone Saga",
+    "authors": [
+      "Scarlett St. Clair"
+    ],
+    "totalBooks": 7,
+    "genres": [
+      "paranormal romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "A Touch of Darkness",
+        "p": 1
+      },
+      {
+        "t": "A Game of Fate",
+        "p": 2
+      },
+      {
+        "t": "A Touch of Ruin",
+        "p": 3
+      },
+      {
+        "t": "A Game of Retribution",
+        "p": 4
+      },
+      {
+        "t": "A Touch of Malice",
+        "p": 5
+      },
+      {
+        "t": "A Game of Gods",
+        "p": 6
+      },
+      {
+        "t": "A Touch of Chaos",
+        "p": 7
+      }
+    ]
+  },
+  {
+    "name": "Adrian X Isolde",
+    "authors": [
+      "Scarlett St. Clair"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "paranormal romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "King of Battle and Blood",
+        "p": 1
+      },
+      {
+        "t": "Queen of Myth and Monsters",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Fairy Tale Retelling",
+    "authors": [
+      "Scarlett St. Clair"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "paranormal romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Mountains Made of Glass",
+        "p": 1
+      },
+      {
+        "t": "Apples Dipped in Gold",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Blood & Roses",
+    "authors": [
+      "Callie Hart"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Deviant",
+        "p": 1
+      },
+      {
+        "t": "Fracture",
+        "p": 2
+      },
+      {
+        "t": "Fallen",
+        "p": 3
+      },
+      {
+        "t": "Burn",
+        "p": 4
+      },
+      {
+        "t": "Twisted",
+        "p": 5
+      },
+      {
+        "t": "Atonement",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Crooked Sinners",
+    "authors": [
+      "Callie Hart"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "dark romance",
+      "new adult romance"
+    ],
+    "books": [
+      {
+        "t": "Riot House",
+        "p": 1
+      },
+      {
+        "t": "Riot Rules",
+        "p": 2
+      },
+      {
+        "t": "Riot Act",
+        "p": 3
+      },
+      {
+        "t": "Riot Reunion",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Fae & Alchemy",
+    "authors": [
+      "Callie Hart"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy",
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Quicksilver",
+        "p": 1
+      },
+      {
+        "t": "Brimstone",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Dead Man's Ink",
+    "authors": [
+      "Callie Hart"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Rebel",
+        "p": 1
+      },
+      {
+        "t": "Rogue",
+        "p": 2
+      },
+      {
+        "t": "Ransom",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Four Horsemen",
+    "authors": [
+      "Laura Thalassa"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "paranormal romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Pestilence",
+        "p": 1
+      },
+      {
+        "t": "War",
+        "p": 2
+      },
+      {
+        "t": "Famine",
+        "p": 3
+      },
+      {
+        "t": "Death",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Bargainer",
+    "authors": [
+      "Laura Thalassa"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "paranormal romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Rhapsodic",
+        "p": 1
+      },
+      {
+        "t": "A Strange Hymn",
+        "p": 2
+      },
+      {
+        "t": "The Emperor of Evening Stars",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Bewitched",
+    "authors": [
+      "Laura Thalassa"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "paranormal romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Bewitched",
+        "p": 1
+      },
+      {
+        "t": "Bespelled",
+        "p": 2
+      },
+      {
+        "t": "The Curse That Binds",
+        "p": 3
+      },
+      {
+        "t": "Bedeviled",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Empyrean",
+    "authors": [
+      "Rebecca Yarros"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "fantasy",
+      "romantasy"
+    ],
+    "books": [
+      {
+        "t": "Fourth Wing",
+        "p": 1
+      },
+      {
+        "t": "Iron Flame",
+        "p": 2
+      },
+      {
+        "t": "Onyx Storm",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Flight & Glory",
+    "authors": [
+      "Rebecca Yarros"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "contemporary",
+      "romance",
+      "new adult romance"
+    ],
+    "books": [
+      {
+        "t": "Full Measures",
+        "p": 1
+      },
+      {
+        "t": "Eyes Turned Skyward",
+        "p": 2
+      },
+      {
+        "t": "Beyond What is Given",
+        "p": 3
+      },
+      {
+        "t": "Hallowed Ground",
+        "p": 4
+      },
+      {
+        "t": "The Reality of Everything",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Salacious Players' Club",
+    "authors": [
+      "Sara Cate"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Praise",
+        "p": 1
+      },
+      {
+        "t": "Eyes on Me",
+        "p": 2
+      },
+      {
+        "t": "Give Me More",
+        "p": 3
+      },
+      {
+        "t": "Mercy",
+        "p": 4
+      },
+      {
+        "t": "Highest Bidder",
+        "p": 5
+      },
+      {
+        "t": "Madame",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Goode Brothers",
+    "authors": [
+      "Sara Cate"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "The Anti-hero",
+        "p": 1
+      },
+      {
+        "t": "The Home Wrecker",
+        "p": 2
+      },
+      {
+        "t": "The Heartbreaker",
+        "p": 3
+      },
+      {
+        "t": "The Prodigal Son",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Wilde Boys",
+    "authors": [
+      "Sara Cate"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "contemporary",
+      "romance"
+    ],
+    "books": [
+      {
+        "t": "Gravity",
+        "p": 1
+      },
+      {
+        "t": "Free Fall",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Wicked Hearts",
+    "authors": [
+      "Sara Cate"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "new adult romance"
+    ],
+    "books": [
+      {
+        "t": "Delicate",
+        "p": 1
+      },
+      {
+        "t": "Dangerous",
+        "p": 2
+      },
+      {
+        "t": "Defiant",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Sinful Manor",
+    "authors": [
+      "Sara Cate"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Keep Me",
+        "p": 1
+      },
+      {
+        "t": "Promise Me",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Witch's Dice",
+    "authors": [
+      "Kaylie Smith"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "young adult fantasy"
+    ],
+    "books": [
+      {
+        "t": "A Ruinous Fate",
+        "p": 1
+      },
+      {
+        "t": "A Reckless Oath",
+        "p": 2
+      },
+      {
+        "t": "A Raging Heart",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Phantasma",
+    "authors": [
+      "Kaylie Smith"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "paranormal romance",
+      "fantasy"
+    ],
+    "books": [
+      {
+        "t": "Phantasma",
+        "p": 1
+      },
+      {
+        "t": "Enchantra",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Ruinous Love Trilogy",
+    "authors": [
+      "Brynne Weaver"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Butcher & Blackbird",
+        "p": 1
+      },
+      {
+        "t": "Leather & Lark",
+        "p": 2
+      },
+      {
+        "t": "Scythe & Sparrow",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Seasons of Carnage Trilogy",
+    "authors": [
+      "Brynne Weaver"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Tourist Season",
+        "p": 1
+      },
+      {
+        "t": "Harvest Season",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Jacksonville Rays",
+    "authors": [
+      "Emily Rath"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "sports romance",
+      "new adult romance"
+    ],
+    "books": [
+      {
+        "t": "Pucking Around",
+        "p": 1
+      },
+      {
+        "t": "Pucking Wild",
+        "p": 2
+      },
+      {
+        "t": "Pucking Sweet",
+        "p": 3
+      },
+      {
+        "t": "Pucking Strong",
+        "p": 4
+      },
+      {
+        "t": "Pucking Free",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Never After",
+    "authors": [
+      "Emily McIntire"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Hooked",
+        "p": 1
+      },
+      {
+        "t": "Scarred",
+        "p": 2
+      },
+      {
+        "t": "Wretched",
+        "p": 3
+      },
+      {
+        "t": "Twisted",
+        "p": 4
+      },
+      {
+        "t": "Crossed",
+        "p": 5
+      },
+      {
+        "t": "Hexed",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Sugarlake",
+    "authors": [
+      "Emily McIntire"
+    ],
+    "totalBooks": 4,
+    "genres": [
+      "small town romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Beneath the Stars",
+        "p": 1
+      },
+      {
+        "t": "Beneath the Stands",
+        "p": 2
+      },
+      {
+        "t": "Beneath the Hood",
+        "p": 3
+      },
+      {
+        "t": "Beneath the Surface",
+        "p": 4
+      }
+    ]
+  },
+  {
+    "name": "Damar",
+    "authors": [
+      "Robin McKinley"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "young adult fantasy"
+    ],
+    "books": [
+      {
+        "t": "The Blue Sword",
+        "p": 1
+      },
+      {
+        "t": "The Hero and the Crown",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Cat and Mouse Duet",
+    "authors": [
+      "H.D. Carlton"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "dark romance",
+      "romantic suspense"
+    ],
+    "books": [
+      {
+        "t": "Haunting Adeline",
+        "p": 1
+      },
+      {
+        "t": "Hunting Adeline",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Edge of Darkness",
+    "authors": [
+      "Leigh Rivers"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Insatiable",
+        "p": 1
+      },
+      {
+        "t": "Voracious",
+        "p": 2
+      },
+      {
+        "t": "Restitution",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Web of Silence",
+    "authors": [
+      "Leigh Rivers"
+    ],
+    "totalBooks": 2,
+    "genres": [
+      "dark romance"
+    ],
+    "books": [
+      {
+        "t": "Little Stranger",
+        "p": 1
+      },
+      {
+        "t": "Little Liar",
+        "p": 2
+      }
+    ]
+  },
+  {
+    "name": "Windsors",
+    "authors": [
+      "Catharina Maura"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "contemporary romance",
+      "arranged marriage"
+    ],
+    "books": [
+      {
+        "t": "The Wrong Bride",
+        "p": 1
+      },
+      {
+        "t": "The Temporary Wife",
+        "p": 2
+      },
+      {
+        "t": "The Unwanted Marriage",
+        "p": 3
+      },
+      {
+        "t": "The Broken Vows",
+        "p": 4
+      },
+      {
+        "t": "The Secret Fiancee",
+        "p": 5
+      },
+      {
+        "t": "The Devious Husband",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Hot & Hammered",
+    "authors": [
+      "Tessa Bailey"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "contemporary romance",
+      "small town romance"
+    ],
+    "books": [
+      {
+        "t": "Fix Her Up",
+        "p": 1
+      },
+      {
+        "t": "Love Her or Lose Her",
+        "p": 2
+      },
+      {
+        "t": "Tools of Engagement",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Big Shots",
+    "authors": [
+      "Tessa Bailey"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "sports romance",
+      "contemporary romance"
+    ],
+    "books": [
+      {
+        "t": "Fangirl Down",
+        "p": 1
+      },
+      {
+        "t": "The Au Pair Affair",
+        "p": 2
+      },
+      {
+        "t": "Dream Girl Drama",
+        "p": 3
+      },
+      {
+        "t": "Pitcher Perfect",
+        "p": 4
+      },
+      {
+        "t": "Catch Her If You Can",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Top Shelf",
+    "authors": [
+      "Alta Hensley"
+    ],
+    "totalBooks": 6,
+    "genres": [
+      "dark romance",
+      "contemporary"
+    ],
+    "books": [
+      {
+        "t": "Bastards & Whiskey",
+        "p": 1
+      },
+      {
+        "t": "Villains & Vodka",
+        "p": 2
+      },
+      {
+        "t": "Scoundrels & Scotch",
+        "p": 3
+      },
+      {
+        "t": "Devils & Rye",
+        "p": 4
+      },
+      {
+        "t": "Beasts & Bourbon",
+        "p": 5
+      },
+      {
+        "t": "Sinners & Gin",
+        "p": 6
+      }
+    ]
+  },
+  {
+    "name": "Dumplin'",
+    "authors": [
+      "Julie Murphy"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "young adult romance"
+    ],
+    "books": [
+      {
+        "t": "Dumplin'",
+        "p": 1
+      },
+      {
+        "t": "Puddin'",
+        "p": 2
+      },
+      {
+        "t": "Pumpkin",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Assassin's Creed",
+    "authors": [
+      "Oliver Bowden"
+    ],
+    "totalBooks": 8,
+    "genres": [
+      "action adventure",
+      "historical fiction",
+      "science fiction"
+    ],
+    "books": [
+      {
+        "t": "Renaissance",
+        "p": 1
+      },
+      {
+        "t": "Brotherhood",
+        "p": 2
+      },
+      {
+        "t": "The Secret Crusade",
+        "p": 3
+      },
+      {
+        "t": "Revelations",
+        "p": 4
+      },
+      {
+        "t": "Forsaken",
+        "p": 5
+      },
+      {
+        "t": "Black Flag",
+        "p": 6
+      },
+      {
+        "t": "Unity",
+        "p": 7
+      },
+      {
+        "t": "Underworld",
+        "p": 8
+      }
+    ]
+  },
+  {
+    "name": "Silver Pines Ranch",
+    "authors": [
+      "Paisley Hope"
+    ],
+    "totalBooks": 5,
+    "genres": [
+      "small town romance",
+      "cowboy romance"
+    ],
+    "books": [
+      {
+        "t": "Holding the Reins",
+        "p": 1
+      },
+      {
+        "t": "Training the Heart",
+        "p": 2
+      },
+      {
+        "t": "Riding the High",
+        "p": 3
+      },
+      {
+        "t": "Freeing the Wild",
+        "p": 4
+      },
+      {
+        "t": "Chasing the Fire",
+        "p": 5
+      }
+    ]
+  },
+  {
+    "name": "Soldiers of Bedlam",
+    "authors": [
+      "Paisley Hope"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "dark romance",
+      "motorcycle club"
+    ],
+    "books": [
+      {
+        "t": "Wolf.E",
+        "p": 1
+      },
+      {
+        "t": "Dove",
+        "p": 2
+      },
+      {
+        "t": "Foxx",
+        "p": 3
+      }
+    ]
+  },
+  {
+    "name": "Baby Dragon",
+    "authors": [
+      "A.T. Qureshi"
+    ],
+    "totalBooks": 3,
+    "genres": [
+      "fantasy",
+      "romance",
+      "cozy"
+    ],
+    "books": [
+      {
+        "t": "The Baby Dragon Cafe",
+        "p": 1
+      },
+      {
+        "t": "The Baby Dragon Bakery",
+        "p": 2
+      },
+      {
+        "t": "The Baby Dragon Bookshop",
+        "p": 3
+      }
+    ]
+  }
+]
