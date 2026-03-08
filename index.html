@@ -866,7 +866,7 @@
 <body>
 
 <header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v1.8</span></h1>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v1.9</span></h1>
   <p>A personal book collection</p>
 </header>
 
@@ -1811,49 +1811,69 @@ function showLookupResult(book) {
   checkBookSeries(book);
 }
 
-// Fetch series info from Open Library - tries proper fetch with User-Agent first,
-// falls back to JSONP script tag if CORS blocks it
+// Fetch series info from Open Library using a two-step approach:
+// 1. Search by ISBN/title to get the Work ID
+// 2. Fetch the work's JSON directly - this reliably contains series data
 async function fetchOpenLibrarySeries(isbn, title, author) {
   const OL_AGENT = "CharlottesLibrary/1.0 (personal book tracker; contact via github.com/werewolfchef94)";
 
-  // Method 1: proper fetch with User-Agent header (fully compliant)
   try {
-    let url, parseResult;
+    // Step A: find the work key
+    let workKey = null;
+    let searchUrl;
     if (isbn) {
-      url = 'https://openlibrary.org/search.json?isbn=' + isbn + '&fields=title,author_name,series,series_number&limit=1';
+      searchUrl = 'https://openlibrary.org/search.json?isbn=' + isbn + '&fields=key,title,author_name,series,series_number&limit=1';
     } else {
-      url = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
-            (author ? '&author=' + encodeURIComponent(author) : '') +
-            '&fields=title,author_name,series,series_number&limit=1';
+      searchUrl = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
+        (author ? '&author=' + encodeURIComponent(author) : '') +
+        '&fields=key,title,author_name,series,series_number&limit=1';
     }
-    const res = await fetch(url, {
-      headers: { 'User-Agent': OL_AGENT }
-    });
-    if (res.ok) {
-      const data = await res.json();
-      const doc = data.docs && data.docs[0];
-      if (doc && doc.series && doc.series.length > 0) {
-        return {
-          series: doc.series[0],
-          series_number: doc.series_number ? doc.series_number[0] : null
-        };
+
+    const searchRes = await fetch(searchUrl, { headers: { 'User-Agent': OL_AGENT } });
+    if (searchRes.ok) {
+      const searchData = await searchRes.json();
+      const doc = searchData.docs && searchData.docs[0];
+      if (doc) {
+        // If series is already in search results, use it directly
+        if (doc.series && doc.series.length > 0) {
+          return {
+            series: doc.series[0],
+            series_number: doc.series_number ? doc.series_number[0] : null
+          };
+        }
+        // Otherwise grab the work key for step B
+        workKey = doc.key; // e.g. "/works/OL28852929W"
       }
     }
-  } catch(e) { /* CORS blocked - fall through to JSONP */ }
 
-  // Method 2: JSONP fallback if fetch is blocked by CORS
+    // Step B: fetch the work JSON directly - contains series info not always in search index
+    if (workKey) {
+      const workRes = await fetch('https://openlibrary.org' + workKey + '.json', {
+        headers: { 'User-Agent': OL_AGENT }
+      });
+      if (workRes.ok) {
+        const work = await workRes.json();
+        // Series lives in work.series or work.subject_series
+        if (work.series && work.series.length > 0) {
+          return { series: work.series[0], series_number: null };
+        }
+      }
+    }
+  } catch(e) { /* CORS or network error - fall through to JSONP */ }
+
+  // JSONP fallback if fetch is blocked by CORS
   return new Promise((resolve) => {
     const cbName = '_olcb_' + Date.now();
     const timeout = setTimeout(() => {
       delete window[cbName];
-      if (script.parentNode) script.parentNode.removeChild(script);
+      if (script && script.parentNode) script.parentNode.removeChild(script);
       resolve(null);
     }, 6000);
 
     window[cbName] = function(data) {
       clearTimeout(timeout);
       delete window[cbName];
-      if (script.parentNode) script.parentNode.removeChild(script);
+      if (script && script.parentNode) script.parentNode.removeChild(script);
       try {
         if (isbn) {
           const key = 'ISBN:' + isbn;
@@ -1880,8 +1900,8 @@ async function fetchOpenLibrarySeries(isbn, title, author) {
       url = 'https://openlibrary.org/api/books?bibkeys=ISBN:' + isbn + '&jscmd=data&format=javascript&callback=' + cbName;
     } else {
       url = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
-            (author ? '&author=' + encodeURIComponent(author) : '') +
-            '&fields=title,author_name,series,series_number&limit=1&callback=' + cbName;
+        (author ? '&author=' + encodeURIComponent(author) : '') +
+        '&fields=key,title,author_name,series,series_number&limit=1&callback=' + cbName;
     }
     script.src = url;
     script.onerror = () => { clearTimeout(timeout); resolve(null); };
