@@ -926,7 +926,7 @@
     <span class="icon">
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b09070" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     </span>
-    <input type="text" id="search-input" placeholder="Search by title or author..." oninput="renderBooks()">
+    <input type="text" id="search-input" placeholder="Search owned books..." oninput="currentTab === 'series' ? renderSeriesView() : renderBooks()">
   </div>
 
   <div class="sort-row">
@@ -1269,9 +1269,14 @@ function switchTab(tab) {
   });
   document.getElementById('book-list').style.display = tab === 'series' ? 'none' : 'flex';
   document.getElementById('series-view').style.display = tab === 'series' ? 'block' : 'none';
-  // Show/hide search+sort for non-series tabs
-  document.querySelector('.search-bar').style.display = tab === 'series' ? 'none' : '';
+  // Search bar always visible; sort only for owned/wishlist
+  document.querySelector('.search-bar').style.display = '';
   document.querySelector('.sort-row').style.display = tab === 'series' ? 'none' : '';
+  // Update search placeholder per tab
+  const placeholders = { owned: 'Search owned books...', wishlist: 'Search wishlist...', series: 'Search series...' };
+  document.getElementById('search-input').placeholder = placeholders[tab] || 'Search...';
+  // Clear search when switching tabs
+  document.getElementById('search-input').value = '';
 
   if (tab === 'series') renderSeriesView();
   else renderBooks();
@@ -1523,6 +1528,7 @@ function fixCorruptSeries() {
 
 function renderSeriesView() {
   const el = document.getElementById('series-view');
+  const q = document.getElementById('search-input').value.toLowerCase().trim();
 
   if (seriesList.length === 0) {
     el.innerHTML = `
@@ -1537,7 +1543,31 @@ function renderSeriesView() {
     return;
   }
 
-  const cards = seriesList.map(s => {
+  if (q && filteredSeries.length === 0) {
+    el.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+        <button class="add-series-btn" onclick="openSeriesModal()">+ New Series</button>
+      </div>
+      <div class="empty">
+        <div class="icon" style="font-size:2rem;opacity:0.4">&#9782;</div>
+        <h3>No series match "${q}"</h3>
+        <p>Try a different search term.</p>
+      </div>`;
+    return;
+  }
+
+  const filteredSeries = q
+    ? seriesList.filter(s =>
+        s.name.toLowerCase().includes(q) ||
+        (s.authors || []).some(a => a.toLowerCase().includes(q)) ||
+        books.some(b => b.seriesId === s.id && (
+          b.title.toLowerCase().includes(q) ||
+          b.author.toLowerCase().includes(q)
+        ))
+      )
+    : seriesList;
+
+  const cards = filteredSeries.map(s => {
     const seriesBooks = books.filter(b => b.seriesId === s.id);
     const ownedBooks = seriesBooks.filter(b => b.type === 'owned');
     const readBooks = seriesBooks.filter(b => b.status === 'read');
