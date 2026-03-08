@@ -899,7 +899,7 @@
     letter-spacing: 0.06em;
   }
 
-  /* â”€â”€ Research Tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  /* ── Research Tab ────────────────────────────────────────────── */
   .research-add-row {
     display: flex; gap: 8px; margin-bottom: 14px;
   }
@@ -989,7 +989,7 @@
 <header style="position:relative">
   <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v3.1</span></h1>
   <p>A personal book collection</p>
-  <button onclick="openSettings()" title="Settings" style="position:absolute;top:12px;right:14px;background:transparent;border:none;cursor:pointer;font-size:1.3rem;opacity:0.55;line-height:1">âš™</button>
+  <button onclick="openSettings()" title="Settings" style="position:absolute;top:12px;right:14px;background:transparent;border:none;cursor:pointer;font-size:1.3rem;opacity:0.55;line-height:1">⚙</button>
 </header>
 
 <div class="tabs">
@@ -1060,7 +1060,7 @@
       <div id="import-status" style="margin-top:8px;font-size:0.78rem"></div>
     </div>
 
-    <div style="text-align:center;font-size:0.75rem;color:var(--ink-light);margin-bottom:10px">â€” or search for a single book â€”</div>
+    <div style="text-align:center;font-size:0.75rem;color:var(--ink-light);margin-bottom:10px">— or search for a single book —</div>
 
     <div class="form-group">
       <label>Search by Title or Author</label>
@@ -1161,9 +1161,19 @@
 
     <div class="form-group" style="margin-top:2px">
       <label>Series / Collection</label>
-      <select id="field-series" style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none">
-        <option value="">None</option>
-      </select>
+
+      <!-- Selected series display -->
+      <div id="edit-series-selected" style="display:none;padding:8px 10px;background:#e8f5e9;border:1.5px solid #4a7c5e;border-radius:8px;margin-bottom:6px;font-size:0.85rem;color:var(--spine);display:flex;justify-content:space-between;align-items:center">
+        <span id="edit-series-selected-name" style="font-weight:700"></span>
+        <button onclick="clearEditSeriesSelection()" style="background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:1rem;padding:0 2px">&#10005;</button>
+      </div>
+      <input type="hidden" id="field-series" value="">
+
+      <!-- Search box -->
+      <input type="text" id="edit-series-search" placeholder="Search series or type a new name…"
+        oninput="filterEditSeriesList()"
+        style="width:100%;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box">
+      <div id="edit-series-results" style="max-height:160px;overflow-y:auto;border:1.5px solid var(--parchment-dark);border-top:none;border-radius:0 0 8px 8px;background:white;display:none"></div>
     </div>
 
     <div class="form-group" style="margin-top:2px" id="series-position-group">
@@ -1228,7 +1238,7 @@ let scannerRunning = false;
 let currentBook = null;
 let activeFormatFilter = null; // null = all, 'physical', 'kindle', 'audiobook'
 let showSeriesFilters = false; // series pills collapsed by default
-let scanningFor = 'owned'; // 'owned' or 'wishlist' â€” set when scanner opens
+let scanningFor = 'owned'; // 'owned' or 'wishlist' — set when scanner opens
 let editingId = null;
 let selectedType = 'owned';
 let selectedRating = 0;
@@ -1355,12 +1365,12 @@ function buildWatchlistCSV() {
 async function pushWatchlistToGitHub() {
   const pat = localStorage.getItem('herLibraryGitHubPAT') || '';
   if (!pat) {
-    alert('No GitHub token saved. Open Settings (âš™) and paste your token first.');
+    alert('No GitHub token saved. Open Settings (⚙) and paste your token first.');
     return;
   }
   const csv = buildWatchlistCSV();
   if (!csv) {
-    alert('Nothing in the watchlist yet â€” scan some books first!');
+    alert('Nothing in the watchlist yet — scan some books first!');
     return;
   }
   const OWNER = 'werewolfchef94';
@@ -1369,7 +1379,7 @@ async function pushWatchlistToGitHub() {
   const API   = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`;
 
   const btn = document.getElementById('push-watchlist-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'â³ Pushingâ€¦'; }
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Pushing…'; }
 
   try {
     // Get current SHA if file already exists (required for updates)
@@ -1392,7 +1402,7 @@ async function pushWatchlistToGitHub() {
     });
 
     if (res.ok) {
-      if (btn) { btn.textContent = 'âœ“ Pushed!'; setTimeout(() => { if(btn){btn.disabled=false;btn.textContent='Push to GitHub';} }, 3000); }
+      if (btn) { btn.textContent = '✓ Pushed!'; setTimeout(() => { if(btn){btn.disabled=false;btn.textContent='Push to GitHub';} }, 3000); }
     } else {
       const err = await res.json();
       alert('GitHub error: ' + (err.message || res.status));
@@ -1441,7 +1451,7 @@ function lookupSeriesFromDB(title, author) {
     return bestMatch;
   }
 
-  // Author-only fallback removed â€” caused too many false positives
+  // Author-only fallback removed — caused too many false positives
 
   return null;
 }
@@ -1532,7 +1542,7 @@ function renderBooks() {
     books.some(b => b.seriesId === s.id && b.type === currentTab)
   );
 
-  // â”€â”€ Format filter pills (owned tab) â€” always visible, compact â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Format filter pills (owned tab) — always visible, compact ───────────────
   let formatPillsHtml = '';
   if (currentTab === 'owned') {
     const owned = books.filter(b => b.type === 'owned');
@@ -1555,7 +1565,7 @@ function renderBooks() {
     </div>`;
   }
 
-  // â”€â”€ Series filter pills â€” collapsed by default, toggle to reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Series filter pills — collapsed by default, toggle to reveal ──────────
   let pillsHtml = '';
   if (seriesWithBooks.length > 0) {
     const activeLabel = activeSeriesFilter
@@ -1977,14 +1987,11 @@ function saveSeries() {
   save();
   closeSeriesModal();
 
-  // If we're in the add/edit book modal, refresh the series dropdown
+  // If we're in the add/edit book modal, select the newly created series
   if (document.getElementById('add-modal').style.display !== 'none' && currentBook) {
-    const sel = document.getElementById('field-series');
     const newId = editingSeriesId || seriesList[seriesList.length - 1].id;
-    sel.innerHTML = '<option value="">None</option>' +
-      seriesList.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('');
-    sel.value = newId;
-    document.getElementById('series-position-group').style.display = 'block';
+    const newName = getSeriesName(newId);
+    selectEditSeries(newId, newName);
   } else {
     renderSeriesView();
   }
@@ -2338,7 +2345,7 @@ async function checkBookSeries(book) {
     return;
   }
 
-  // Step 3: series detected from DB but not in library yet â€” auto-create and show panel
+  // Step 3: series detected from DB but not in library yet — auto-create and show panel
   if (seriesName) {
     currentBook.detectedSeries = seriesName;
     const dbRef = book._dbSeriesRef || SEED_SERIES_DB.find(s => s.name.toLowerCase() === seriesName.toLowerCase());
@@ -2363,7 +2370,7 @@ async function checkBookSeries(book) {
       </div>`;
     }
   } else {
-    // Step 4: no match â€” show manual tag UI
+    // Step 4: no match — show manual tag UI
     const sortedSeries = [...seriesList].sort((a,b) => a.name.localeCompare(b.name));
     hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
       <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:8px">Part of a series? Tag it here:</div>
@@ -2404,7 +2411,7 @@ function filterQuickSeriesList() {
 
   const matches = data.filter(s => s.name.toLowerCase().includes(q)).slice(0, 20);
   if (matches.length === 0) {
-    results.innerHTML = '<div style="padding:8px 10px;font-size:0.8rem;color:var(--ink-light)">No matches â€” use the field below to create new</div>';
+    results.innerHTML = '<div style="padding:8px 10px;font-size:0.8rem;color:var(--ink-light)">No matches — use the field below to create new</div>';
   } else {
     results.innerHTML = matches.map(s =>
       `<div onclick="selectQuickSeries('${s.id}', '${esc(s.name).replace(/'/g, "\'")}')"
@@ -2432,6 +2439,81 @@ function clearQuickSeriesSelection() {
   document.getElementById('quick-series-selected').style.display = 'none';
   const nameInput = document.getElementById('quick-series-name');
   if (nameInput) nameInput.style.display = 'block';
+}
+
+// ── Edit-modal series picker ──────────────────────────────────────────────────
+
+function filterEditSeriesList() {
+  const q = (document.getElementById('edit-series-search').value || '').toLowerCase().trim();
+  const results = document.getElementById('edit-series-results');
+  if (!q) { results.style.display = 'none'; return; }
+
+  // Merge library series + DB series into one searchable list
+  const dbMatches = (seriesDB || [])
+    .filter(d => d.name.toLowerCase().includes(q))
+    .map(d => ({ id: null, name: d.name, fromDB: true, dbEntry: d }))
+    .slice(0, 15);
+
+  const libMatches = seriesList
+    .filter(s => s.name.toLowerCase().includes(q) && !dbMatches.find(d => d.name.toLowerCase() === s.name.toLowerCase()))
+    .map(s => ({ id: s.id, name: s.name, fromDB: false }))
+    .slice(0, 5);
+
+  const all = [...libMatches, ...dbMatches];
+
+  if (all.length === 0) {
+    results.innerHTML = `<div style="padding:8px 10px;font-size:0.82rem;color:var(--ink-light)">No match — hit Save to create "<strong>${esc(q)}</strong>" as a new series</div>`;
+  } else {
+    results.innerHTML = all.map(s =>
+      `<div onclick="selectEditSeries(${s.id ? `'${s.id}'` : 'null'}, '${esc(s.name).replace(/'/g,"\\'")}', ${s.fromDB ? `${JSON.stringify(s.dbEntry)}` : 'null'})"
+        style="padding:8px 12px;font-size:0.85rem;color:var(--ink);cursor:pointer;border-bottom:1px solid #f0e8d0;display:flex;justify-content:space-between;align-items:center"
+        onmouseover="this.style.background='#fff8e7'" onmouseout="this.style.background=''">
+        <span>${esc(s.name)}</span>
+        ${s.fromDB ? '<span style="font-size:0.7rem;color:var(--spine);font-weight:700">DB</span>' : '<span style="font-size:0.7rem;color:var(--ink-light)">library</span>'}
+      </div>`
+    ).join('');
+  }
+  results.style.display = 'block';
+}
+
+function selectEditSeries(existingId, name, dbEntry) {
+  let seriesId = existingId;
+
+  if (!seriesId) {
+    // Find or create in library from DB entry
+    const existing = seriesList.find(s => s.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      seriesId = existing.id;
+    } else {
+      const newS = {
+        id: 's' + Date.now(),
+        name: dbEntry ? dbEntry.name : name,
+        status: dbEntry ? (dbEntry.status || 'ongoing') : 'ongoing',
+        totalBooks: dbEntry ? (dbEntry.totalBooks || null) : null,
+        _dbRef: dbEntry ? dbEntry.name : null
+      };
+      seriesList.push(newS);
+      save();
+      seriesId = newS.id;
+    }
+  }
+
+  document.getElementById('field-series').value = seriesId;
+  document.getElementById('edit-series-selected-name').textContent = name;
+  document.getElementById('edit-series-selected').style.display = 'flex';
+  document.getElementById('edit-series-search').style.display = 'none';
+  document.getElementById('edit-series-search').value = '';
+  document.getElementById('edit-series-results').style.display = 'none';
+  document.getElementById('series-position-group').style.display = 'block';
+}
+
+function clearEditSeriesSelection() {
+  document.getElementById('field-series').value = '';
+  document.getElementById('edit-series-selected').style.display = 'none';
+  document.getElementById('edit-series-search').style.display = 'block';
+  document.getElementById('edit-series-search').value = '';
+  document.getElementById('edit-series-results').style.display = 'none';
+  document.getElementById('series-position-group').style.display = 'none';
 }
 
 function applyQuickSeriesTag() {
@@ -2504,7 +2586,7 @@ function skipSeriesTotal(seriesId) {
   const s = seriesList.find(x => x.id === seriesId);
   const hint = document.getElementById('series-hint');
   if (hint && s) hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:0.8rem;font-weight:700;color:var(--spine)">
-    Tagged as: ${esc(s.name)}${currentBook.seriesPosition ? ' #' + currentBook.seriesPosition : ''} â€” saved when you add the book.
+    Tagged as: ${esc(s.name)}${currentBook.seriesPosition ? ' #' + currentBook.seriesPosition : ''} — saved when you add the book.
   </div>`;
 }
 
@@ -2583,13 +2665,13 @@ function showSeriesHint(series, scannedBook, hint, seriesPosition) {
     return;
   }
 
-  // Build missing list â€” exclude both owned and wishlisted
+  // Build missing list — exclude both owned and wishlisted
   const missing = [];
   for (let i = 1; i <= total; i++) {
     if (!ownedPositions.has(i) && !wishPositions.has(i)) missing.push(i);
   }
 
-  // â”€â”€ WISHLIST SCAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── WISHLIST SCAN ──────────────────────────────────────────────────────────
   if (isWishlistScan) {
     if (missing.length === 0) {
       hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem">
@@ -2616,7 +2698,7 @@ function showSeriesHint(series, scannedBook, hint, seriesPosition) {
     return;
   }
 
-  // â”€â”€ OWNED SCAN â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── OWNED SCAN ─────────────────────────────────────────────────────────────
   if (missing.length === 0) {
     hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem">
       <span style="font-weight:700;color:#2e7d32">&#10003; Complete series!</span>
@@ -2635,7 +2717,7 @@ function showSeriesHint(series, scannedBook, hint, seriesPosition) {
 
   hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
     <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:2px">Part of: ${esc(series.name)}</div>
-    <div style="font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">You own ${ownedPositions.size} of ${total} â€” ${missing.length} missing:</div>
+    <div style="font-size:0.72rem;color:var(--ink-light);margin-bottom:6px">You own ${ownedPositions.size} of ${total} — ${missing.length} missing:</div>
     <div style="margin-bottom:8px;max-height:120px;overflow-y:auto">${missingLabels}</div>
     <button onclick="addAllMissingToWishlist('${series.id}')"
       style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer;width:100%">
@@ -2648,7 +2730,7 @@ function addAllMissingToWishlist(seriesId) {
   const s = seriesList.find(x => x.id === seriesId);
   if (!s) return;
 
-  // Build missing positions â€” exclude current unsaved book so it doesn't get wishlist-added too
+  // Build missing positions — exclude current unsaved book so it doesn't get wishlist-added too
   const currentPos = currentBook && currentBook.seriesId === seriesId ? currentBook.seriesPosition : null;
   const seriesBooks = books.filter(b => b.seriesId === seriesId);
   const ownedPos = new Set(seriesBooks.filter(b => b.type === 'owned').map(b => b.seriesPosition).filter(Boolean));
@@ -2738,15 +2820,22 @@ function openAddModal(book, isEdit) {
   document.getElementById('field-notes').value = book.notes || '';
   setRating(book.rating || 0);
 
-  // Populate series dropdown
-  const sel = document.getElementById('field-series');
-  sel.innerHTML = '<option value="">None</option>' +
-    seriesList.map(s => `<option value="${s.id}" ${book.seriesId === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('');
+  // Populate series picker
+  document.getElementById('field-series').value = book.seriesId || '';
+  document.getElementById('edit-series-search').value = '';
+  document.getElementById('edit-series-results').style.display = 'none';
+  const selName = book.seriesId ? getSeriesName(book.seriesId) : '';
+  const selDisplay = document.getElementById('edit-series-selected');
+  if (selName) {
+    document.getElementById('edit-series-selected-name').textContent = selName;
+    selDisplay.style.display = 'flex';
+    document.getElementById('edit-series-search').style.display = 'none';
+  } else {
+    selDisplay.style.display = 'none';
+    document.getElementById('edit-series-search').style.display = 'block';
+  }
   document.getElementById('field-series-position').value = book.seriesPosition || '';
-  document.getElementById('series-position-group').style.display = sel.value ? 'block' : 'none';
-  sel.onchange = () => {
-    document.getElementById('series-position-group').style.display = sel.value ? 'block' : 'none';
-  };
+  document.getElementById('series-position-group').style.display = book.seriesId ? 'block' : 'none';
 }
 
 function closeAddModal() {
@@ -2813,11 +2902,11 @@ function importKindleCSV(input) {
       return result;
     }
 
-    // Clean author: "Lastname, Firstname:" â†’ "Firstname Lastname"
+    // Clean author: "Lastname, Firstname:" → "Firstname Lastname"
     function cleanAuthor(raw) {
       if (!raw) return 'Unknown Author';
       raw = raw.replace(/:$/, '').trim();
-      // "Lastname, Firstname" â†’ "Firstname Lastname"
+      // "Lastname, Firstname" → "Firstname Lastname"
       const m = raw.match(/^([^,]+),\s*(.+)$/);
       if (m) return m[2].trim() + ' ' + m[1].trim();
       return raw;
@@ -3005,7 +3094,22 @@ function toggleKindleFields() {
 function saveBook() {
   if (!currentBook) return;
 
-  const seriesId = document.getElementById('field-series').value || null;
+  let seriesId = document.getElementById('field-series').value || null;
+  // If no series selected but user typed a name, create it
+  if (!seriesId) {
+    const typedName = (document.getElementById('edit-series-search').value || '').trim();
+    if (typedName) {
+      const existing = seriesList.find(s => s.name.toLowerCase() === typedName.toLowerCase());
+      if (existing) {
+        seriesId = existing.id;
+      } else {
+        const newS = { id: 's' + Date.now(), name: typedName, status: 'ongoing', totalBooks: null };
+        seriesList.push(newS);
+        save();
+        seriesId = newS.id;
+      }
+    }
+  }
   const seriesPosition = parseInt(document.getElementById('field-series-position').value) || null;
 
   const fmt = document.getElementById('field-format').value;
@@ -3087,24 +3191,24 @@ function clearWatchlist() {
 <div id="settings-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;align-items:center;justify-content:center;padding:16px">
   <div style="background:var(--parchment);border-radius:14px;padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,0.25);font-family:Lato,sans-serif">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
-      <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--spine)">âš™ Settings</h2>
-      <button onclick="closeSettings()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:var(--ink-light);line-height:1">Ã—</button>
+      <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--spine)">⚙ Settings</h2>
+      <button onclick="closeSettings()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:var(--ink-light);line-height:1">×</button>
     </div>
 
     <!-- GitHub Token -->
     <div style="margin-bottom:20px">
-      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:6px">ðŸ”‘ GitHub Personal Access Token</div>
+      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:6px">🔑 GitHub Personal Access Token</div>
       <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">Used to push your series watchlist to GitHub monthly. Only needs <em>Contents: Read & Write</em> on your repo.</div>
-      <input id="pat-input" type="password" placeholder="github_pat_â€¦" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid #c9b99a;font-size:0.85rem;font-family:Lato,sans-serif;background:#fff;color:var(--ink)">
+      <input id="pat-input" type="password" placeholder="github_pat_…" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid #c9b99a;font-size:0.85rem;font-family:Lato,sans-serif;background:#fff;color:var(--ink)">
       <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
         <button onclick="savePAT()" style="background:var(--gold);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">Save Token</button>
-        <span id="pat-saved-msg" style="display:none;color:green;font-size:0.8rem">âœ“ Saved</span>
+        <span id="pat-saved-msg" style="display:none;color:green;font-size:0.8rem">✓ Saved</span>
       </div>
     </div>
 
     <!-- Watchlist Push -->
     <div style="border-top:1px solid #ddd;padding-top:18px;margin-bottom:20px">
-      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:4px">ðŸ“¤ Series Watchlist</div>
+      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:4px">📤 Series Watchlist</div>
       <div id="watchlist-count" style="font-size:0.78rem;color:var(--ink-light);margin-bottom:10px">No series logged yet</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
         <button id="push-watchlist-btn" onclick="pushWatchlistToGitHub()" style="background:var(--spine);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">Push to GitHub</button>
