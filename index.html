@@ -917,14 +917,6 @@
     </svg>
     <span style="font-size:0.6rem;display:block;margin-top:2px">Kindle</span>
   </button>
-  <button class="scan-fab" onclick="openTransferModal()" title="Transfer / Backup"
-    style="background:linear-gradient(135deg,#4a3580,#2e1f5e)">
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="17 1 21 5 17 9"/><line x1="3" y1="11" x2="21" y2="5"/>
-      <polyline points="7 23 3 19 7 15"/><line x1="21" y1="13" x2="3" y2="19"/>
-    </svg>
-    <span style="font-size:0.6rem;display:block;margin-top:2px">Transfer</span>
-  </button>
 </div>
 
 <!-- Kindle Search Modal -->
@@ -958,50 +950,6 @@
     <div id="kindle-results"></div>
     <div class="btn-row" style="margin-top:8px">
       <button class="btn-secondary" onclick="closeKindleSearch()">Cancel</button>
-    </div>
-  </div>
-</div>
-
-<!-- Transfer Modal -->
-<div class="modal-overlay" id="transfer-modal" style="display:none">
-  <div class="modal">
-    <h2>&#8645; Transfer Library</h2>
-
-    <!-- EXPORT -->
-    <div style="background:linear-gradient(135deg,#f0f7f2,#e0f0e8);border:1.5px solid #4a7c5e;border-radius:10px;padding:14px;margin-bottom:14px">
-      <div style="font-size:0.9rem;font-weight:700;color:var(--spine);margin-bottom:4px">&#11015; Export (this device)</div>
-      <div style="font-size:0.78rem;color:var(--ink-light);margin-bottom:10px">Download your entire library as a file, then transfer it to your phone via WhatsApp, email, or Google Drive.</div>
-      <button onclick="exportLibrary()"
-        style="width:100%;padding:10px;background:var(--spine);color:white;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer">
-        &#11015; Download Library Backup
-      </button>
-    </div>
-
-    <!-- IMPORT -->
-    <div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:10px;padding:14px;margin-bottom:14px">
-      <div style="font-size:0.9rem;font-weight:700;color:var(--spine);margin-bottom:4px">&#11014; Import (new device)</div>
-      <div style="font-size:0.78rem;color:var(--ink-light);margin-bottom:10px">Open the backup file on your phone and import it here. This will <strong>merge</strong> with any books already on this device.</div>
-      <label style="display:block;width:100%;padding:10px;background:#b8860b;color:white;text-align:center;border-radius:8px;font-family:Lato,sans-serif;font-size:0.85rem;font-weight:700;cursor:pointer;box-sizing:border-box">
-        &#11014; Choose Backup File
-        <input type="file" accept=".json" onchange="importLibrary(this)" style="display:none">
-      </label>
-      <div id="transfer-status" style="margin-top:8px;font-size:0.8rem;text-align:center"></div>
-    </div>
-
-    <!-- HOW TO -->
-    <div style="background:#f8f8f8;border-radius:8px;padding:12px;margin-bottom:14px">
-      <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:6px">How to transfer PC â†’ Phone:</div>
-      <ol style="font-size:0.75rem;color:var(--ink-light);margin:0;padding-left:18px;line-height:1.8">
-        <li>On your PC: tap <strong>Download Library Backup</strong></li>
-        <li>Send the file to yourself (WhatsApp, email, Google Drive)</li>
-        <li>On your phone: open the app, tap <strong>Transfer</strong></li>
-        <li>Tap <strong>Choose Backup File</strong> and pick the file</li>
-        <li>Done! All your books will appear &#127881;</li>
-      </ol>
-    </div>
-
-    <div class="btn-row">
-      <button class="btn-secondary" onclick="closeTransferModal()">Close</button>
     </div>
   </div>
 </div>
@@ -1154,8 +1102,6 @@ let seriesList = JSON.parse(localStorage.getItem('herLibrarySeries') || '[]');
 let currentTab = 'owned';
 let scannerRunning = false;
 let currentBook = null;
-let activeFormatFilter = null; // null = all, 'physical', 'kindle', 'audiobook'
-let showSeriesFilters = false; // series pills collapsed by default
 let scanningFor = 'owned'; // 'owned' or 'wishlist' â€” set when scanner opens
 let editingId = null;
 let selectedType = 'owned';
@@ -1265,8 +1211,6 @@ function save() {
 // --- Tabs --------------------------------------------------------------------
 function switchTab(tab) {
   currentTab = tab;
-  activeFormatFilter = null;
-  showSeriesFilters = false;
   activeSeriesFilter = null;
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
     b.classList.toggle('active',
@@ -1296,15 +1240,6 @@ function renderBooks() {
     list = list.filter(b => b.seriesId === activeSeriesFilter);
   }
 
-  // Format filter (owned tab only)
-  if (currentTab === 'owned' && activeFormatFilter) {
-    if (activeFormatFilter === 'physical') {
-      list = list.filter(b => b.format !== 'kindle' && b.format !== 'audiobook');
-    } else {
-      list = list.filter(b => b.format === activeFormatFilter);
-    }
-  }
-
   if (q) list = list.filter(b =>
     b.title.toLowerCase().includes(q) ||
     b.author.toLowerCase().includes(q) ||
@@ -1331,63 +1266,24 @@ function renderBooks() {
     books.some(b => b.seriesId === s.id && b.type === currentTab)
   );
 
-  // â”€â”€ Format filter pills (owned tab) â€” always visible, compact â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  let formatPillsHtml = '';
-  if (currentTab === 'owned') {
-    const owned = books.filter(b => b.type === 'owned');
-    const nKindle   = owned.filter(b => b.format === 'kindle').length;
-    const nAudio    = owned.filter(b => b.format === 'audiobook').length;
-    const nPhysical = owned.filter(b => b.format !== 'kindle' && b.format !== 'audiobook').length;
-    formatPillsHtml = `<div class="series-filter-row" style="margin-top:0">
-      <button class="filter-pill ${!activeFormatFilter ? 'active' : ''}" onclick="setFormatFilter(null)">
-        All <span style="opacity:0.7;font-size:0.75em">(${owned.length})</span>
-      </button>
-      <button class="filter-pill ${activeFormatFilter === 'physical' ? 'active' : ''}" onclick="setFormatFilter('physical')">
-        &#128218; Physical <span style="opacity:0.7;font-size:0.75em">(${nPhysical})</span>
-      </button>
-      <button class="filter-pill ${activeFormatFilter === 'kindle' ? 'active' : ''}" onclick="setFormatFilter('kindle')">
-        &#128214; Kindle <span style="opacity:0.7;font-size:0.75em">(${nKindle})</span>
-      </button>
-      ${nAudio > 0 ? `<button class="filter-pill ${activeFormatFilter === 'audiobook' ? 'active' : ''}" onclick="setFormatFilter('audiobook')">
-        &#127911; Audio <span style="opacity:0.7;font-size:0.75em">(${nAudio})</span>
-      </button>` : ''}
+  let pillsHtml = '';
+  if (seriesWithBooks.length > 0) {
+    pillsHtml = `<div class="series-filter-row">
+      <button class="filter-pill ${!activeSeriesFilter ? 'active' : ''}" onclick="setSeriesFilter(null)">All</button>
+      ${seriesWithBooks.map(s =>
+        `<button class="filter-pill ${activeSeriesFilter === s.id ? 'active' : ''}" onclick="setSeriesFilter('${s.id}')">${esc(s.name)}</button>`
+      ).join('')}
     </div>`;
   }
 
-  // â”€â”€ Series filter pills â€” collapsed by default, toggle to reveal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  let pillsHtml = '';
-  if (seriesWithBooks.length > 0) {
-    const activeLabel = activeSeriesFilter
-      ? esc(seriesList.find(s => s.id === activeSeriesFilter)?.name || 'Series')
-      : null;
-    const toggleLabel = activeLabel
-      ? `&#9782; ${activeLabel} &#9660;`
-      : `&#9782; Filter by Series (${seriesWithBooks.length}) ${showSeriesFilters ? '&#9650;' : '&#9660;'}`;
-    pillsHtml = `
-      <div style="margin-bottom:${showSeriesFilters ? '4px' : '6px'}">
-        <button onclick="toggleSeriesFilters()"
-          style="background:${activeLabel ? 'var(--spine)' : 'transparent'};color:${activeLabel ? 'white' : 'var(--spine)'};border:1.5px solid var(--spine);border-radius:20px;padding:5px 12px;font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer">
-          ${toggleLabel}
-        </button>
-        ${activeLabel ? `<button onclick="setSeriesFilter(null)" style="background:transparent;border:none;color:var(--ink-light);font-size:0.75rem;cursor:pointer;padding:5px 6px">&#10005; Clear</button>` : ''}
-      </div>
-      ${showSeriesFilters ? `<div class="series-filter-row" style="margin-bottom:6px">
-        <button class="filter-pill ${!activeSeriesFilter ? 'active' : ''}" onclick="setSeriesFilter(null)">All</button>
-        ${seriesWithBooks.map(s =>
-          `<button class="filter-pill ${activeSeriesFilter === s.id ? 'active' : ''}" onclick="setSeriesFilter('${s.id}');toggleSeriesFilters()">${esc(s.name)}</button>`
-        ).join('')}
-      </div>` : ''}
-    `;
-  }
-
   if (list.length === 0) {
-    el.innerHTML = pillsHtml + formatPillsHtml + `<div class="empty">
+    el.innerHTML = pillsHtml + `<div class="empty">
       <div class="icon" style="font-size:2.5rem;opacity:0.4">${currentTab === 'owned' ? '&#9755;' : '&#9733;'}</div>
       <h3>${activeSeriesFilter ? 'No books in this series yet' : (currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty')}</h3>
       <p>${currentTab === 'owned' ? 'Tap the camera button to scan a book barcode.' : 'Scan a book and add it to the wishlist.'}</p>
     </div>`;
   } else {
-    el.innerHTML = pillsHtml + formatPillsHtml + list.map(b => bookCard(b)).join('');
+    el.innerHTML = pillsHtml + list.map(b => bookCard(b)).join('');
   }
 
   renderStats();
@@ -1395,16 +1291,6 @@ function renderBooks() {
 
 function setSeriesFilter(id) {
   activeSeriesFilter = id;
-  renderBooks();
-}
-
-function setFormatFilter(fmt) {
-  activeFormatFilter = fmt;
-  renderBooks();
-}
-
-function toggleSeriesFilters() {
-  showSeriesFilters = !showSeriesFilters;
   renderBooks();
 }
 
@@ -1468,24 +1354,12 @@ function esc(s) {
 
 function renderStats() {
   const owned = books.filter(b => b.type === 'owned');
-  const wish  = books.filter(b => b.type === 'wishlist');
-  const read  = owned.filter(b => b.status === 'read');
-  const kindle   = owned.filter(b => b.format === 'kindle').length;
-  const physical = owned.filter(b => b.format !== 'kindle' && b.format !== 'audiobook').length;
-  const audio    = owned.filter(b => b.format === 'audiobook').length;
+  const wish = books.filter(b => b.type === 'wishlist');
+  const read = owned.filter(b => b.status === 'read');
   document.getElementById('stats-bar').innerHTML = `
-    <div class="stat-pill" onclick="setFormatFilter(null)" style="cursor:pointer" title="All owned">
-      <div class="num">${owned.length}</div><div class="label">Owned</div>
-    </div>
-    <div class="stat-pill" onclick="setFormatFilter('physical'); switchTab('owned')" style="cursor:pointer" title="Physical books">
-      <div class="num">${physical}</div><div class="label">&#128218; Physical</div>
-    </div>
-    <div class="stat-pill" onclick="setFormatFilter('kindle'); switchTab('owned')" style="cursor:pointer" title="Kindle books">
-      <div class="num">${kindle}</div><div class="label">&#128214; Kindle</div>
-    </div>
+    <div class="stat-pill"><div class="num">${owned.length}</div><div class="label">Owned</div></div>
     <div class="stat-pill"><div class="num">${read.length}</div><div class="label">Read</div></div>
     <div class="stat-pill"><div class="num">${wish.length}</div><div class="label">Wishlist</div></div>
-    ${audio > 0 ? `<div class="stat-pill" onclick="setFormatFilter('audiobook'); switchTab('owned')" style="cursor:pointer" title="Audiobooks"><div class="num">${audio}</div><div class="label">&#127911; Audio</div></div>` : ''}
   `;
 }
 
@@ -2840,114 +2714,6 @@ function saveBook() {
   // If on series tab, go back to owned/wishlist
   if (currentTab === 'series') switchTab('owned');
   else renderBooks();
-}
-
-// --- Transfer / Backup --------------------------------------------------------
-function openTransferModal() {
-  document.getElementById('transfer-modal').style.display = 'flex';
-  document.getElementById('transfer-status').innerHTML = '';
-}
-
-function closeTransferModal() {
-  document.getElementById('transfer-modal').style.display = 'none';
-}
-
-function exportLibrary() {
-  const payload = {
-    exportedAt: new Date().toISOString(),
-    version: '3.0',
-    books,
-    seriesList,
-    userSeries: JSON.parse(localStorage.getItem('herLibraryUserSeries') || '[]')
-  };
-  const json = JSON.stringify(payload, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'charlottes-library-backup.json';
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importLibrary(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const statusEl = document.getElementById('transfer-status');
-  statusEl.innerHTML = '<span style="color:var(--spine)">Reading file...</span>';
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    try {
-      const payload = JSON.parse(e.target.result);
-
-      // Validate it looks like our backup
-      if (!payload.books || !Array.isArray(payload.books)) {
-        statusEl.innerHTML = '<span style="color:red">This doesn't look like a valid library backup.</span>';
-        return;
-      }
-
-      let addedBooks = 0, addedSeries = 0;
-
-      // Merge series first
-      const incomingSeries = payload.seriesList || [];
-      incomingSeries.forEach(incoming => {
-        const exists = seriesList.find(s =>
-          s.id === incoming.id ||
-          s.name.toLowerCase() === incoming.name.toLowerCase()
-        );
-        if (!exists) {
-          seriesList.push(incoming);
-          addedSeries++;
-        }
-      });
-
-      // Remap series IDs if needed (in case of ID conflicts)
-      const idMap = {};
-      incomingSeries.forEach(incoming => {
-        const match = seriesList.find(s => s.name.toLowerCase() === incoming.name.toLowerCase());
-        if (match && match.id !== incoming.id) idMap[incoming.id] = match.id;
-      });
-
-      // Merge books
-      const incomingBooks = payload.books || [];
-      incomingBooks.forEach(incoming => {
-        const exists = books.some(b =>
-          (incoming.isbn && b.isbn && b.isbn === incoming.isbn) ||
-          (incoming.asin && b.asin && b.asin === incoming.asin) ||
-          (b.title && incoming.title && b.title.toLowerCase() === incoming.title.toLowerCase())
-        );
-        if (!exists) {
-          // Fix series ID if remapped
-          if (incoming.seriesId && idMap[incoming.seriesId]) {
-            incoming.seriesId = idMap[incoming.seriesId];
-          }
-          books.push(incoming);
-          addedBooks++;
-        }
-      });
-
-      // Merge user series
-      if (payload.userSeries) {
-        const existing = JSON.parse(localStorage.getItem('herLibraryUserSeries') || '[]');
-        const merged = [...existing];
-        payload.userSeries.forEach(us => {
-          if (!merged.find(e => e.name.toLowerCase() === us.name.toLowerCase())) {
-            merged.push(us);
-          }
-        });
-        localStorage.setItem('herLibraryUserSeries', JSON.stringify(merged));
-      }
-
-      save();
-      renderBooks();
-      statusEl.innerHTML = `<span style="color:#2e7d32;font-weight:700">&#10003; Imported ${addedBooks} books and ${addedSeries} series successfully!</span>`;
-
-    } catch(err) {
-      statusEl.innerHTML = '<span style="color:red">Could not read file. Make sure it's a valid backup.</span>';
-    }
-  };
-  reader.readAsText(file);
 }
 
 // --- Init ---------------------------------------------------------------------
