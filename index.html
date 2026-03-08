@@ -348,8 +348,14 @@
   /* Stats bar */
   .stats-bar {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 8px;
     margin-bottom: 16px;
+  }
+
+  .stats-row {
+    display: flex;
+    gap: 10px;
   }
 
   .stat-pill {
@@ -359,6 +365,43 @@
     padding: 10px;
     text-align: center;
     box-shadow: 0 2px 6px var(--shadow);
+  }
+
+  .stat-pill.primary .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    color: var(--spine);
+    font-weight: 700;
+  }
+
+  .stat-pill.primary .label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-light);
+    margin-top: 2px;
+  }
+
+  .stat-pill.sub {
+    background: var(--parchment);
+    box-shadow: none;
+    border: 1px solid var(--parchment-dark);
+    padding: 7px 10px;
+  }
+
+  .stat-pill.sub .num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--spine);
+    font-weight: 700;
+  }
+
+  .stat-pill.sub .label {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-light);
+    margin-top: 1px;
   }
 
   .stat-pill .num {
@@ -1422,19 +1465,39 @@ function renderStats() {
   const kindle   = owned.filter(b => b.format === 'kindle').length;
   const physical = owned.filter(b => b.format !== 'kindle' && b.format !== 'audiobook').length;
   const audio    = owned.filter(b => b.format === 'audiobook').length;
+
   document.getElementById('stats-bar').innerHTML = `
-    <div class="stat-pill" onclick="setFormatFilter(null)" style="cursor:pointer" title="All owned">
-      <div class="num">${owned.length}</div><div class="label">Owned</div>
+    <!-- Primary row: Owned, Read, Wishlist -->
+    <div class="stats-row">
+      <div class="stat-pill primary" onclick="switchTab('owned'); setFormatFilter(null)" style="cursor:pointer">
+        <div class="num">${owned.length}</div>
+        <div class="label">Owned</div>
+      </div>
+      <div class="stat-pill primary" onclick="switchTab('owned')" style="cursor:pointer">
+        <div class="num">${read.length}</div>
+        <div class="label">Read</div>
+      </div>
+      <div class="stat-pill primary" onclick="switchTab('wishlist')" style="cursor:pointer">
+        <div class="num">${wish.length}</div>
+        <div class="label">Wishlist</div>
+      </div>
     </div>
-    <div class="stat-pill" onclick="setFormatFilter('physical'); switchTab('owned')" style="cursor:pointer" title="Physical books">
-      <div class="num">${physical}</div><div class="label">&#128218; Physical</div>
+    <!-- Sub row: format breakdown -->
+    <div class="stats-row">
+      <div class="stat-pill sub" onclick="switchTab('owned'); setFormatFilter('physical')" style="cursor:pointer" title="Physical books">
+        <div class="num">${physical}</div>
+        <div class="label">&#128218; Physical</div>
+      </div>
+      <div class="stat-pill sub" onclick="switchTab('owned'); setFormatFilter('kindle')" style="cursor:pointer" title="Kindle books">
+        <div class="num">${kindle}</div>
+        <div class="label">&#128214; Kindle</div>
+      </div>
+      ${audio > 0 ? `
+      <div class="stat-pill sub" onclick="switchTab('owned'); setFormatFilter('audiobook')" style="cursor:pointer" title="Audiobooks">
+        <div class="num">${audio}</div>
+        <div class="label">&#127911; Audio</div>
+      </div>` : ''}
     </div>
-    <div class="stat-pill" onclick="setFormatFilter('kindle'); switchTab('owned')" style="cursor:pointer" title="Kindle books">
-      <div class="num">${kindle}</div><div class="label">&#128214; Kindle</div>
-    </div>
-    <div class="stat-pill"><div class="num">${read.length}</div><div class="label">Read</div></div>
-    <div class="stat-pill"><div class="num">${wish.length}</div><div class="label">Wishlist</div></div>
-    ${audio > 0 ? `<div class="stat-pill" onclick="setFormatFilter('audiobook'); switchTab('owned')" style="cursor:pointer" title="Audiobooks"><div class="num">${audio}</div><div class="label">&#127911; Audio</div></div>` : ''}
   `;
 }
 
