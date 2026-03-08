@@ -866,7 +866,7 @@
 <body>
 
 <header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.9</span></h1>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v3.0</span></h1>
   <p>A personal book collection</p>
 </header>
 
@@ -923,6 +923,20 @@
 <div class="modal-overlay" id="kindle-modal" style="display:none">
   <div class="modal">
     <h2>Add a Kindle Book</h2>
+
+    <!-- CSV Import section -->
+    <div style="background:linear-gradient(135deg,#f0f7f2,#e0f0e8);border:1.5px solid #4a7c5e;border-radius:10px;padding:12px 14px;margin-bottom:14px">
+      <div style="font-size:0.85rem;font-weight:700;color:var(--spine);margin-bottom:4px">&#128196; Bulk Import from CSV</div>
+      <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">Upload your kindle-library.csv to add all your Kindle books at once.</div>
+      <label style="display:block;background:var(--spine);color:white;text-align:center;padding:8px 12px;border-radius:7px;font-family:Lato,sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer">
+        &#128196; Choose CSV File
+        <input type="file" accept=".csv" onchange="importKindleCSV(this)" style="display:none">
+      </label>
+      <div id="import-status" style="margin-top:8px;font-size:0.78rem"></div>
+    </div>
+
+    <div style="text-align:center;font-size:0.75rem;color:var(--ink-light);margin-bottom:10px">â€” or search for a single book â€”</div>
+
     <div class="form-group">
       <label>Search by Title or Author</label>
       <div style="display:flex;gap:8px">
@@ -1097,7 +1111,7 @@ let viewingSeriesId = null;
 let editingSeriesId = null;
 
 // --- Seed Series Database (embedded + optionally refreshed from series-db.json)
-const SERIES_DB_VERSION = "2.8";
+const SERIES_DB_VERSION = "3.0";
 let SEED_SERIES_DB = [];
 
 async function loadSeriesDB() {
@@ -2433,6 +2447,162 @@ function openKindleSearch() {
   document.getElementById('kindle-results').innerHTML = '';
   document.getElementById('kindle-status').innerHTML = '';
   setTimeout(() => document.getElementById('kindle-search-input').focus(), 100);
+}
+
+function importKindleCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const statusEl = document.getElementById('import-status');
+  statusEl.innerHTML = '<span style="color:var(--spine)">Reading file...</span>';
+
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const text = e.target.result;
+    const lines = text.trim().split('\n');
+    const headers = lines[0].toLowerCase().split(',');
+    const titleIdx = headers.findIndex(h => h.includes('title'));
+    const authorIdx = headers.findIndex(h => h.includes('author'));
+    const asinIdx = headers.findIndex(h => h.includes('asin'));
+
+    if (titleIdx === -1) {
+      statusEl.innerHTML = '<span style="color:red">Could not find a title column in this CSV.</span>';
+      return;
+    }
+
+    // Parse CSV rows (handles quoted fields)
+    function parseCSVLine(line) {
+      const result = [];
+      let cur = '', inQ = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQ && line[i+1] === '"') { cur += '"'; i++; }
+          else inQ = !inQ;
+        } else if (ch === ',' && !inQ) {
+          result.push(cur); cur = '';
+        } else cur += ch;
+      }
+      result.push(cur);
+      return result;
+    }
+
+    // Clean author: "Lastname, Firstname:" â†’ "Firstname Lastname"
+    function cleanAuthor(raw) {
+      if (!raw) return 'Unknown Author';
+      raw = raw.replace(/:$/, '').trim();
+      // "Lastname, Firstname" â†’ "Firstname Lastname"
+      const m = raw.match(/^([^,]+),\s*(.+)$/);
+      if (m) return m[2].trim() + ' ' + m[1].trim();
+      return raw;
+    }
+
+    // Clean title: strip subtitle junk like "(Series Name Book 1)"
+    // Returns { cleanTitle, seriesName, seriesPosition }
+    function parseTitle(raw) {
+      // Try to extract series from parentheses: (Series Name Book N) or (Series Name #N)
+      const m = raw.match(/^(.*?)\s*\((.+?)\s+(?:[Bb]ook\s+(\d+(?:\.\d+)?)|#(\d+(?:\.\d+)?))\s*\)(.*)$/);
+      if (m) {
+        const beforeParen = m[1].trim();
+        const seriesName = m[2].trim();
+        const pos = parseFloat(m[3] || m[4]);
+        // Remove trailing subtitle noise from the before-paren part
+        const cleanTitle = beforeParen.replace(/:\s*A\s+.+$/i, '').trim() || beforeParen;
+        return { cleanTitle: cleanTitle || raw, seriesName, seriesPosition: isNaN(pos) ? null : pos };
+      }
+      // Strip "A [adjective] [genre] Romance" style subtitles
+      const clean = raw.replace(/:\s*A\s+.{3,60}$/i, '').trim();
+      return { cleanTitle: clean || raw, seriesName: null, seriesPosition: null };
+    }
+
+    const rows = lines.slice(1).filter(l => l.trim());
+    let added = 0, skipped = 0, total = rows.length;
+
+    statusEl.innerHTML = `<span style="color:var(--spine)">Importing 0 of ${total}...</span>`;
+
+    // Process in batches to avoid blocking UI
+    for (let i = 0; i < rows.length; i++) {
+      const cols = parseCSVLine(rows[i]);
+      const rawTitle = (cols[titleIdx] || '').trim();
+      const rawAuthor = (cols[authorIdx] || '').trim();
+      const asin = asinIdx >= 0 ? (cols[asinIdx] || '').trim() : '';
+      if (!rawTitle) { skipped++; continue; }
+
+      // Check for duplicate by title
+      const titleLower = rawTitle.toLowerCase();
+      const already = books.some(b => (b.title || '').toLowerCase() === titleLower ||
+        (b.asin && asin && b.asin === asin));
+      if (already) { skipped++; continue; }
+
+      const author = cleanAuthor(rawAuthor);
+      const { cleanTitle, seriesName, seriesPosition } = parseTitle(rawTitle);
+
+      // Try to find series in DB
+      let seriesId = null;
+      if (seriesName) {
+        let s = seriesList.find(x => x.name.toLowerCase() === seriesName.toLowerCase());
+        if (!s) {
+          const dbRef = SEED_SERIES_DB.find(x => x.name.toLowerCase() === seriesName.toLowerCase());
+          if (dbRef) {
+            s = { id: 's' + Date.now() + Math.random(), name: dbRef.name, status: 'ongoing', totalBooks: dbRef.totalBooks || null };
+            seriesList.push(s);
+          } else {
+            s = { id: 's' + Date.now() + Math.random(), name: seriesName, status: 'ongoing', totalBooks: null };
+            seriesList.push(s);
+          }
+        }
+        seriesId = s.id;
+      }
+
+      // Try Google Books for cover (ASIN not usable for covers, use title+author)
+      let cover = '';
+      try {
+        const q = encodeURIComponent(cleanTitle + ' ' + author);
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0`);
+        const data = await res.json();
+        if (data.items && data.items[0]) {
+          const img = data.items[0].volumeInfo.imageLinks;
+          cover = img ? (img.thumbnail || img.smallThumbnail || '').replace('http://','https://') : '';
+        }
+      } catch(e) {}
+
+      books.unshift({
+        id: 'b' + Date.now() + Math.random(),
+        isbn: '',
+        asin,
+        title: cleanTitle,
+        author,
+        cover,
+        year: '',
+        pages: '',
+        format: 'kindle',
+        datePurchased: '',
+        alsoPhysical: false,
+        type: 'owned',
+        status: 'unread',
+        rating: 0,
+        notes: '',
+        seriesId,
+        seriesPosition,
+        detectedSeries: null,
+        detectedPosition: null,
+        _dbSeriesRef: null,
+        addedAt: Date.now() - i
+      });
+      added++;
+
+      // Update status every 10 books
+      if (i % 10 === 0) {
+        statusEl.innerHTML = `<span style="color:var(--spine)">Importing ${added} of ${total}... (${skipped} skipped)</span>`;
+        save();
+        await new Promise(r => setTimeout(r, 0)); // yield to UI
+      }
+    }
+
+    save();
+    renderBooks();
+    statusEl.innerHTML = `<span style="color:#2e7d32;font-weight:700">&#10003; Done! Added ${added} books${skipped > 0 ? ', skipped ' + skipped + ' duplicates' : ''}.</span>`;
+  };
+  reader.readAsText(file);
 }
 
 function closeKindleSearch() {
