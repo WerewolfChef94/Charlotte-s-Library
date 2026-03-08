@@ -866,7 +866,7 @@
 <body>
 
 <header>
-  <h1>Charlotte's Library</h1>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v1.8</span></h1>
   <p>A personal book collection</p>
 </header>
 
@@ -960,9 +960,7 @@
 
     <div id="lookup-result-area"></div>
 
-    <div id="scanner-cancel-row" class="btn-row" style="margin-top:0">
-      <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
-    </div>
+    <div id="scanner-cancel-row" style="display:none"></div>
   </div>
 </div>
 
@@ -1794,10 +1792,6 @@ function addManualBook() {
 
 function showLookupResult(book) {
   const area = document.getElementById('lookup-result-area');
-  // Hide the default cancel button - we render our own buttons below
-  const cancelRow = document.getElementById('scanner-cancel-row');
-  if (cancelRow) cancelRow.style.display = 'none';
-
   area.innerHTML = `<div class="lookup-result">
     ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">&#9776;</div>'}
     <div class="details">
