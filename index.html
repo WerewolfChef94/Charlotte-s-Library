@@ -1777,10 +1777,12 @@ async function lookupISBN(isbnOverride) {
       if (m1) { detectedSeries = m1[1].trim(); detectedPosition = parseInt(m1[2]); }
 
       // Google Books seriesInfo field (not always present but use when available)
+      // Note: seriesId is a numeric Google ID â€” we only want the human-readable name
       if (!detectedSeries && info.seriesInfo) {
         const si = info.seriesInfo;
-        if (si.bookSeries && si.bookSeries[0] && si.bookSeries[0].seriesId) {
-          detectedSeries = si.bookSeries[0].seriesId;
+        // bookSeries[0].name has the real series name (not seriesId which is a number)
+        if (si.bookSeries && si.bookSeries[0] && si.bookSeries[0].name) {
+          detectedSeries = si.bookSeries[0].name;
         }
         if (si.shortSeriesBookTitle) {
           const m2 = si.shortSeriesBookTitle.match(/#?(\d+)/);
@@ -1991,18 +1993,22 @@ async function checkBookSeries(book) {
   const hint = document.getElementById('series-hint');
   if (!hint) return;
 
-  // Step 1: check local seed database (instant, offline, covers 500+ romance/fantasy series)
-  let seriesName = book.detectedSeries || null;
-  let seriesPosition = book.detectedPosition || null;
+  // Step 1: ALWAYS check local seed database first â€” it's most reliable
+  // (don't trust detectedSeries from Google Books scan-time â€” often garbage)
+  let seriesName = null;
+  let seriesPosition = null;
 
-  if (!seriesName) {
-    const dbResult = lookupSeriesFromDB(book.title, book.author);
-    if (dbResult) {
-      seriesName = dbResult.series.name;
-      seriesPosition = dbResult.position;
-      // also pre-populate totalBooks if we create the series later
-      book._dbSeriesRef = dbResult.series;
-    }
+  const dbResult = lookupSeriesFromDB(book.title, book.author);
+  if (dbResult) {
+    seriesName = dbResult.series.name;
+    seriesPosition = dbResult.position;
+    book._dbSeriesRef = dbResult.series;
+  }
+
+  // Only fall back to Google Books scan-time detection if DB had no match
+  if (!seriesName && book.detectedSeries) {
+    seriesName = book.detectedSeries;
+    seriesPosition = book.detectedPosition || null;
   }
 
   // Step 2: check if Google Books already gave us series info
@@ -2049,7 +2055,7 @@ async function checkBookSeries(book) {
           const m = fullTitle.match(/\(([^)]+?),?\s*(?:book\s*)?#?(\d+)\)/i);
           if (m) { seriesName = m[1].trim(); seriesPosition = parseInt(m[2]); break; }
           if (info.seriesInfo && info.seriesInfo.bookSeries && info.seriesInfo.bookSeries[0]) {
-            seriesName = info.seriesInfo.bookSeries[0].seriesId;
+            seriesName = info.seriesInfo.bookSeries[0].name || null;
             if (info.seriesInfo.shortSeriesBookTitle) {
               const m2 = info.seriesInfo.shortSeriesBookTitle.match(/#?(\d+)/);
               if (m2) seriesPosition = parseInt(m2[1]);
