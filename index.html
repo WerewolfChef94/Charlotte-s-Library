@@ -1580,55 +1580,74 @@ async function lookupISBN(isbnOverride) {
   }
 
   document.getElementById('isbn-input').value = isbn;
-  setScanStatus('Looking up book ' + isbn + '...', 'loading');
+  setScanStatus('Searching for ISBN: ' + isbn, 'loading');
 
-  // Use Claude AI as primary lookup - bypasses all CORS issues
+  // Try Google Books API - most reliable with HTTPS
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 400,
-        messages: [{
-          role: 'user',
-          content: 'What book has ISBN ' + isbn + '? Reply ONLY with a raw JSON object, no markdown, no backticks, no explanation. Format: {"title":"Full Title","author":"Author Name","year":"2020","pages":320}. If you do not know this exact ISBN reply: {"unknown":true}'
-        }]
-      })
-    });
-
-    if (res.ok) {
-      const data = await res.json();
-      const rawText = (data.content?.[0]?.text || '').trim();
-      // Strip any accidental markdown
-      const cleaned = rawText.replace(/```json|```/g, '').trim();
-      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
-      if (jsonMatch) {
-        const bookData = JSON.parse(jsonMatch[0]);
-        if (!bookData.unknown && bookData.title) {
-          currentBook = {
-            id: null, isbn,
-            title: bookData.title,
-            author: bookData.author || 'Unknown Author',
-            cover: 'https://covers.openlibrary.org/b/isbn/' + isbn + '-M.jpg',
-            year: String(bookData.year || ''),
-            pages: bookData.pages || '',
-            type: 'owned', status: 'unread', rating: 0, notes: '',
-            addedAt: Date.now()
-          };
-          setScanStatus('', 'ok');
-          showLookupResult(currentBook);
-          return;
-        }
+    setScanStatus('Step 1: Trying Google Books...', 'loading');
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn);
+    setScanStatus('Step 1: Got response ' + res.status, 'loading');
+    const data = await res.json();
+    setScanStatus('Step 1: Items found: ' + (data.totalItems || 0), 'loading');
+    if (data.items && data.items.length > 0) {
+      const info = data.items[0].volumeInfo;
+      let cover = '';
+      if (info.imageLinks) {
+        cover = (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://');
       }
+      currentBook = {
+        id: null, isbn,
+        title: info.title || 'Unknown Title',
+        author: (info.authors || ['Unknown Author']).join(', '),
+        cover,
+        year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
+        pages: info.pageCount || '',
+        type: 'owned', status: 'unread', rating: 0, notes: '',
+        addedAt: Date.now()
+      };
+      setScanStatus('', 'ok');
+      showLookupResult(currentBook);
+      return;
     }
-  } catch(e) { /* fall through to manual */ }
+  } catch(e) {
+    setScanStatus('Step 1 error: ' + e.message, 'err');
+    await new Promise(r => setTimeout(r, 2000));
+  }
 
-  // Manual entry fallback
-  setScanStatus('', 'ok');
+  // Try Open Library
+  try {
+    setScanStatus('Step 2: Trying Open Library...', 'loading');
+    const res = await fetch('https://openlibrary.org/search.json?isbn=' + isbn + '&limit=1');
+    setScanStatus('Step 2: Got response ' + res.status, 'loading');
+    const data = await res.json();
+    setScanStatus('Step 2: Docs found: ' + (data.numFound || 0), 'loading');
+    if (data.docs && data.docs.length > 0) {
+      const doc = data.docs[0];
+      const cover = doc.cover_i
+        ? 'https://covers.openlibrary.org/b/id/' + doc.cover_i + '-M.jpg'
+        : '';
+      currentBook = {
+        id: null, isbn,
+        title: doc.title || 'Unknown Title',
+        author: doc.author_name ? doc.author_name.join(', ') : 'Unknown Author',
+        cover,
+        year: doc.first_publish_year ? String(doc.first_publish_year) : '',
+        pages: doc.number_of_pages_median || '',
+        type: 'owned', status: 'unread', rating: 0, notes: '',
+        addedAt: Date.now()
+      };
+      setScanStatus('', 'ok');
+      showLookupResult(currentBook);
+      return;
+    }
+  } catch(e) {
+    setScanStatus('Step 2 error: ' + e.message, 'err');
+    await new Promise(r => setTimeout(r, 2000));
+  }
+
+  // Show debug info and manual entry
+  setScanStatus('Both lookups failed for ISBN ' + isbn + '. Enter manually below.', 'err');
   document.getElementById('lookup-result-area').innerHTML =
-    '<div class="status-message status-err" style="margin-bottom:12px">' +
-    'Could not find ISBN <strong>' + isbn + '</strong> automatically. Enter details manually:</div>' +
     '<div style="margin-bottom:10px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>' +
     '<input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
     '<div style="margin-bottom:12px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Author</label>' +
