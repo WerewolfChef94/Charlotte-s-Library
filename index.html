@@ -1355,9 +1355,9 @@ function saveToWatchlist(entry) {
 function buildWatchlistCSV() {
   const watchlist = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
   if (!watchlist.length) return null;
-  const header = 'series_name,author,date_added';
+  const header = 'entry_type,series_name,book_name,author,date_added';
   const rows = watchlist.map(w =>
-    `"${(w.series_name||'').replace(/"/g,'""')}","${(w.author||'').replace(/"/g,'""')}","${w.date_added||''}"`
+    `"${(w.entry_type||'series').replace(/"/g,'""')}","${(w.series_name||'').replace(/"/g,'""')}","${(w.book_name||'').replace(/"/g,'""')}","${(w.author||'').replace(/"/g,'""')}","${w.date_added||''}"`
   );
   return [header, ...rows].join('\n');
 }
@@ -3161,8 +3161,8 @@ function openSettings() {
   const modal = document.getElementById('settings-modal');
   document.getElementById('pat-input').value = pat;
   document.getElementById('watchlist-count').textContent = watchlist.length
-    ? `${watchlist.length} series in watchlist`
-    : 'No series logged yet';
+    ? `${watchlist.length} entr${watchlist.length === 1 ? 'y' : 'ies'} in watchlist`
+    : 'Nothing logged yet';
   modal.style.display = 'flex';
 }
 
@@ -3182,8 +3182,175 @@ function savePAT() {
 function clearWatchlist() {
   if (confirm('Clear the watchlist log? This won\'t affect your books or series.')) {
     localStorage.removeItem('herLibraryWatchlist');
-    document.getElementById('watchlist-count').textContent = 'No series logged yet';
+    document.getElementById('watchlist-count').textContent = 'Nothing logged yet';
+    if (currentTab === 'research') renderResearchView();
   }
+}
+
+// ── Research Tab ──────────────────────────────────────────────────────────────
+
+function renderResearchView() {
+  const el = document.getElementById('research-view');
+  const wl = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
+
+  el.innerHTML = `
+    <div style="padding:16px 14px 0">
+      <h2 style="font-family:'Playfair Display',serif;color:var(--spine);margin:0 0 4px;font-size:1.2rem">&#128269; Research & Wishlist Log</h2>
+      <p style="font-size:0.8rem;color:var(--ink-light);margin:0 0 16px;line-height:1.5">Spotted a book you can't scan? Log it here — by author, book title, or series. Everything goes into your monthly watchlist CSV.</p>
+
+      <!-- Entry form -->
+      <div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:10px;padding:14px;margin-bottom:18px">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--spine);margin-bottom:10px">&#43; Log a new entry</div>
+
+        <!-- Type toggle -->
+        <div style="display:flex;gap:6px;margin-bottom:10px" id="research-type-btns">
+          <button onclick="setResearchType('book')"   id="rtype-book"   class="rtype-btn rtype-active">&#128214; Book</button>
+          <button onclick="setResearchType('series')" id="rtype-series" class="rtype-btn">&#128218; Series</button>
+          <button onclick="setResearchType('author')" id="rtype-author" class="rtype-btn">&#9997; Author</button>
+        </div>
+
+        <div id="research-book-fields">
+          <input type="text" id="r-book-title" placeholder="Book title *"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+          <input type="text" id="r-book-author" placeholder="Author name (optional)"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+          <input type="text" id="r-book-series" placeholder="Series name (optional)"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+        </div>
+
+        <div id="research-series-fields" style="display:none">
+          <input type="text" id="r-series-name" placeholder="Series name *"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+          <input type="text" id="r-series-author" placeholder="Author name (optional)"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+        </div>
+
+        <div id="research-author-fields" style="display:none">
+          <input type="text" id="r-author-name" placeholder="Author name *"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+          <input type="text" id="r-author-series" placeholder="Series name (optional)"
+            style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+        </div>
+
+        <div id="research-form-error" style="font-size:0.78rem;color:#c0392b;margin-bottom:6px;display:none"></div>
+        <button onclick="saveResearchEntry()"
+          style="width:100%;padding:10px;background:var(--spine);color:white;border:none;border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;font-weight:700;cursor:pointer">
+          Save to Watchlist
+        </button>
+      </div>
+
+      <!-- Log -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <div style="font-size:0.82rem;font-weight:700;color:var(--spine)">Logged entries (${wl.length})</div>
+        ${wl.length ? `<button onclick="clearResearchEntry('all')" style="font-size:0.72rem;padding:4px 10px;background:none;border:1.5px solid #c0392b;color:#c0392b;border-radius:6px;cursor:pointer;font-family:Lato,sans-serif">Clear all</button>` : ''}
+      </div>
+
+      ${wl.length === 0
+        ? `<div style="text-align:center;padding:24px 0;color:var(--ink-light);font-size:0.85rem">Nothing logged yet — add your first entry above.</div>`
+        : wl.slice().reverse().map((w, ri) => {
+            const i = wl.length - 1 - ri;
+            const type = w.entry_type || 'series';
+            const icon = type === 'book' ? '&#128214;' : type === 'author' ? '&#9997;' : '&#128218;';
+            const badge = type === 'book' ? '#3a7bd5' : type === 'author' ? '#7c5cbf' : '#4a7c5e';
+            const primary = type === 'book' ? w.book_name : type === 'author' ? w.author : w.series_name;
+            const subs = [
+              w.author && type !== 'author' ? `by ${w.author}` : null,
+              w.series_name && type !== 'series' ? `series: ${w.series_name}` : null,
+              w.book_name && type !== 'book' ? `book: ${w.book_name}` : null,
+              w.date_added ? w.date_added : null
+            ].filter(Boolean);
+            return `<div style="background:white;border:1.5px solid var(--parchment-dark);border-radius:8px;padding:10px 12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:flex-start">
+              <div style="display:flex;gap:8px;align-items:flex-start">
+                <span style="background:${badge};color:white;border-radius:5px;padding:2px 7px;font-size:0.7rem;font-weight:700;white-space:nowrap;margin-top:2px">${icon} ${type}</span>
+                <div>
+                  <div style="font-weight:700;font-size:0.87rem;color:var(--ink)">${esc(primary||'')}</div>
+                  ${subs.length ? `<div style="font-size:0.75rem;color:var(--ink-light);margin-top:2px">${subs.map(esc).join(' · ')}</div>` : ''}
+                </div>
+              </div>
+              <button onclick="clearResearchEntry(${i})" style="background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:1rem;padding:0 2px;flex-shrink:0">&#10005;</button>
+            </div>`;
+          }).join('')
+      }
+    </div>
+  `;
+
+  // Add rtype-btn styles if not already present
+  if (!document.getElementById('rtype-style')) {
+    const s = document.createElement('style');
+    s.id = 'rtype-style';
+    s.textContent = `
+      .rtype-btn { flex:1;padding:7px 4px;border:1.5px solid var(--parchment-dark);border-radius:7px;font-family:Lato,sans-serif;font-size:0.78rem;font-weight:700;background:white;color:var(--ink);cursor:pointer;transition:all .15s }
+      .rtype-active { background:var(--spine);color:white;border-color:var(--spine) }
+    `;
+    document.head.appendChild(s);
+  }
+
+  window._researchType = window._researchType || 'book';
+  setResearchType(window._researchType);
+}
+
+function setResearchType(type) {
+  window._researchType = type;
+  ['book','series','author'].forEach(t => {
+    const btn = document.getElementById('rtype-' + t);
+    const fields = document.getElementById('research-' + t + '-fields');
+    if (btn) btn.classList.toggle('rtype-active', t === type);
+    if (fields) fields.style.display = t === type ? 'block' : 'none';
+  });
+}
+
+function saveResearchEntry() {
+  const type = window._researchType || 'book';
+  const errEl = document.getElementById('research-form-error');
+  errEl.style.display = 'none';
+
+  let entry = { entry_type: type, date_added: new Date().toISOString().split('T')[0] };
+
+  if (type === 'book') {
+    const title  = (document.getElementById('r-book-title').value  || '').trim();
+    const author = (document.getElementById('r-book-author').value || '').trim();
+    const series = (document.getElementById('r-book-series').value || '').trim();
+    if (!title) { errEl.textContent = 'Please enter a book title.'; errEl.style.display='block'; return; }
+    entry.book_name   = title;
+    entry.author      = author;
+    entry.series_name = series;
+  } else if (type === 'series') {
+    const sname  = (document.getElementById('r-series-name').value   || '').trim();
+    const author = (document.getElementById('r-series-author').value || '').trim();
+    if (!sname) { errEl.textContent = 'Please enter a series name.'; errEl.style.display='block'; return; }
+    entry.series_name = sname;
+    entry.author      = author;
+    entry.book_name   = '';
+  } else {
+    const aname  = (document.getElementById('r-author-name').value   || '').trim();
+    const series = (document.getElementById('r-author-series').value || '').trim();
+    if (!aname) { errEl.textContent = 'Please enter an author name.'; errEl.style.display='block'; return; }
+    entry.author      = aname;
+    entry.series_name = series;
+    entry.book_name   = '';
+  }
+
+  const wl = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
+  wl.push(entry);
+  localStorage.setItem('herLibraryWatchlist', JSON.stringify(wl));
+
+  // Clear fields
+  ['r-book-title','r-book-author','r-book-series','r-series-name','r-series-author','r-author-name','r-author-series']
+    .forEach(id => { const el = document.getElementById(id); if(el) el.value=''; });
+
+  renderResearchView();
+}
+
+function clearResearchEntry(index) {
+  const wl = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
+  if (index === 'all') {
+    if (!confirm('Clear all logged entries?')) return;
+    localStorage.setItem('herLibraryWatchlist', JSON.stringify([]));
+  } else {
+    wl.splice(index, 1);
+    localStorage.setItem('herLibraryWatchlist', JSON.stringify(wl));
+  }
+  renderResearchView();
 }
 </script>
 
