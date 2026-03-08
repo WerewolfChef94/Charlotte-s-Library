@@ -1811,15 +1811,115 @@ function showLookupResult(book) {
   checkBookSeries(book);
 }
 
+// Fetch series info from Open Library - tries proper fetch with User-Agent first,
+// falls back to JSONP script tag if CORS blocks it
+async function fetchOpenLibrarySeries(isbn, title, author) {
+  const OL_AGENT = "CharlottesLibrary/1.0 (personal book tracker; contact via github.com/werewolfchef94)";
+
+  // Method 1: proper fetch with User-Agent header (fully compliant)
+  try {
+    let url, parseResult;
+    if (isbn) {
+      url = 'https://openlibrary.org/search.json?isbn=' + isbn + '&fields=title,author_name,series,series_number&limit=1';
+    } else {
+      url = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
+            (author ? '&author=' + encodeURIComponent(author) : '') +
+            '&fields=title,author_name,series,series_number&limit=1';
+    }
+    const res = await fetch(url, {
+      headers: { 'User-Agent': OL_AGENT }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      const doc = data.docs && data.docs[0];
+      if (doc && doc.series && doc.series.length > 0) {
+        return {
+          series: doc.series[0],
+          series_number: doc.series_number ? doc.series_number[0] : null
+        };
+      }
+    }
+  } catch(e) { /* CORS blocked - fall through to JSONP */ }
+
+  // Method 2: JSONP fallback if fetch is blocked by CORS
+  return new Promise((resolve) => {
+    const cbName = '_olcb_' + Date.now();
+    const timeout = setTimeout(() => {
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      resolve(null);
+    }, 6000);
+
+    window[cbName] = function(data) {
+      clearTimeout(timeout);
+      delete window[cbName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+      try {
+        if (isbn) {
+          const key = 'ISBN:' + isbn;
+          const book = data[key];
+          if (book && book.series) {
+            resolve({ series: Array.isArray(book.series) ? book.series[0] : book.series });
+            return;
+          }
+        } else if (data.docs && data.docs[0] && data.docs[0].series) {
+          const doc = data.docs[0];
+          resolve({
+            series: doc.series[0],
+            series_number: doc.series_number ? doc.series_number[0] : null
+          });
+          return;
+        }
+        resolve(null);
+      } catch(e) { resolve(null); }
+    };
+
+    const script = document.createElement('script');
+    let url;
+    if (isbn) {
+      url = 'https://openlibrary.org/api/books?bibkeys=ISBN:' + isbn + '&jscmd=data&format=javascript&callback=' + cbName;
+    } else {
+      url = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
+            (author ? '&author=' + encodeURIComponent(author) : '') +
+            '&fields=title,author_name,series,series_number&limit=1&callback=' + cbName;
+    }
+    script.src = url;
+    script.onerror = () => { clearTimeout(timeout); resolve(null); };
+    document.head.appendChild(script);
+  });
+}
+
 async function checkBookSeries(book) {
   const hint = document.getElementById('series-hint');
   if (!hint) return;
 
-  // Step 1: check if Google Books already told us the series during lookup
+  // Step 1: check if Google Books already gave us series info during ISBN lookup
   let seriesName = book.detectedSeries || null;
   let seriesPosition = book.detectedPosition || null;
 
-  // Step 2: if not, do a secondary search by title+author to find series info
+  // Step 2: ask Open Library by ISBN - best source for series data
+  if (!seriesName && book.isbn) {
+    try {
+      const olData = await fetchOpenLibrarySeries(book.isbn, null, null);
+      if (olData && olData.series) {
+        seriesName = olData.series;
+        if (olData.series_number) seriesPosition = parseInt(olData.series_number);
+      }
+    } catch(e) { /* ignore */ }
+  }
+
+  // Step 3: ask Open Library by title+author if ISBN gave nothing
+  if (!seriesName) {
+    try {
+      const olData = await fetchOpenLibrarySeries(null, book.title, book.author);
+      if (olData && olData.series) {
+        seriesName = olData.series;
+        if (olData.series_number) seriesPosition = parseInt(olData.series_number);
+      }
+    } catch(e) { /* ignore */ }
+  }
+
+  // Step 4: Google Books title pattern matching as last resort
   if (!seriesName) {
     try {
       const q = encodeURIComponent(book.title + ' ' + book.author);
@@ -1844,7 +1944,7 @@ async function checkBookSeries(book) {
     } catch(e) { /* ignore */ }
   }
 
-  // Step 3: cross-check against existing series in library by name or author
+  // Step 5: cross-check against existing series in library by name or author
   let matchedSeries = null;
   if (seriesName) {
     matchedSeries = seriesList.find(s =>
@@ -1871,7 +1971,7 @@ async function checkBookSeries(book) {
     return;
   }
 
-  // Step 4: series detected but not in library yet - offer to create it
+  // Step 6: series detected but not in library yet - offer to create it
   if (seriesName) {
     currentBook.detectedSeries = seriesName;
     currentBook.detectedPosition = seriesPosition;
