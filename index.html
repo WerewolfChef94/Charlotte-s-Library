@@ -1544,17 +1544,21 @@ function renderSeriesView() {
     return;
   }
 
-  const filteredSeries = q
+  // Split query into words for partial multi-word matching
+  // e.g. "monsters curvy" matches "Monsters Love Curvy Girls"
+  const qWords = q ? q.split(/\s+/).filter(Boolean) : [];
+
+  const filteredSeries = qWords.length > 0
     ? seriesList.filter(s => {
-        const name = (s.name || '').toLowerCase();
-        const authors = (s.authors || []).map(a => a.toLowerCase());
-        const hasMatchingBook = books.some(b => b.seriesId === s.id && (
-          (b.title  || '').toLowerCase().includes(q) ||
-          (b.author || '').toLowerCase().includes(q)
-        ));
-        return name.includes(q) ||
-               authors.some(a => a.includes(q)) ||
-               hasMatchingBook;
+        const name    = (s.name || '').toLowerCase();
+        const authors = (s.authors || []).map(a => a.toLowerCase()).join(' ');
+        const bookText = books
+          .filter(b => b.seriesId === s.id)
+          .map(b => ((b.title || '') + ' ' + (b.author || '')).toLowerCase())
+          .join(' ');
+        const haystack = name + ' ' + authors + ' ' + bookText;
+        // Every query word must appear somewhere in the combined text
+        return qWords.every(w => haystack.includes(w));
       })
     : seriesList;
 
