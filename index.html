@@ -866,7 +866,7 @@
 <body>
 
 <header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.8</span></h1>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.9</span></h1>
   <p>A personal book collection</p>
 </header>
 
@@ -2040,20 +2040,32 @@ async function checkBookSeries(book) {
     return;
   }
 
-  // Step 6: series detected but not in library yet - offer to create it
+  // Step 6: series detected from DB but not in library yet
+  // Auto-create it immediately so we can show the full missing books panel
   if (seriesName) {
     currentBook.detectedSeries = seriesName;
     currentBook.detectedPosition = seriesPosition;
-    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
-      <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:4px">
-        Part of a series: <em>${esc(seriesName)}</em>${seriesPosition ? ' (Book #' + seriesPosition + ')' : ''}
-      </div>
-      <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">This series is not in your library yet.</div>
-      <button onclick="autoCreateSeries(${JSON.stringify(seriesName)}, ${seriesPosition || 'null'})"
-        style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer">
-        + Create series &amp; tag this book
-      </button>
-    </div>`;
+    const dbRef = book._dbSeriesRef || SEED_SERIES_DB.find(s => s.name.toLowerCase() === seriesName.toLowerCase());
+    if (dbRef) {
+      const newSeries = { id: 's' + Date.now(), name: dbRef.name, status: 'ongoing', totalBooks: dbRef.totalBooks || null };
+      seriesList.push(newSeries);
+      save();
+      currentBook.seriesId = newSeries.id;
+      if (seriesPosition) currentBook.seriesPosition = seriesPosition;
+      book._dbSeriesRef = dbRef;
+      showSeriesHint(newSeries, book, hint, seriesPosition);
+    } else {
+      hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
+        <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:4px">
+          Part of a series: <em>${esc(seriesName)}</em>${seriesPosition ? ' (Book #' + seriesPosition + ')' : ''}
+        </div>
+        <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">This series is not in your library yet.</div>
+        <button onclick="autoCreateSeries(${JSON.stringify(seriesName)}, ${seriesPosition || 'null'})"
+          style="font-size:0.72rem;padding:5px 10px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-weight:700;cursor:pointer">
+          + Create series &amp; tag this book
+        </button>
+      </div>`;
+    }
   } else {
     // No series found - show standalone badge
     hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
