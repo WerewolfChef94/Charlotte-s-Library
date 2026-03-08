@@ -2193,13 +2193,39 @@ function showSeriesHint(series, scannedBook, hint, seriesPosition) {
   const wishPositions = new Set(seriesBooks.filter(b => b.type === 'wishlist').map(b => b.seriesPosition).filter(Boolean));
   const isWishlistScan = scanningFor === 'wishlist';
 
-  // Count the scanned book in the right set for display purposes
-  if (seriesPosition) {
+  // Only count the scanned book if it isn't already saved in the library
+  // (prevents "Complete series!" when re-scanning an already-owned book)
+  const isbn = scannedBook && scannedBook.isbn;
+  const titleLower = (scannedBook && scannedBook.title || '').toLowerCase();
+  const alreadySaved = books.some(b =>
+    b.seriesId === series.id && (
+      (isbn && b.isbn && b.isbn === isbn) ||
+      (b.title && b.title.toLowerCase() === titleLower)
+    )
+  );
+  if (seriesPosition && !alreadySaved) {
     if (isWishlistScan) wishPositions.add(seriesPosition);
     else ownedPositions.add(seriesPosition);
   }
 
   currentBook.seriesId = series.id;
+
+  // If already saved, show a simple "already in library" notice instead
+  if (alreadySaved) {
+    const existingBook = books.find(b =>
+      b.seriesId === series.id && (
+        (isbn && b.isbn && b.isbn === isbn) ||
+        (b.title && b.title.toLowerCase() === titleLower)
+      )
+    );
+    const existingType = existingBook ? existingBook.type : 'owned';
+    hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem">
+      <span style="font-weight:700;color:#2e7d32">&#10003; Already in your library</span><br>
+      <span style="color:#1b5e20">This book is already in your <strong>${existingType === 'owned' ? 'Owned' : 'Wishlist'}</strong> tab.</span>
+    </div>`;
+    return;
+  }
+
   const total = series.totalBooks;
 
   // Look up seed DB for real book titles
