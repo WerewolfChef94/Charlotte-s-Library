@@ -649,15 +649,17 @@
 </header>
 
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('owned')">ðŸ“š Owned</button>
-  <button class="tab-btn" onclick="switchTab('wishlist')">âœ¨ Wishlist</button>
+  <button class="tab-btn active" onclick="switchTab('owned')">&#9755; Owned</button>
+  <button class="tab-btn" onclick="switchTab('wishlist')">&#9733; Wishlist</button>
 </div>
 
 <main>
   <div class="stats-bar" id="stats-bar"></div>
 
   <div class="search-bar">
-    <span class="icon">ðŸ”</span>
+    <span class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#b09070" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
     <input type="text" id="search-input" placeholder="Search by title or authorâ€¦" oninput="renderBooks()">
   </div>
 
@@ -674,7 +676,12 @@
   <div class="book-list" id="book-list"></div>
 </main>
 
-<button class="scan-fab" onclick="openScanner()" title="Scan a book">ðŸ“·</button>
+<button class="scan-fab" onclick="openScanner()" title="Scan a book">
+  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+    <circle cx="12" cy="13" r="4"/>
+  </svg>
+</button>
 
 <!-- Scanner Modal -->
 <div class="modal-overlay" id="scan-modal" style="display:none">
@@ -710,8 +717,8 @@
     <div id="found-book-preview"></div>
 
     <div style="display:flex;gap:10px;margin-bottom:14px">
-      <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">ðŸ“š Owned</button>
-      <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">âœ¨ Wishlist</button>
+      <button class="btn-type owned active" id="btn-owned" onclick="selectType('owned')">Owned</button>
+      <button class="btn-type wishlist" id="btn-wish" onclick="selectType('wishlist')">Wishlist</button>
     </div>
 
     <div class="form-group">
@@ -790,9 +797,9 @@ function renderBooks() {
 
   if (list.length === 0) {
     el.innerHTML = `<div class="empty">
-      <div class="icon">${currentTab === 'owned' ? 'ðŸ“š' : 'âœ¨'}</div>
+      <div class="icon" style="font-size:2.5rem;opacity:0.4">${currentTab === 'owned' ? '&#9776;' : '&#9733;'}</div>
       <h3>${currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty'}</h3>
-      <p>${currentTab === 'owned' ? 'Tap the ðŸ“· button to scan a book spine barcode.' : 'Scan a book and add it to the wishlist.'}</p>
+      <p>${currentTab === 'owned' ? 'Tap the camera button to scan a book barcode.' : 'Scan a book and add it to the wishlist.'}</p>
     </div>`;
   } else {
     el.innerHTML = list.map(b => bookCard(b)).join('');
@@ -816,7 +823,7 @@ function statusBadge(s) {
 function bookCard(b) {
   const coverHtml = b.cover
     ? `<img class="book-cover" src="${b.cover}" alt="">`
-    : `<div class="book-cover-placeholder">ðŸ“–</div>`;
+    : `<div class="book-cover-placeholder">&#9776;</div>`;
 
   const moveLabel = b.type === 'owned' ? 'â†’ Wishlist' : 'â†’ Library';
 
@@ -827,7 +834,7 @@ function bookCard(b) {
       <div class="book-author">${esc(b.author)}</div>
       <div class="book-meta">
         ${statusBadge(b.status)}
-        <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? 'ðŸ“š Owned' : 'âœ¨ Wishlist'}</span>
+        <span class="badge ${b.type === 'owned' ? 'badge-owned' : 'badge-wish'}">${b.type === 'owned' ? 'Owned' : 'Wishlist'}</span>
       </div>
       <div class="stars">${stars(b.rating || 0)}</div>
       ${b.notes ? `<div class="book-notes">${esc(b.notes)}</div>` : ''}
