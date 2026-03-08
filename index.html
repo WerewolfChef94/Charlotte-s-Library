@@ -866,7 +866,7 @@
 <body>
 
 <header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.3</span></h1>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.4</span></h1>
   <p>A personal book collection</p>
 </header>
 
@@ -2265,13 +2265,14 @@ function addAllMissingToWishlist(seriesId) {
   const s = seriesList.find(x => x.id === seriesId);
   if (!s) return;
 
-  // Build missing positions from series total vs what's already in library
+  // Build missing positions â€” exclude current unsaved book so it doesn't get wishlist-added too
+  const currentPos = currentBook && currentBook.seriesId === seriesId ? currentBook.seriesPosition : null;
   const seriesBooks = books.filter(b => b.seriesId === seriesId);
   const ownedPos = new Set(seriesBooks.filter(b => b.type === 'owned').map(b => b.seriesPosition).filter(Boolean));
   const wishPos = new Set(seriesBooks.filter(b => b.type === 'wishlist').map(b => b.seriesPosition).filter(Boolean));
   const missing = [];
   for (let i = 1; i <= (s.totalBooks || 0); i++) {
-    if (!ownedPos.has(i) && !wishPos.has(i)) missing.push(i);
+    if (!ownedPos.has(i) && !wishPos.has(i) && i !== currentPos) missing.push(i);
   }
 
   // Get real titles from seed DB
