@@ -866,16 +866,8 @@
 <body>
 
 <header>
-  <div style="display:flex;justify-content:space-between;align-items:flex-start">
-    <div>
-      <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v3.0</span></h1>
-      <p>A personal book collection</p>
-    </div>
-    <button onclick="openTransferModal()" title="Transfer / Backup"
-      style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:6px 10px;color:white;font-family:Lato,sans-serif;font-size:0.7rem;cursor:pointer;margin-top:4px;white-space:nowrap">
-      &#8645; Transfer
-    </button>
-  </div>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v3.0</span></h1>
+  <p>A personal book collection</p>
 </header>
 
 <div class="tabs">
@@ -924,6 +916,14 @@
       <line x1="9" y1="15" x2="13" y2="15"/>
     </svg>
     <span style="font-size:0.6rem;display:block;margin-top:2px">Kindle</span>
+  </button>
+  <button class="scan-fab" onclick="openTransferModal()" title="Transfer / Backup"
+    style="background:linear-gradient(135deg,#4a3580,#2e1f5e)">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="17 1 21 5 17 9"/><line x1="3" y1="11" x2="21" y2="5"/>
+      <polyline points="7 23 3 19 7 15"/><line x1="21" y1="13" x2="3" y2="19"/>
+    </svg>
+    <span style="font-size:0.6rem;display:block;margin-top:2px">Transfer</span>
   </button>
 </div>
 
