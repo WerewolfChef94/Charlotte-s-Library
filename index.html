@@ -2014,6 +2014,13 @@ async function checkBookSeries(book) {
         const data = await res.json();
         for (const item of (data.items || [])) {
           const info = item.volumeInfo;
+          // Only use this result if the title roughly matches what we scanned
+          const resultTitle = (info.title || '').toLowerCase();
+          const ourTitle = book.title.toLowerCase();
+          const titleWords = ourTitle.split(' ').filter(w => w.length > 3);
+          const titleMatches = titleWords.length > 0 && titleWords.some(w => resultTitle.includes(w));
+          if (!titleMatches) continue;
+
           const fullTitle = (info.title || '') + ' ' + (info.subtitle || '');
           const m = fullTitle.match(/\(([^)]+?),?\s*(?:book\s*)?#?(\d+)\)/i);
           if (m) { seriesName = m[1].trim(); seriesPosition = parseInt(m[2]); break; }
@@ -2039,15 +2046,7 @@ async function checkBookSeries(book) {
       seriesName.toLowerCase().includes(s.name.toLowerCase())
     );
   }
-  // Also match by author even without a detected series name
-  if (!matchedSeries) {
-    matchedSeries = seriesList.find(s => {
-      const seriesBooks = books.filter(b => b.seriesId === s.id);
-      return seriesBooks.some(b => b.author && book.author &&
-        b.author.toLowerCase() === book.author.toLowerCase());
-    });
-    if (matchedSeries && !seriesName) seriesName = matchedSeries.name;
-  }
+  // Author-match against existing library removed â€” caused false positives
 
   if (matchedSeries) {
     // Tag the book to existing series
