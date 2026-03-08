@@ -1974,8 +1974,8 @@ async function checkBookSeries(book) {
   const hint = document.getElementById('series-hint');
   if (!hint) return;
 
-  // Step 1: ALWAYS check local seed database first â€” it's most reliable
-  // (don't trust detectedSeries from Google Books scan-time â€” often garbage)
+  // ONLY use the embedded series DB â€” external APIs (Open Library, Google Books)
+  // return garbage series names and cause false positives
   let seriesName = null;
   let seriesPosition = null;
 
@@ -1984,64 +1984,6 @@ async function checkBookSeries(book) {
     seriesName = dbResult.series.name;
     seriesPosition = dbResult.position;
     book._dbSeriesRef = dbResult.series;
-  }
-
-  // (detectedSeries from scan-time not used â€” unreliable)
-
-  // Step 2: check if Google Books already gave us series info
-
-  // Step 2: ask Open Library by ISBN - best source for series data
-  if (!seriesName && book.isbn) {
-    try {
-      const olData = await fetchOpenLibrarySeries(book.isbn, null, null);
-      if (olData && olData.series) {
-        seriesName = olData.series;
-        if (olData.series_number) seriesPosition = parseInt(olData.series_number);
-      }
-    } catch(e) { /* ignore */ }
-  }
-
-  // Step 3: ask Open Library by title+author if ISBN gave nothing
-  if (!seriesName) {
-    try {
-      const olData = await fetchOpenLibrarySeries(null, book.title, book.author);
-      if (olData && olData.series) {
-        seriesName = olData.series;
-        if (olData.series_number) seriesPosition = parseInt(olData.series_number);
-      }
-    } catch(e) { /* ignore */ }
-  }
-
-  // Step 4: Google Books title pattern matching as last resort
-  if (!seriesName) {
-    try {
-      const q = encodeURIComponent(book.title + ' ' + book.author);
-      const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + q + '&maxResults=5&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
-      if (res.ok) {
-        const data = await res.json();
-        for (const item of (data.items || [])) {
-          const info = item.volumeInfo;
-          // Only use this result if the title roughly matches what we scanned
-          const resultTitle = (info.title || '').toLowerCase();
-          const ourTitle = book.title.toLowerCase();
-          const titleWords = ourTitle.split(' ').filter(w => w.length > 3);
-          const titleMatches = titleWords.length > 0 && titleWords.some(w => resultTitle.includes(w));
-          if (!titleMatches) continue;
-
-          const fullTitle = (info.title || '') + ' ' + (info.subtitle || '');
-          const m = fullTitle.match(/\(([^)]+?),?\s*(?:book\s*)?#?(\d+)\)/i);
-          if (m) { seriesName = m[1].trim(); seriesPosition = parseInt(m[2]); break; }
-          if (info.seriesInfo && info.seriesInfo.bookSeries && info.seriesInfo.bookSeries[0]) {
-            seriesName = info.seriesInfo.bookSeries[0].name || null;
-            if (info.seriesInfo.shortSeriesBookTitle) {
-              const m2 = info.seriesInfo.shortSeriesBookTitle.match(/#?(\d+)/);
-              if (m2) seriesPosition = parseInt(m2[1]);
-            }
-            if (seriesName) break;
-          }
-        }
-      }
-    } catch(e) { /* ignore */ }
   }
 
   // Step 5: cross-check against existing series in library by name or author
