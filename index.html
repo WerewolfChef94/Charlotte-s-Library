@@ -922,13 +922,23 @@ async function startCamera() {
 
   // Check BarcodeDetector support
   if (!('BarcodeDetector' in window)) {
-    setScanStatus('âš ï¸ Your browser doesn\'t support automatic scanning. Please type the ISBN number from the back of the book into the field below.', 'err');
+    setScanStatus('âš ï¸ Auto-scan not supported on this browser. Please type the ISBN number from the back of the book into the field below.', 'err');
     return;
   }
 
+  // Check which formats are supported
+  let supportedFormats = [];
+  try {
+    supportedFormats = await BarcodeDetector.getSupportedFormats();
+  } catch(e) {}
+
+  const formatsToUse = ['ean_13', 'ean_8', 'upc_a', 'upc_e'].filter(f =>
+    supportedFormats.length === 0 || supportedFormats.includes(f)
+  );
+
   try {
     barcodeDetector = new BarcodeDetector({
-      formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e']
+      formats: formatsToUse.length > 0 ? formatsToUse : ['ean_13', 'ean_8', 'upc_a', 'upc_e']
     });
   } catch(e) {
     setScanStatus('âš ï¸ Barcode detection unavailable. Please enter ISBN manually below.', 'err');
@@ -936,46 +946,78 @@ async function startCamera() {
   }
 
   try {
+    // Request highest possible resolution for better barcode detection
     cameraStream = await navigator.mediaDevices.getUserMedia({
       video: {
         facingMode: { ideal: 'environment' },
-        width: { ideal: 1280 },
-        height: { ideal: 720 }
+        width: { ideal: 1920 },
+        height: { ideal: 1080 },
+        focusMode: { ideal: 'continuous' }
       },
       audio: false
     });
 
+    // Try to enable continuous autofocus on the track
+    const track = cameraStream.getVideoTracks()[0];
+    if (track && track.applyConstraints) {
+      try {
+        await track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] });
+      } catch(e) { /* focus constraint not supported, continue */ }
+    }
+
     video.srcObject = cameraStream;
     await video.play();
     scannerRunning = true;
-    setScanStatus('ðŸ“· Point the camera at the barcode on the back of the book', 'loading');
+    setScanStatus('ðŸ“· Hold the barcode steady inside the box â€” keep it well lit', 'loading');
 
-    // Scan a frame every 400ms
+    // Require same barcode detected twice in a row to avoid false positives
+    let lastCode = null;
+    let confirmCount = 0;
+
+    // Scan every 200ms for responsiveness
     scanInterval = setInterval(async () => {
-      if (!scannerRunning || video.readyState < 2) return;
+      if (!scannerRunning || video.readyState < 2 || video.videoWidth === 0) return;
       try {
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
+
+        // Boost contrast slightly to help detection
+        ctx.filter = 'contrast(1.2) brightness(1.05)';
         ctx.drawImage(video, 0, 0);
+        ctx.filter = 'none';
+
         const barcodes = await barcodeDetector.detect(canvas);
         if (barcodes.length > 0) {
           const code = barcodes[0].rawValue;
-          if (code && code.length >= 10) {
-            stopCamera();
-            document.getElementById('isbn-input').value = code;
-            lookupISBN(code);
+          if (code && code.length >= 8) {
+            if (code === lastCode) {
+              confirmCount++;
+              if (confirmCount >= 2) {
+                stopCamera();
+                document.getElementById('isbn-input').value = code;
+                setScanStatus('âœ… Barcode detected! Looking up bookâ€¦', 'ok');
+                lookupISBN(code);
+              }
+            } else {
+              lastCode = code;
+              confirmCount = 1;
+            }
           }
+        } else {
+          // Reset confirmation if nothing seen
+          lastCode = null;
+          confirmCount = 0;
         }
       } catch(e) { /* continue scanning */ }
-    }, 400);
+    }, 200);
 
   } catch(e) {
     scannerRunning = false;
     if (e.name === 'NotAllowedError') {
-      setScanStatus('ðŸ“µ Camera permission denied. Please allow camera access in Chrome: tap the ðŸ”’ icon in the address bar â†’ Site settings â†’ Camera â†’ Allow. Then reload the page.', 'err');
+      setScanStatus('ðŸ“µ Camera permission denied. In Chrome tap the ðŸ”’ lock icon in the address bar â†’ Site settings â†’ Camera â†’ Allow, then reload.', 'err');
     } else {
-      setScanStatus('âš ï¸ Could not start camera. Please enter the ISBN manually below.', 'err');
+      setScanStatus('âš ï¸ Could not start camera (' + e.message + '). Please enter the ISBN manually below.', 'err');
     }
   }
 }
