@@ -1573,7 +1573,6 @@ function setScanStatus(msg, type) {
 }
 
 async function lookupISBN(isbnOverride) {
-  // Clean ISBN - strip spaces, dashes, and non-digits
   let isbn = (isbnOverride || document.getElementById('isbn-input').value).replace(/[^\d]/g, '').trim();
   if (!isbn || isbn.length < 8) {
     setScanStatus('Please enter a valid ISBN (10 or 13 digits).', 'err');
@@ -1581,26 +1580,26 @@ async function lookupISBN(isbnOverride) {
   }
 
   document.getElementById('isbn-input').value = isbn;
-  setScanStatus('> Looking up bookâ€¦', 'loading');
+  setScanStatus('Looking up book...', 'loading');
 
-  // Try Google Books first (works fine on HTTPS)
+  // 1. Open Library books API - free, no key needed
   try {
-    const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&maxResults=1`);
+    const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
     if (res.ok) {
       const data = await res.json();
-      if (data.items && data.items.length > 0) {
-        const info = data.items[0].volumeInfo;
-        let cover = '';
-        if (info.imageLinks) {
-          cover = (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://');
-        }
+      const key = `ISBN:${isbn}`;
+      if (data[key]) {
+        const book = data[key];
+        const author = book.authors ? book.authors.map(a => a.name).join(', ') : 'Unknown Author';
+        const cover = book.cover
+          ? (book.cover.large || book.cover.medium || book.cover.small || '')
+          : `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
         currentBook = {
           id: null, isbn,
-          title: info.title || 'Unknown Title',
-          author: (info.authors || ['Unknown Author']).join(', '),
-          cover,
-          year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
-          pages: info.pageCount || '',
+          title: book.title || 'Unknown Title',
+          author, cover,
+          year: book.publish_date || '',
+          pages: book.number_of_pages || '',
           type: 'owned', status: 'unread', rating: 0, notes: '',
           addedAt: Date.now()
         };
@@ -1611,9 +1610,38 @@ async function lookupISBN(isbnOverride) {
     }
   } catch(e) { /* fall through */ }
 
-  // Fallback: use Claude AI to identify the book by ISBN
+  // 2. Open Library search endpoint
   try {
-    setScanStatus('AI: Asking AI to identify bookâ€¦', 'loading');
+    setScanStatus('Searching...', 'loading');
+    const res = await fetch(`https://openlibrary.org/search.json?isbn=${isbn}&limit=1`);
+    if (res.ok) {
+      const data = await res.json();
+      if (data.docs && data.docs.length > 0) {
+        const doc = data.docs[0];
+        const coverId = doc.cover_i;
+        const cover = coverId
+          ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`
+          : `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
+        currentBook = {
+          id: null, isbn,
+          title: doc.title || 'Unknown Title',
+          author: doc.author_name ? doc.author_name.join(', ') : 'Unknown Author',
+          cover,
+          year: doc.first_publish_year ? String(doc.first_publish_year) : '',
+          pages: doc.number_of_pages_median || '',
+          type: 'owned', status: 'unread', rating: 0, notes: '',
+          addedAt: Date.now()
+        };
+        setScanStatus('', 'ok');
+        showLookupResult(currentBook);
+        return;
+      }
+    }
+  } catch(e) { /* fall through */ }
+
+  // 3. Claude AI fallback
+  try {
+    setScanStatus('Asking AI to identify book...', 'loading');
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -1622,13 +1650,10 @@ async function lookupISBN(isbnOverride) {
         max_tokens: 300,
         messages: [{
           role: 'user',
-          content: `ISBN: ${isbn}. What book is this? Reply ONLY with a JSON object like this, no other text:
-{"title":"Book Title","author":"Author Name","year":"2020","pages":320}
-If you don't know the book, reply with: {"unknown":true}`
+          content: `What book has ISBN ${isbn}? Reply ONLY with JSON, no other text: {"title":"Book Title","author":"Author Name","year":"2020","pages":320} If unknown: {"unknown":true}`
         }]
       })
     });
-
     if (res.ok) {
       const data = await res.json();
       const text = data.content?.[0]?.text || '';
@@ -1636,13 +1661,11 @@ If you don't know the book, reply with: {"unknown":true}`
       if (jsonMatch) {
         const bookData = JSON.parse(jsonMatch[0]);
         if (!bookData.unknown && bookData.title) {
-          // Get cover from Open Library using the title/author
-          let cover = `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
           currentBook = {
             id: null, isbn,
             title: bookData.title,
             author: bookData.author || 'Unknown Author',
-            cover,
+            cover: `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`,
             year: bookData.year || '',
             pages: bookData.pages || '',
             type: 'owned', status: 'unread', rating: 0, notes: '',
@@ -1654,24 +1677,27 @@ If you don't know the book, reply with: {"unknown":true}`
         }
       }
     }
-  } catch(e) { /* fall through to manual */ }
+  } catch(e) { /* fall through */ }
 
-  // Final fallback: manual entry
+  // 4. Manual entry fallback
   setScanStatus('', 'ok');
   document.getElementById('lookup-result-area').innerHTML = `
     <div class="status-message status-err" style="margin-bottom:12px">
-      * Could not find ISBN <strong>${isbn}</strong> automatically. Enter the details manually:
+      Could not find ISBN <strong>${isbn}</strong> automatically. Enter details manually:
     </div>
-    <div style="margin-bottom:10px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>
-    <input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>
-    <div style="margin-bottom:12px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Author</label>
-    <input type="text" id="manual-author" placeholder="Author name" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>
+    <div style="margin-bottom:10px">
+      <label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>
+      <input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none">
+    </div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Author</label>
+      <input type="text" id="manual-author" placeholder="Author name" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none">
+    </div>
     <div class="btn-row">
       <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
       <button class="btn-primary" onclick="addManualBook()">Add Book</button>
     </div>`;
 }
-
 function addManualBook() {
   const title = document.getElementById('manual-title').value.trim();
   const author = document.getElementById('manual-author').value.trim();
