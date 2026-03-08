@@ -1017,7 +1017,7 @@
 </div>
 
 <script>
-// â”€â”€â”€ State â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- State -------------------------------------------------------------------
 let books = JSON.parse(localStorage.getItem('herLibrary') || '[]');
 let seriesList = JSON.parse(localStorage.getItem('herLibrarySeries') || '[]');
 let currentTab = 'owned';
@@ -1035,7 +1035,7 @@ function save() {
   localStorage.setItem('herLibrarySeries', JSON.stringify(seriesList));
 }
 
-// â”€â”€â”€ Tabs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Tabs --------------------------------------------------------------------
 function switchTab(tab) {
   currentTab = tab;
   activeSeriesFilter = null;
@@ -1056,7 +1056,7 @@ function switchTab(tab) {
   else renderBooks();
 }
 
-// â”€â”€â”€ Render â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Render ------------------------------------------------------------------
 function renderBooks() {
   const q = document.getElementById('search-input').value.toLowerCase();
   const sort = document.getElementById('sort-select').value;
@@ -1187,7 +1187,7 @@ function renderStats() {
   `;
 }
 
-// â”€â”€â”€ Series View â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Series View --------------------------------------------------------------
 function renderSeriesView() {
   const el = document.getElementById('series-view');
 
@@ -1342,7 +1342,7 @@ function editCurrentSeries() {
   openSeriesModal(viewingSeriesId);
 }
 
-// â”€â”€â”€ Series CRUD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Series CRUD --------------------------------------------------------------
 function openSeriesModal(id) {
   editingSeriesId = id || null;
   const s = id ? seriesList.find(x => x.id === id) : null;
@@ -1416,7 +1416,7 @@ function editBook(id) {
   openAddModal(b, true);
 }
 
-// â”€â”€â”€ Scanner (Native BarcodeDetector) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Scanner (Native BarcodeDetector) ----------------------------------------
 let cameraStream = null;
 let scanInterval = null;
 let barcodeDetector = null;
@@ -1535,7 +1535,7 @@ async function startCamera() {
               if (confirmCount >= 2) {
                 stopCamera();
                 document.getElementById('isbn-input').value = code;
-                setScanStatus('OK: Barcode detected! Looking up bookâ€¦', 'ok');
+                setScanStatus('OK: Barcode detected! Looking up book...', 'ok');
                 lookupISBN(code);
               }
             } else {
@@ -1554,7 +1554,7 @@ async function startCamera() {
   } catch(e) {
     scannerRunning = false;
     if (e.name === 'NotAllowedError') {
-      setScanStatus('X Camera permission denied. In Chrome tap the padlock lock icon in the address bar - Site settings â†’ Camera - Allow, then reload.', 'err');
+      setScanStatus('X Camera permission denied. In Chrome tap the padlock lock icon in the address bar - Site settings > Camera > Allow, then reload.', 'err');
     } else {
       setScanStatus('! Could not start camera (' + e.message + '). Please enter the ISBN manually below.', 'err');
     }
@@ -1580,84 +1580,29 @@ async function lookupISBN(isbnOverride) {
   }
 
   document.getElementById('isbn-input').value = isbn;
-  setScanStatus('Looking up book...', 'loading');
+  setScanStatus('Looking up book ' + isbn + '...', 'loading');
 
-  // 1. Open Library books API - free, no key needed
+  // Use Claude AI as primary lookup - bypasses all CORS issues
   try {
-    const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
-    if (res.ok) {
-      const data = await res.json();
-      const key = `ISBN:${isbn}`;
-      if (data[key]) {
-        const book = data[key];
-        const author = book.authors ? book.authors.map(a => a.name).join(', ') : 'Unknown Author';
-        const cover = book.cover
-          ? (book.cover.large || book.cover.medium || book.cover.small || '')
-          : `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
-        currentBook = {
-          id: null, isbn,
-          title: book.title || 'Unknown Title',
-          author, cover,
-          year: book.publish_date || '',
-          pages: book.number_of_pages || '',
-          type: 'owned', status: 'unread', rating: 0, notes: '',
-          addedAt: Date.now()
-        };
-        setScanStatus('', 'ok');
-        showLookupResult(currentBook);
-        return;
-      }
-    }
-  } catch(e) { /* fall through */ }
-
-  // 2. Open Library search endpoint
-  try {
-    setScanStatus('Searching...', 'loading');
-    const res = await fetch(`https://openlibrary.org/search.json?isbn=${isbn}&limit=1`);
-    if (res.ok) {
-      const data = await res.json();
-      if (data.docs && data.docs.length > 0) {
-        const doc = data.docs[0];
-        const coverId = doc.cover_i;
-        const cover = coverId
-          ? `https://covers.openlibrary.org/b/id/${coverId}-M.jpg`
-          : `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`;
-        currentBook = {
-          id: null, isbn,
-          title: doc.title || 'Unknown Title',
-          author: doc.author_name ? doc.author_name.join(', ') : 'Unknown Author',
-          cover,
-          year: doc.first_publish_year ? String(doc.first_publish_year) : '',
-          pages: doc.number_of_pages_median || '',
-          type: 'owned', status: 'unread', rating: 0, notes: '',
-          addedAt: Date.now()
-        };
-        setScanStatus('', 'ok');
-        showLookupResult(currentBook);
-        return;
-      }
-    }
-  } catch(e) { /* fall through */ }
-
-  // 3. Claude AI fallback
-  try {
-    setScanStatus('Asking AI to identify book...', 'loading');
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 300,
+        max_tokens: 400,
         messages: [{
           role: 'user',
-          content: `What book has ISBN ${isbn}? Reply ONLY with JSON, no other text: {"title":"Book Title","author":"Author Name","year":"2020","pages":320} If unknown: {"unknown":true}`
+          content: 'What book has ISBN ' + isbn + '? Reply ONLY with a raw JSON object, no markdown, no backticks, no explanation. Format: {"title":"Full Title","author":"Author Name","year":"2020","pages":320}. If you do not know this exact ISBN reply: {"unknown":true}'
         }]
       })
     });
+
     if (res.ok) {
       const data = await res.json();
-      const text = data.content?.[0]?.text || '';
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      const rawText = (data.content?.[0]?.text || '').trim();
+      // Strip any accidental markdown
+      const cleaned = rawText.replace(/```json|```/g, '').trim();
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const bookData = JSON.parse(jsonMatch[0]);
         if (!bookData.unknown && bookData.title) {
@@ -1665,8 +1610,8 @@ async function lookupISBN(isbnOverride) {
             id: null, isbn,
             title: bookData.title,
             author: bookData.author || 'Unknown Author',
-            cover: `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`,
-            year: bookData.year || '',
+            cover: 'https://covers.openlibrary.org/b/isbn/' + isbn + '-M.jpg',
+            year: String(bookData.year || ''),
             pages: bookData.pages || '',
             type: 'owned', status: 'unread', rating: 0, notes: '',
             addedAt: Date.now()
@@ -1677,26 +1622,20 @@ async function lookupISBN(isbnOverride) {
         }
       }
     }
-  } catch(e) { /* fall through */ }
+  } catch(e) { /* fall through to manual */ }
 
-  // 4. Manual entry fallback
+  // Manual entry fallback
   setScanStatus('', 'ok');
-  document.getElementById('lookup-result-area').innerHTML = `
-    <div class="status-message status-err" style="margin-bottom:12px">
-      Could not find ISBN <strong>${isbn}</strong> automatically. Enter details manually:
-    </div>
-    <div style="margin-bottom:10px">
-      <label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>
-      <input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none">
-    </div>
-    <div style="margin-bottom:12px">
-      <label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Author</label>
-      <input type="text" id="manual-author" placeholder="Author name" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none">
-    </div>
-    <div class="btn-row">
-      <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
-      <button class="btn-primary" onclick="addManualBook()">Add Book</button>
-    </div>`;
+  document.getElementById('lookup-result-area').innerHTML =
+    '<div class="status-message status-err" style="margin-bottom:12px">' +
+    'Could not find ISBN <strong>' + isbn + '</strong> automatically. Enter details manually:</div>' +
+    '<div style="margin-bottom:10px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>' +
+    '<input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
+    '<div style="margin-bottom:12px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Author</label>' +
+    '<input type="text" id="manual-author" placeholder="Author name" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
+    '<div class="btn-row">' +
+    '<button class="btn-secondary" onclick="closeScanner()">Cancel</button>' +
+    '<button class="btn-primary" onclick="addManualBook()">Add Book</button></div>';
 }
 function addManualBook() {
   const title = document.getElementById('manual-title').value.trim();
@@ -1722,7 +1661,7 @@ function showLookupResult(book) {
     <div class="details">
       <h3>${esc(book.title)}</h3>
       <p>${esc(book.author)}</p>
-      <small>${book.year}${book.pages ? ' Â· ' + book.pages + ' pages' : ''}</small>
+      <small>${book.year}${book.pages ? ' - ' + book.pages + ' pages' : ''}</small>
     </div>
   </div>
   <div class="btn-row">
@@ -1737,7 +1676,7 @@ function proceedToAdd() {
   openAddModal(currentBook, false);
 }
 
-// â”€â”€â”€ Add/Edit Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Add/Edit Modal -----------------------------------------------------------
 function openAddModal(book, isEdit) {
   document.getElementById('add-modal-title').textContent = isEdit ? 'Edit Book' : 'Add to Library';
   document.getElementById('add-modal').style.display = 'flex';
@@ -1820,7 +1759,7 @@ function saveBook() {
   else renderBooks();
 }
 
-// â”€â”€â”€ Init â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// --- Init ---------------------------------------------------------------------
 renderBooks();
 </script>
 </body>
