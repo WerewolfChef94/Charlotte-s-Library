@@ -671,7 +671,6 @@
     font-weight: 700;
   }
 
-  .status-ok { background: #e8f5e9; color: #2e7d32; }
   .status-err { background: #ffebee; color: #c62828; }
   .status-loading { background: #fff8e1; color: #f57f17; }
 
@@ -698,12 +697,7 @@
   .divider::after { right: 0; }
 
   /* Series */
-  .series-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 16px;
-  }
+
 
   .series-grid {
     display: flex;
@@ -1018,7 +1012,6 @@
 
     <div id="lookup-result-area"></div>
 
-    <div id="scanner-cancel-row" style="display:none"></div>
   </div>
 </div>
 
@@ -1174,7 +1167,6 @@ async function loadSeriesDB() {
         const data = await res.json();
         if (Array.isArray(data) && data.length > 0) {
           SEED_SERIES_DB = data;
-          console.log('Series DB loaded: ' + data.length + ' series from ' + url);
           break;
         }
       }
@@ -2005,7 +1997,7 @@ async function lookupISBN(isbnOverride) {
         cover,
         year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
         pages: info.pageCount || '',
-        detectedSeries: null, detectedPosition: null,
+        detectedSeries: null,
         seriesId: null, seriesPosition: null, _dbSeriesRef: null,
         type: scanningFor, status: 'unread', rating: 0, notes: '',
         addedAt: Date.now()
@@ -2037,7 +2029,7 @@ async function lookupISBN(isbnOverride) {
         cover,
         year: doc.first_publish_year ? String(doc.first_publish_year) : '',
         pages: doc.number_of_pages_median || '',
-        detectedSeries: null, detectedPosition: null,
+        detectedSeries: null,
         seriesId: null, seriesPosition: null, _dbSeriesRef: null,
         type: scanningFor, status: 'unread', rating: 0, notes: '',
         addedAt: Date.now()
@@ -2099,113 +2091,18 @@ function showLookupResult(book) {
   checkBookSeries(book);
 }
 
-// Fetch series info from Open Library using a two-step approach:
-// 1. Search by ISBN/title to get the Work ID
-// 2. Fetch the work's JSON directly - this reliably contains series data
-async function fetchOpenLibrarySeries(isbn, title, author) {
-  const OL_AGENT = "CharlottesLibrary/1.0 (personal book tracker; contact via github.com/werewolfchef94)";
-
-  try {
-    // Step A: find the work key
-    let workKey = null;
-    let searchUrl;
-    if (isbn) {
-      searchUrl = 'https://openlibrary.org/search.json?isbn=' + isbn + '&fields=key,title,author_name,series,series_number&limit=1';
-    } else {
-      searchUrl = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
-        (author ? '&author=' + encodeURIComponent(author) : '') +
-        '&fields=key,title,author_name,series,series_number&limit=1';
-    }
-
-    const searchRes = await fetch(searchUrl, { headers: { 'User-Agent': OL_AGENT } });
-    if (searchRes.ok) {
-      const searchData = await searchRes.json();
-      const doc = searchData.docs && searchData.docs[0];
-      if (doc) {
-        // If series is already in search results, use it directly
-        if (doc.series && doc.series.length > 0) {
-          return {
-            series: doc.series[0],
-            series_number: doc.series_number ? doc.series_number[0] : null
-          };
-        }
-        // Otherwise grab the work key for step B
-        workKey = doc.key; // e.g. "/works/OL28852929W"
-      }
-    }
-
-    // Step B: fetch the work JSON directly - contains series info not always in search index
-    if (workKey) {
-      const workRes = await fetch('https://openlibrary.org' + workKey + '.json', {
-        headers: { 'User-Agent': OL_AGENT }
-      });
-      if (workRes.ok) {
-        const work = await workRes.json();
-        // Series lives in work.series or work.subject_series
-        if (work.series && work.series.length > 0) {
-          return { series: work.series[0], series_number: null };
-        }
-      }
-    }
-  } catch(e) { /* CORS or network error - fall through to JSONP */ }
-
-  // JSONP fallback if fetch is blocked by CORS
-  return new Promise((resolve) => {
-    const cbName = '_olcb_' + Date.now();
-    const timeout = setTimeout(() => {
-      delete window[cbName];
-      if (script && script.parentNode) script.parentNode.removeChild(script);
-      resolve(null);
-    }, 6000);
-
-    window[cbName] = function(data) {
-      clearTimeout(timeout);
-      delete window[cbName];
-      if (script && script.parentNode) script.parentNode.removeChild(script);
-      try {
-        if (isbn) {
-          const key = 'ISBN:' + isbn;
-          const book = data[key];
-          if (book && book.series) {
-            resolve({ series: Array.isArray(book.series) ? book.series[0] : book.series });
-            return;
-          }
-        } else if (data.docs && data.docs[0] && data.docs[0].series) {
-          const doc = data.docs[0];
-          resolve({
-            series: doc.series[0],
-            series_number: doc.series_number ? doc.series_number[0] : null
-          });
-          return;
-        }
-        resolve(null);
-      } catch(e) { resolve(null); }
-    };
-
-    const script = document.createElement('script');
-    let url;
-    if (isbn) {
-      url = 'https://openlibrary.org/api/books?bibkeys=ISBN:' + isbn + '&jscmd=data&format=javascript&callback=' + cbName;
-    } else {
-      url = 'https://openlibrary.org/search.json?title=' + encodeURIComponent(title) +
-        (author ? '&author=' + encodeURIComponent(author) : '') +
-        '&fields=key,title,author_name,series,series_number&limit=1&callback=' + cbName;
-    }
-    script.src = url;
-    script.onerror = () => { clearTimeout(timeout); resolve(null); };
-    document.head.appendChild(script);
-  });
-}
 
 async function checkBookSeries(book) {
   const hint = document.getElementById('series-hint');
   if (!hint) return;
 
-  // ONLY use the embedded series DB â€” external APIs (Open Library, Google Books)
-  // return garbage series names and cause false positives
+  // Reset book series fields for fresh scan
+  book.detectedSeries = null;
+  book._dbSeriesRef = null;
+
+  // Step 1: DB lookup by title/author (instant, offline)
   let seriesName = null;
   let seriesPosition = null;
-
   const dbResult = lookupSeriesFromDB(book.title, book.author);
   if (dbResult) {
     seriesName = dbResult.series.name;
@@ -2213,7 +2110,7 @@ async function checkBookSeries(book) {
     book._dbSeriesRef = dbResult.series;
   }
 
-  // Step 5: cross-check against existing series in library by name or author
+  // Step 2: cross-check against existing library series by name
   let matchedSeries = null;
   if (seriesName) {
     matchedSeries = seriesList.find(s =>
@@ -2222,21 +2119,17 @@ async function checkBookSeries(book) {
       seriesName.toLowerCase().includes(s.name.toLowerCase())
     );
   }
-  // Author-match against existing library removed â€” caused false positives
 
   if (matchedSeries) {
-    // Tag the book to existing series
     currentBook.seriesId = matchedSeries.id;
     if (seriesPosition) currentBook.seriesPosition = seriesPosition;
     showSeriesHint(matchedSeries, book, hint, seriesPosition);
     return;
   }
 
-  // Step 6: series detected from DB but not in library yet
-  // Auto-create it immediately so we can show the full missing books panel
+  // Step 3: series detected from DB but not in library yet â€” auto-create and show panel
   if (seriesName) {
     currentBook.detectedSeries = seriesName;
-    currentBook.detectedPosition = seriesPosition;
     const dbRef = book._dbSeriesRef || SEED_SERIES_DB.find(s => s.name.toLowerCase() === seriesName.toLowerCase());
     if (dbRef) {
       const newSeries = { id: 's' + Date.now(), name: dbRef.name, status: 'ongoing', totalBooks: dbRef.totalBooks || null };
@@ -2259,17 +2152,25 @@ async function checkBookSeries(book) {
       </div>`;
     }
   } else {
-    // No series found - show standalone badge
+    // Step 4: no match â€” show manual tag UI
+    const sortedSeries = [...seriesList].sort((a,b) => a.name.localeCompare(b.name));
     hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
       <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:8px">Part of a series? Tag it here:</div>
       <div id="series-quick-tag" style="display:block">
-        ${seriesList.length > 0 ? `<select id="quick-series-select" style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);margin-bottom:6px">
-          <option value="">-- Pick existing series --</option>
-          ${seriesList.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}
-          <option value="__new__">+ Create new series...</option>
-        </select>` : ''}
-        <input type="text" id="quick-series-name" placeholder="Series name (e.g. Chestnut Springs)"
-          style="display:${seriesList.length > 0 ? 'none' : 'block'};width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:6px">
+        ${seriesList.length > 0 ? `
+        <input type="text" id="quick-series-search" placeholder="Search existing series..."
+          oninput="filterQuickSeriesList()"
+          style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:4px">
+        <div id="quick-series-results"
+          style="max-height:140px;overflow-y:auto;border:1.5px solid #8ab89a;border-radius:6px;background:white;margin-bottom:6px;display:none"></div>
+        <div id="quick-series-selected" style="display:none;padding:6px 8px;background:#e8f5e9;border:1.5px solid #4a7c5e;border-radius:6px;margin-bottom:6px;font-size:0.8rem;color:var(--spine);display:flex;justify-content:space-between;align-items:center">
+          <span id="quick-series-selected-name" style="font-weight:700"></span>
+          <button onclick="clearQuickSeriesSelection()" style="background:none;border:none;color:var(--ink-light);cursor:pointer;font-size:0.9rem;padding:0 2px">&#10005;</button>
+        </div>
+        <input type="hidden" id="quick-series-select" value="">
+        ` : ''}
+        <input type="text" id="quick-series-name" placeholder="Or type a new series name..."
+          style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:6px">
         <input type="number" id="quick-series-pos" placeholder="Book number (e.g. 3)" min="1"
           style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:6px">
         <button onclick="applyQuickSeriesTag()"
@@ -2278,10 +2179,49 @@ async function checkBookSeries(book) {
         </button>
       </div>
     </div>`;
+    window._quickSeriesData = sortedSeries;
   }
 }
 
+function filterQuickSeriesList() {
+  const q = (document.getElementById('quick-series-search').value || '').toLowerCase().trim();
+  const results = document.getElementById('quick-series-results');
+  if (!results) return;
+  const data = window._quickSeriesData || [];
 
+  if (!q) { results.style.display = 'none'; return; }
+
+  const matches = data.filter(s => s.name.toLowerCase().includes(q)).slice(0, 20);
+  if (matches.length === 0) {
+    results.innerHTML = '<div style="padding:8px 10px;font-size:0.8rem;color:var(--ink-light)">No matches â€” use the field below to create new</div>';
+  } else {
+    results.innerHTML = matches.map(s =>
+      `<div onclick="selectQuickSeries('${s.id}', '${esc(s.name).replace(/'/g, "\'")}')"
+        style="padding:8px 10px;font-size:0.82rem;color:var(--ink);cursor:pointer;border-bottom:1px solid #f0e8d0"
+        onmouseover="this.style.background='#fff8e7'" onmouseout="this.style.background=''">${esc(s.name)}</div>`
+    ).join('');
+  }
+  results.style.display = 'block';
+}
+
+function selectQuickSeries(id, name) {
+  document.getElementById('quick-series-select').value = id;
+  const selectedEl = document.getElementById('quick-series-selected');
+  document.getElementById('quick-series-selected-name').textContent = name;
+  selectedEl.style.display = 'flex';
+  document.getElementById('quick-series-results').style.display = 'none';
+  document.getElementById('quick-series-search').value = '';
+  // Hide the new series name input since we picked an existing one
+  const nameInput = document.getElementById('quick-series-name');
+  if (nameInput) { nameInput.style.display = 'none'; nameInput.value = ''; }
+}
+
+function clearQuickSeriesSelection() {
+  document.getElementById('quick-series-select').value = '';
+  document.getElementById('quick-series-selected').style.display = 'none';
+  const nameInput = document.getElementById('quick-series-name');
+  if (nameInput) nameInput.style.display = 'block';
+}
 
 function applyQuickSeriesTag() {
   const sel = document.getElementById('quick-series-select');
@@ -2291,11 +2231,11 @@ function applyQuickSeriesTag() {
 
   let seriesId = null;
 
-  if (sel && sel.value && sel.value !== '__new__') {
+  if (sel && sel.value) {
     seriesId = sel.value;
   } else {
-    const name = (nameInput && nameInput.value.trim()) || (sel && sel.value === '__new__' && nameInput ? nameInput.value.trim() : '');
-    if (!name) { alert('Please enter a series name.'); return; }
+    const name = (nameInput && nameInput.value.trim()) || '';
+    if (!name) { alert('Please search for an existing series or type a new series name.'); return; }
     const existing = seriesList.find(s => s.name.toLowerCase() === name.toLowerCase());
     if (existing) {
       seriesId = existing.id;
