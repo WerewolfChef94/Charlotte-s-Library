@@ -866,7 +866,7 @@
 <body>
 
 <header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v1.9</span></h1>
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v2.0</span></h1>
   <p>A personal book collection</p>
 </header>
 
@@ -2007,11 +2007,101 @@ async function checkBookSeries(book) {
     </div>`;
   } else {
     // No series found - show standalone badge
-    hint.innerHTML = `<div style="background:linear-gradient(135deg,#eef4f0,#ddeae2);border:1.5px solid #8ab89a;border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:8px">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4a7c5e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-      <span style="font-size:0.8rem;font-weight:700;color:#4a7c5e">Standalone book</span>
+    hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
+      <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:8px">Part of a series? Tag it here:</div>
+      <div id="series-quick-tag" style="display:block">
+        ${seriesList.length > 0 ? `<select id="quick-series-select" style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);margin-bottom:6px">
+          <option value="">-- Pick existing series --</option>
+          ${seriesList.map(s => `<option value="${s.id}">${esc(s.name)}</option>`).join('')}
+          <option value="__new__">+ Create new series...</option>
+        </select>` : ''}
+        <input type="text" id="quick-series-name" placeholder="Series name (e.g. Chestnut Springs)"
+          style="display:${seriesList.length > 0 ? 'none' : 'block'};width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:6px">
+        <input type="number" id="quick-series-pos" placeholder="Book number (e.g. 3)" min="1"
+          style="width:100%;padding:8px;border:1.5px solid #8ab89a;border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:6px">
+        <button onclick="applyQuickSeriesTag()"
+          style="width:100%;padding:7px;background:#4a7c5e;color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer">
+          Tag this book
+        </button>
+      </div>
     </div>`;
   }
+}
+
+
+
+function applyQuickSeriesTag() {
+  const sel = document.getElementById('quick-series-select');
+  const nameInput = document.getElementById('quick-series-name');
+  const posInput = document.getElementById('quick-series-pos');
+  const position = parseInt(posInput && posInput.value) || null;
+
+  let seriesId = null;
+
+  if (sel && sel.value && sel.value !== '__new__') {
+    seriesId = sel.value;
+  } else {
+    const name = (nameInput && nameInput.value.trim()) || (sel && sel.value === '__new__' && nameInput ? nameInput.value.trim() : '');
+    if (!name) { alert('Please enter a series name.'); return; }
+    const existing = seriesList.find(s => s.name.toLowerCase() === name.toLowerCase());
+    if (existing) {
+      seriesId = existing.id;
+    } else {
+      const newSeries = { id: 's' + Date.now(), name, status: 'ongoing', totalBooks: null };
+      seriesList.push(newSeries);
+      save();
+      seriesId = newSeries.id;
+    }
+  }
+
+  if (seriesId && currentBook) {
+    currentBook.seriesId = seriesId;
+    currentBook.seriesPosition = position;
+    const s = seriesList.find(x => x.id === seriesId);
+    save();
+
+    // If series has no total book count yet, ask for it so we can show missing books
+    if (s && !s.totalBooks) {
+      const hint = document.getElementById('series-hint');
+      if (hint) hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px">
+        <div style="font-size:0.8rem;font-weight:700;color:var(--spine);margin-bottom:6px">Tagged as: ${esc(s.name)}${position ? ' #' + position : ''}</div>
+        <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:6px">How many books are in this series? (so we can show what you're missing)</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input type="number" id="quick-total-books" placeholder="e.g. 5" min="1"
+            style="flex:1;padding:8px;border:1.5px solid var(--gold);border-radius:6px;font-family:Lato,sans-serif;font-size:0.85rem;background:white;color:var(--ink);outline:none">
+          <button onclick="applySeriesTotal('${s.id}')"
+            style="padding:8px 14px;background:var(--spine);color:white;border:none;border-radius:6px;font-family:Lato,sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer">Show missing</button>
+          <button onclick="skipSeriesTotal('${s.id}')"
+            style="padding:8px 10px;background:none;border:1.5px solid #ccc;border-radius:6px;font-family:Lato,sans-serif;font-size:0.75rem;color:#888;cursor:pointer">Skip</button>
+        </div>
+      </div>`;
+    } else {
+      // Series already has total - show missing panel immediately
+      const hint = document.getElementById('series-hint');
+      if (hint && s) showSeriesHint(s, currentBook, hint, position);
+    }
+  }
+}
+
+function applySeriesTotal(seriesId) {
+  const input = document.getElementById('quick-total-books');
+  const total = parseInt(input && input.value);
+  const s = seriesList.find(x => x.id === seriesId);
+  if (!s) return;
+  if (total && total > 0) {
+    s.totalBooks = total;
+    save();
+  }
+  const hint = document.getElementById('series-hint');
+  if (hint && s) showSeriesHint(s, currentBook, hint, currentBook.seriesPosition);
+}
+
+function skipSeriesTotal(seriesId) {
+  const s = seriesList.find(x => x.id === seriesId);
+  const hint = document.getElementById('series-hint');
+  if (hint && s) hint.innerHTML = `<div style="background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:8px;padding:10px 12px;font-size:0.8rem;font-weight:700;color:var(--spine)">
+    Tagged as: ${esc(s.name)}${currentBook.seriesPosition ? ' #' + currentBook.seriesPosition : ''} â€” saved when you add the book.
+  </div>`;
 }
 
 function autoCreateSeries(name, position) {
