@@ -899,6 +899,19 @@
     letter-spacing: 0.06em;
   }
 
+
+  /* ── Bulk Edit Mode ──────────────────────────────────────────── */
+  .bulk-toolbar { position:sticky;top:0;z-index:50;background:var(--spine);color:white;padding:10px 14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-radius:0 0 10px 10px;margin-bottom:10px; }
+  .bulk-toolbar select { flex:1;min-width:0;padding:7px 10px;border:none;border-radius:7px;font-family:Lato,sans-serif;font-size:0.82rem;background:white;color:var(--ink);outline:none; }
+  .bulk-toolbar button { padding:7px 12px;border:none;border-radius:7px;font-family:Lato,sans-serif;font-size:0.8rem;font-weight:700;cursor:pointer; }
+  .bulk-apply-btn { background:var(--gold);color:var(--ink); }
+  .bulk-cancel-btn { background:rgba(255,255,255,0.2);color:white; }
+  .bulk-count { font-size:0.78rem;opacity:0.85;white-space:nowrap; }
+  .book-card.bulk-checked { outline:2.5px solid var(--gold);background:#fffbf0; }
+  .bulk-checkbox { position:absolute;top:10px;left:10px;width:20px;height:20px;accent-color:var(--spine);cursor:pointer;z-index:5; }
+  .book-card { position:relative; }
+  .bulk-select-row { display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px;align-items:center; }
+  .bulk-select-row button { font-size:0.72rem;padding:4px 10px;border:1.5px solid var(--spine);border-radius:6px;background:white;color:var(--spine);cursor:pointer;font-family:Lato,sans-serif;font-weight:700; }
   /* ── Research Tab ────────────────────────────────────────────── */
   .research-add-row {
     display: flex; gap: 8px; margin-bottom: 14px;
@@ -1017,6 +1030,10 @@
       <option value="author">Author A-Z</option>
       <option value="rating">Highest Rated</option>
     </select>
+    <button id="bulk-edit-toggle" onclick="toggleBulkMode()"
+      style="margin-left:auto;padding:6px 12px;background:var(--spine);color:white;border:none;border-radius:7px;font-family:Lato,sans-serif;font-size:0.75rem;font-weight:700;cursor:pointer;white-space:nowrap">
+      &#9998; Bulk Edit
+    </button>
   </div>
 
   <div class="book-list" id="book-list"></div>
@@ -1245,6 +1262,8 @@ let selectedRating = 0;
 let activeSeriesFilter = null; // filter books by series
 let viewingSeriesId = null;
 let editingSeriesId = null;
+let bulkMode = false;
+let bulkSelected = new Set();
 
 // --- Seed Series Database (embedded + optionally refreshed from series-db.json)
 const SERIES_DB_VERSION = "3.1";
@@ -1467,6 +1486,7 @@ function switchTab(tab) {
   activeFormatFilter = null;
   showSeriesFilters = false;
   activeSeriesFilter = null;
+  if (bulkMode) { bulkMode = false; bulkSelected.clear(); }
   document.querySelectorAll('.tab-btn').forEach((b, i) => {
     b.classList.toggle('active',
       (i === 0 && tab === 'owned') ||
@@ -1591,14 +1611,50 @@ function renderBooks() {
     `;
   }
 
+  // Build bulk toolbar if active
+  let bulkToolbarHtml = '';
+  if (bulkMode) {
+    const allIds = list.map(b => b.id);
+    const allChecked = allIds.length > 0 && allIds.every(id => bulkSelected.has(id));
+    // Author options from current list
+    const authorSet = [...new Set(list.map(b => b.author).filter(Boolean))].sort();
+    // Series options from current list
+    const seriesSet = [...new Set(list.map(b => b.seriesId).filter(Boolean))];
+
+    bulkToolbarHtml = `<div class="bulk-toolbar">
+      <div style="display:flex;gap:6px;width:100%;align-items:center;flex-wrap:wrap">
+        <span style="font-weight:700;font-size:0.85rem">&#9998; Bulk Edit</span>
+        <span class="bulk-count">${bulkSelected.size} selected</span>
+        <button class="bulk-cancel-btn" onclick="toggleBulkMode()">Cancel</button>
+      </div>
+      <div class="bulk-select-row" style="width:100%">
+        <button onclick="bulkSelectAll(${JSON.stringify(allIds)})">${allChecked ? 'Deselect All' : 'Select All'}</button>
+        ${authorSet.length > 0 ? `<select onchange="bulkSelectByAuthor(this.value,${JSON.stringify(allIds)})" style="font-size:0.72rem;padding:4px 8px;border:1.5px solid var(--spine);border-radius:6px;background:white;color:var(--spine);cursor:pointer;font-family:Lato,sans-serif;font-weight:700">
+          <option value="">Select by author…</option>
+          ${authorSet.map(a => `<option value="${esc(a)}">${esc(a)}</option>`).join('')}
+        </select>` : ''}
+        ${seriesSet.length > 0 ? `<select onchange="bulkSelectBySeries(this.value)" style="font-size:0.72rem;padding:4px 8px;border:1.5px solid var(--spine);border-radius:6px;background:white;color:var(--spine);cursor:pointer;font-family:Lato,sans-serif;font-weight:700">
+          <option value="">Select by series…</option>
+          ${seriesSet.map(id => `<option value="${id}">${esc(getSeriesName(id))}</option>`).join('')}
+        </select>` : ''}
+      </div>
+      ${bulkSelected.size > 0 ? `<div style="display:flex;gap:6px;width:100%;flex-wrap:wrap">
+        <span style="font-size:0.75rem;opacity:0.85;align-self:center">Mark as:</span>
+        <button class="bulk-apply-btn" onclick="bulkSetStatus('read')">&#10003; Read</button>
+        <button class="bulk-apply-btn" onclick="bulkSetStatus('reading')" style="background:#e8c96a">&#9654; Reading</button>
+        <button class="bulk-apply-btn" onclick="bulkSetStatus('unread')" style="background:white;color:var(--ink)">&#9632; Unread</button>
+      </div>` : ''}
+    </div>`;
+  }
+
   if (list.length === 0) {
-    el.innerHTML = pillsHtml + formatPillsHtml + `<div class="empty">
+    el.innerHTML = bulkToolbarHtml + pillsHtml + formatPillsHtml + `<div class="empty">
       <div class="icon" style="font-size:2.5rem;opacity:0.4">${currentTab === 'owned' ? '&#9755;' : '&#9733;'}</div>
       <h3>${activeSeriesFilter ? 'No books in this series yet' : (currentTab === 'owned' ? 'No books yet' : 'Wishlist is empty')}</h3>
       <p>${currentTab === 'owned' ? 'Tap the camera button to scan a book barcode.' : 'Scan a book and add it to the wishlist.'}</p>
     </div>`;
   } else {
-    el.innerHTML = pillsHtml + formatPillsHtml + list.map(b => bookCard(b)).join('');
+    el.innerHTML = bulkToolbarHtml + pillsHtml + formatPillsHtml + list.map(b => bookCard(b)).join('');
   }
 
   renderStats();
@@ -1649,7 +1705,12 @@ function bookCard(b) {
        </span>`
     : '';
 
-  return `<div class="book-card ${b.type === 'wishlist' ? 'wishlist' : ''}" id="card-${b.id}">
+  const bulkChk = bulkMode
+    ? `<input type="checkbox" class="bulk-checkbox" ${bulkSelected.has(b.id)?'checked':''} onchange="toggleBulkBook('${b.id}',this.checked)" onclick="event.stopPropagation()">`
+    : '';
+
+  return `<div class="book-card ${b.type === 'wishlist' ? 'wishlist' : ''}${bulkMode && bulkSelected.has(b.id) ? ' bulk-checked' : ''}" id="card-${b.id}" ${bulkMode ? `onclick="toggleBulkBook('${b.id}',!document.querySelector('#card-${b.id} .bulk-checkbox')?.checked)"` : ''}>
+    ${bulkChk}
     ${coverHtml}
     <div class="book-info">
       <div class="book-title" title="${esc(b.title)}">${esc(b.title)}</div>
@@ -2280,12 +2341,10 @@ function addManualBook() {
     id: null, isbn,
     title, author: author || 'Unknown Author',
     cover: '', year: '', pages: '',
-    type: 'owned', status: 'unread', rating: 0, notes: '',
+    type: scanningFor, status: 'unread', rating: 0, notes: '',
     addedAt: Date.now()
   };
-  closeScanner();
-  editingId = null;
-  openAddModal(currentBook, false);
+  quickAdd(scanningFor);
 }
 
 function showLookupResult(book) {
@@ -2301,10 +2360,18 @@ function showLookupResult(book) {
   <div id="series-hint" style="margin:6px 0 10px 0">
     <div style="font-size:0.75rem;color:var(--ink-light);font-style:italic;padding:4px 0">Checking for series info...</div>
   </div>
-  <div class="btn-row">
-    <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
-    <button class="btn-primary" onclick="proceedToAdd()">Add to Library</button>
-  </div>`;
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px">
+    <div class="btn-row" style="gap:8px">
+      <button class="btn-secondary" onclick="closeScanner()" style="flex:0 0 auto;padding:10px 14px">Cancel</button>
+      <button class="btn-primary" onclick="quickAdd('owned')" style="flex:1;background:var(--spine)">&#43; Owned</button>
+      <button class="btn-primary" onclick="quickAdd('wishlist')" style="flex:1;background:#8a6a3a">&#9733; Wishlist</button>
+    </div>
+    <div style="text-align:center">
+      <button onclick="proceedToAdd()" style="background:none;border:none;color:var(--ink-light);font-size:0.78rem;cursor:pointer;font-family:Lato,sans-serif;text-decoration:underline;padding:2px">
+        Add with more options…
+      </button>
+    </div>
+  </div>\`;
   // Kick off series check in background
   checkBookSeries(book);
 }
@@ -2769,6 +2836,67 @@ function addAllMissingToWishlist(seriesId) {
   if (hint) hint.innerHTML = `<div style="background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border:1.5px solid #4caf50;border-radius:8px;padding:10px 12px;font-size:0.8rem;color:#2e7d32;font-weight:700">
     Added ${added} missing book${added !== 1 ? 's' : ''} to your Wishlist with real titles!
   </div>`;
+}
+
+function quickAdd(type) {
+  if (!currentBook) return;
+  currentBook.type = type;
+
+  // Check wishlist→owned promotion
+  if (type === 'owned') {
+    const isbn = currentBook.isbn;
+    const titleLower = (currentBook.title || '').toLowerCase();
+    const existing = books.find(b =>
+      b.type === 'wishlist' && (
+        (isbn && b.isbn && b.isbn === isbn) ||
+        (b.title && b.title.toLowerCase() === titleLower)
+      )
+    );
+    if (existing) {
+      if (confirm(`"${currentBook.title}" is on your Wishlist. Move it to Owned instead?`)) {
+        existing.type = 'owned';
+        save();
+        currentTab = 'owned';
+        closeScanner();
+        renderBooks();
+        return;
+      }
+    }
+  }
+
+  // Save immediately with defaults
+  const book = {
+    ...currentBook,
+    id: 'b' + Date.now() + Math.random().toString(36).slice(2,6),
+    type,
+    status: 'unread',
+    rating: 0,
+    notes: '',
+    format: 'physical',
+    addedAt: Date.now()
+  };
+  books.push(book);
+  save();
+  closeScanner();
+  currentTab = type;
+  renderBooks();
+
+  // Brief toast confirmation
+  showToast(`"${book.title}" added to ${type === 'owned' ? 'Library' : 'Wishlist'} ✓`);
+}
+
+function showToast(msg) {
+  let toast = document.getElementById('scan-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'scan-toast';
+    toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--spine);color:white;padding:10px 18px;border-radius:20px;font-family:Lato,sans-serif;font-size:0.85rem;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:opacity 0.4s;white-space:nowrap';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
 }
 
 function proceedToAdd() {
@@ -3352,6 +3480,56 @@ function clearResearchEntry(index) {
   }
   renderResearchView();
 }
+
+// ── Bulk Edit ─────────────────────────────────────────────────────────────────
+
+function toggleBulkMode() {
+  bulkMode = !bulkMode;
+  bulkSelected.clear();
+  const btn = document.getElementById('bulk-edit-toggle');
+  if (btn) {
+    btn.textContent = bulkMode ? '✕ Exit Bulk' : '✎ Bulk Edit';
+    btn.style.background = bulkMode ? '#c0392b' : 'var(--spine)';
+  }
+  renderBooks();
+}
+
+function toggleBulkBook(id, checked) {
+  if (checked) bulkSelected.add(id);
+  else bulkSelected.delete(id);
+  renderBooks();
+}
+
+function bulkSelectAll(allIds) {
+  const allChecked = allIds.every(id => bulkSelected.has(id));
+  if (allChecked) allIds.forEach(id => bulkSelected.delete(id));
+  else allIds.forEach(id => bulkSelected.add(id));
+  renderBooks();
+}
+
+function bulkSelectByAuthor(author, allIds) {
+  if (!author) return;
+  const matches = books.filter(b => b.author === author && allIds.includes(b.id));
+  matches.forEach(b => bulkSelected.add(b.id));
+  renderBooks();
+}
+
+function bulkSelectBySeries(seriesId) {
+  if (!seriesId) return;
+  books.filter(b => b.seriesId === seriesId).forEach(b => bulkSelected.add(b.id));
+  renderBooks();
+}
+
+function bulkSetStatus(status) {
+  if (!bulkSelected.size) return;
+  const label = status === 'read' ? 'Read' : status === 'reading' ? 'Reading' : 'Unread';
+  if (!confirm(`Mark ${bulkSelected.size} book${bulkSelected.size===1?'':'s'} as ${label}?`)) return;
+  books.forEach(b => { if (bulkSelected.has(b.id)) b.status = status; });
+  save();
+  bulkSelected.clear();
+  renderBooks();
+}
+
 </script>
 
 <!-- Settings Modal -->
