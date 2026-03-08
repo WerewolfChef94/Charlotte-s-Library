@@ -1034,44 +1034,126 @@ function setScanStatus(msg, type) {
 }
 
 async function lookupISBN(isbnOverride) {
-  const isbn = isbnOverride || document.getElementById('isbn-input').value.trim();
-  if (!isbn || isbn.length < 10) {
+  // Clean ISBN - strip spaces, dashes, and non-digits
+  let isbn = (isbnOverride || document.getElementById('isbn-input').value).replace(/[\s\-]/g, '').trim();
+  if (!isbn || isbn.length < 8) {
     setScanStatus('Please enter a valid ISBN (10 or 13 digits).', 'err');
     return;
   }
 
-  setScanStatus('Looking up bookâ€¦', 'loading');
+  // Update the input field with the cleaned ISBN
+  document.getElementById('isbn-input').value = isbn;
+  setScanStatus('ðŸ” Looking up bookâ€¦', 'loading');
 
+  // Try Google Books API first
   try {
-    const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`);
-    const data = await res.json();
+    // Try both with and without the ISBN prefix
+    const urls = [
+      `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}&maxResults=1`,
+      `https://www.googleapis.com/books/v1/volumes?q=${isbn}&maxResults=1`,
+    ];
 
-    if (!data.items || data.items.length === 0) {
-      setScanStatus('Book not found. Try a different ISBN.', 'err');
-      return;
+    let info = null;
+    for (const url of urls) {
+      try {
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.items && data.items.length > 0) {
+          info = data.items[0].volumeInfo;
+          break;
+        }
+      } catch(e) { continue; }
     }
 
-    const info = data.items[0].volumeInfo;
-    currentBook = {
-      id: null,
-      isbn,
-      title: info.title || 'Unknown Title',
-      author: (info.authors || ['Unknown Author']).join(', '),
-      cover: info.imageLinks ? (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '') : '',
-      year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
-      pages: info.pageCount || '',
-      type: 'owned',
-      status: 'unread',
-      rating: 0,
-      notes: '',
-      addedAt: Date.now()
-    };
+    if (info) {
+      // Fix cover image to use HTTPS and higher resolution
+      let cover = '';
+      if (info.imageLinks) {
+        cover = info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '';
+        cover = cover.replace('http://', 'https://').replace('&zoom=1', '&zoom=2');
+      }
 
-    setScanStatus('', 'ok');
-    showLookupResult(currentBook);
-  } catch(e) {
-    setScanStatus('Network error. Check your connection.', 'err');
-  }
+      currentBook = {
+        id: null,
+        isbn,
+        title: info.title || 'Unknown Title',
+        author: (info.authors || ['Unknown Author']).join(', '),
+        cover,
+        year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
+        pages: info.pageCount || '',
+        type: 'owned',
+        status: 'unread',
+        rating: 0,
+        notes: '',
+        addedAt: Date.now()
+      };
+      setScanStatus('', 'ok');
+      showLookupResult(currentBook);
+      return;
+    }
+  } catch(e) { /* fall through to Open Library */ }
+
+  // Fallback: try Open Library API
+  try {
+    setScanStatus('ðŸ” Trying backup databaseâ€¦', 'loading');
+    const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`);
+    const data = await res.json();
+    const key = `ISBN:${isbn}`;
+
+    if (data[key]) {
+      const book = data[key];
+      const authors = book.authors ? book.authors.map(a => a.name).join(', ') : 'Unknown Author';
+      const cover = book.cover ? (book.cover.large || book.cover.medium || book.cover.small || '') : '';
+
+      currentBook = {
+        id: null,
+        isbn,
+        title: book.title || 'Unknown Title',
+        author: authors,
+        cover,
+        year: book.publish_date || '',
+        pages: book.number_of_pages || '',
+        type: 'owned',
+        status: 'unread',
+        rating: 0,
+        notes: '',
+        addedAt: Date.now()
+      };
+      setScanStatus('', 'ok');
+      showLookupResult(currentBook);
+      return;
+    }
+  } catch(e) { /* fall through */ }
+
+  // If both fail, let user add manually
+  setScanStatus('', 'ok');
+  document.getElementById('lookup-result-area').innerHTML = `
+    <div class="status-message status-err" style="margin-bottom:12px">
+      ðŸ“š Book not found automatically for ISBN <strong>${isbn}</strong>. You can add it manually below.
+    </div>
+    <div class="form-group"><label>Title</label><input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>
+    <div class="form-group" style="margin-top:10px"><label>Author</label><input type="text" id="manual-author" placeholder="Author name" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>
+    <div class="btn-row" style="margin-top:12px">
+      <button class="btn-secondary" onclick="closeScanner()">Cancel</button>
+      <button class="btn-primary" onclick="addManualBook()">Add Book â†’</button>
+    </div>`;
+}
+
+function addManualBook() {
+  const title = document.getElementById('manual-title').value.trim();
+  const author = document.getElementById('manual-author').value.trim();
+  if (!title) { alert('Please enter a title.'); return; }
+  const isbn = document.getElementById('isbn-input').value;
+  currentBook = {
+    id: null, isbn,
+    title, author: author || 'Unknown Author',
+    cover: '', year: '', pages: '',
+    type: 'owned', status: 'unread', rating: 0, notes: '',
+    addedAt: Date.now()
+  };
+  closeScanner();
+  editingId = null;
+  openAddModal(currentBook, false);
 }
 
 function showLookupResult(book) {
