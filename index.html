@@ -1580,15 +1580,15 @@ async function lookupISBN(isbnOverride) {
   }
 
   document.getElementById('isbn-input').value = isbn;
-  setScanStatus('Searching for ISBN: ' + isbn, 'loading');
+  setScanStatus('Looking up book...', 'loading');
 
   // Try Google Books API - most reliable with HTTPS
   try {
-    setScanStatus('Step 1: Trying Google Books...', 'loading');
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn);
-    setScanStatus('Step 1: Got response ' + res.status, 'loading');
+    
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
+    
     const data = await res.json();
-    setScanStatus('Step 1: Items found: ' + (data.totalItems || 0), 'loading');
+    
     if (data.items && data.items.length > 0) {
       const info = data.items[0].volumeInfo;
       let cover = '';
@@ -1610,17 +1610,16 @@ async function lookupISBN(isbnOverride) {
       return;
     }
   } catch(e) {
-    setScanStatus('Step 1 error: ' + e.message, 'err');
-    await new Promise(r => setTimeout(r, 2000));
+    
   }
 
   // Try Open Library
   try {
-    setScanStatus('Step 2: Trying Open Library...', 'loading');
+    setScanStatus('Trying backup database...', 'loading');
     const res = await fetch('https://openlibrary.org/search.json?isbn=' + isbn + '&limit=1');
-    setScanStatus('Step 2: Got response ' + res.status, 'loading');
+    
     const data = await res.json();
-    setScanStatus('Step 2: Docs found: ' + (data.numFound || 0), 'loading');
+    
     if (data.docs && data.docs.length > 0) {
       const doc = data.docs[0];
       const cover = doc.cover_i
@@ -1641,12 +1640,11 @@ async function lookupISBN(isbnOverride) {
       return;
     }
   } catch(e) {
-    setScanStatus('Step 2 error: ' + e.message, 'err');
-    await new Promise(r => setTimeout(r, 2000));
+    
   }
 
   // Show debug info and manual entry
-  setScanStatus('Both lookups failed for ISBN ' + isbn + '. Enter manually below.', 'err');
+  setScanStatus('Book not found. Please enter details manually below.', 'err');
   document.getElementById('lookup-result-area').innerHTML =
     '<div style="margin-bottom:10px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>' +
     '<input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
