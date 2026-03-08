@@ -1302,11 +1302,12 @@ function renderBooks() {
     }
   }
 
-  if (q) list = list.filter(b =>
-    b.title.toLowerCase().includes(q) ||
-    b.author.toLowerCase().includes(q) ||
-    (b.seriesId && getSeriesName(b.seriesId).toLowerCase().includes(q))
-  );
+  if (q) list = list.filter(b => {
+    const title  = (b.title  || '').toLowerCase();
+    const author = (b.author || '').toLowerCase();
+    const series = b.seriesId ? getSeriesName(b.seriesId).toLowerCase() : '';
+    return title.includes(q) || author.includes(q) || series.includes(q);
+  });
 
   list = [...list].sort((a, b) => {
     if (activeSeriesFilter) {
@@ -1543,6 +1544,20 @@ function renderSeriesView() {
     return;
   }
 
+  const filteredSeries = q
+    ? seriesList.filter(s => {
+        const name = (s.name || '').toLowerCase();
+        const authors = (s.authors || []).map(a => a.toLowerCase());
+        const hasMatchingBook = books.some(b => b.seriesId === s.id && (
+          (b.title  || '').toLowerCase().includes(q) ||
+          (b.author || '').toLowerCase().includes(q)
+        ));
+        return name.includes(q) ||
+               authors.some(a => a.includes(q)) ||
+               hasMatchingBook;
+      })
+    : seriesList;
+
   if (q && filteredSeries.length === 0) {
     el.innerHTML = `
       <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
@@ -1550,22 +1565,11 @@ function renderSeriesView() {
       </div>
       <div class="empty">
         <div class="icon" style="font-size:2rem;opacity:0.4">&#9782;</div>
-        <h3>No series match "${q}"</h3>
+        <h3>No series match "${esc(q)}"</h3>
         <p>Try a different search term.</p>
       </div>`;
     return;
   }
-
-  const filteredSeries = q
-    ? seriesList.filter(s =>
-        s.name.toLowerCase().includes(q) ||
-        (s.authors || []).some(a => a.toLowerCase().includes(q)) ||
-        books.some(b => b.seriesId === s.id && (
-          b.title.toLowerCase().includes(q) ||
-          b.author.toLowerCase().includes(q)
-        ))
-      )
-    : seriesList;
 
   const cards = filteredSeries.map(s => {
     const seriesBooks = books.filter(b => b.seriesId === s.id);
