@@ -898,19 +898,105 @@
     cursor: pointer;
     letter-spacing: 0.06em;
   }
+
+  /* â”€â”€ Research Tab â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+  .research-add-row {
+    display: flex; gap: 8px; margin-bottom: 14px;
+  }
+  .research-add-row input {
+    flex: 1; padding: 10px 14px;
+    border: 2px solid var(--parchment-dark);
+    border-radius: 10px;
+    font-family: Lato, sans-serif; font-size: 0.9rem;
+    background: white; color: var(--ink); outline: none;
+    transition: border-color 0.2s;
+  }
+  .research-add-row input:focus { border-color: var(--gold); }
+  .research-add-btn {
+    padding: 10px 16px; background: var(--spine); color: white;
+    border: none; border-radius: 10px;
+    font-family: Lato, sans-serif; font-size: 0.85rem; font-weight: 700;
+    cursor: pointer; white-space: nowrap;
+  }
+  .research-add-btn:hover { background: var(--gold); }
+  .author-chips-wrap { margin-bottom: 12px; min-height: 28px; }
+  .author-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: white; border: 1.5px solid var(--parchment-dark);
+    border-radius: 20px; padding: 4px 10px 4px 12px;
+    font-size: 0.78rem; margin: 0 5px 5px 0; color: var(--ink);
+  }
+  .author-chip.chip-done { background: #e8f5ee; border-color: #2d6a4f; color: #2d6a4f; }
+  .author-chip.chip-error { background: #fdf0ee; border-color: #c0392b; color: #c0392b; }
+  .author-chip.chip-busy { background: #fff8e7; border-color: var(--gold); }
+  .chip-x { background: none; border: none; cursor: pointer; color: inherit; opacity: 0.5; font-size: 0.85rem; padding: 0; }
+  .chip-x:hover { opacity: 1; }
+  .research-actions { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+  .btn-research-go {
+    flex: 1; padding: 11px; background: linear-gradient(135deg, var(--spine), #2d1a06);
+    color: white; border: none; border-radius: 10px;
+    font-family: Lato, sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  }
+  .btn-research-go:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-research-export {
+    padding: 11px 16px; background: #2d6a4f; color: white;
+    border: none; border-radius: 10px;
+    font-family: Lato, sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  }
+  .btn-research-export:disabled { opacity: 0.4; cursor: not-allowed; }
+  .research-progress { font-size: 0.8rem; color: var(--spine); margin-bottom: 10px; min-height: 18px; }
+  .research-prog-bar { background: var(--parchment-dark); border-radius: 6px; height: 5px; margin-top: 5px; overflow: hidden; }
+  .research-prog-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--spine)); border-radius: 6px; transition: width 0.4s; }
+  .research-summary {
+    display: flex; gap: 16px; background: white;
+    border: 1.5px solid var(--parchment-dark); border-radius: 10px;
+    padding: 10px 14px; margin-bottom: 12px; font-size: 0.8rem;
+  }
+  .research-summary strong { color: var(--spine); }
+  .research-author-block {
+    background: white; border: 1.5px solid var(--parchment-dark);
+    border-radius: 12px; margin-bottom: 12px; overflow: hidden;
+  }
+  .research-author-hdr {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 14px; background: var(--parchment);
+    border-bottom: 1px solid var(--parchment-dark); cursor: pointer;
+  }
+  .research-author-name {
+    font-family: 'Playfair Display', serif; font-size: 0.95rem;
+    color: var(--spine); font-weight: 700;
+  }
+  .research-author-badge {
+    font-size: 0.72rem; color: #8a6a3a;
+    background: var(--parchment-dark); padding: 2px 8px; border-radius: 10px;
+  }
+  .research-series-list { padding: 8px 14px 12px; }
+  .research-series-row {
+    display: flex; align-items: flex-start; gap: 8px;
+    padding: 7px 0; border-bottom: 1px solid #f5ede0;
+  }
+  .research-series-row:last-child { border-bottom: none; }
+  .research-chk { width: 16px; height: 16px; accent-color: #2d6a4f; margin-top: 2px; flex-shrink: 0; cursor: pointer; }
+  .research-series-name { font-weight: 700; font-size: 0.85rem; color: var(--ink); }
+  .research-series-meta { font-size: 0.72rem; color: #8a6a3a; margin-top: 1px; }
+  .research-series-books { font-size: 0.72rem; color: var(--ink); margin-top: 3px; font-style: italic; line-height: 1.4; }
+  .research-error { padding: 10px 14px; font-size: 0.8rem; color: #c0392b; }
+
 </style>
 </head>
 <body>
 
-<header>
-  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v3.0</span></h1>
+<header style="position:relative">
+  <h1>Charlotte's Library <span style="font-size:0.55rem;font-weight:400;opacity:0.6;font-family:Lato,sans-serif;vertical-align:middle">v3.1</span></h1>
   <p>A personal book collection</p>
+  <button onclick="openSettings()" title="Settings" style="position:absolute;top:12px;right:14px;background:transparent;border:none;cursor:pointer;font-size:1.3rem;opacity:0.55;line-height:1">âš™</button>
 </header>
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('owned')">&#9755; Owned</button>
   <button class="tab-btn" onclick="switchTab('wishlist')">&#9733; Wishlist</button>
   <button class="tab-btn" onclick="switchTab('series')">&#9782; Series</button>
+  <button class="tab-btn" onclick="switchTab('research')">&#128269; Research</button>
 </div>
 
 <main>
@@ -935,6 +1021,7 @@
 
   <div class="book-list" id="book-list"></div>
   <div id="series-view" style="display:none;padding-bottom:90px"></div>
+  <div id="research-view" style="display:none;padding-bottom:90px"></div>
 </main>
 
 <div class="fab-group">
@@ -1150,12 +1237,11 @@ let viewingSeriesId = null;
 let editingSeriesId = null;
 
 // --- Seed Series Database (embedded + optionally refreshed from series-db.json)
-const SERIES_DB_VERSION = "3.0";
+const SERIES_DB_VERSION = "3.1";
 let SEED_SERIES_DB = [];
 
 async function loadSeriesDB() {
   // Try to load series-db.json with cache-busting
-  // This file lives in the same folder as index.html on GitHub Pages
   const urls = [
     'series-db.json',
     'https://werewolfchef94.github.io/Charlottes-Library/series-db.json'
@@ -1184,6 +1270,46 @@ async function loadSeriesDB() {
       });
     }
   } catch(e) {}
+
+  // Dedup: re-point books from user-created series to newly arrived DB series
+  dedupUserSeries();
+}
+
+function dedupUserSeries() {
+  // When a series Charlotte manually tagged now exists in the DB,
+  // migrate her books to the DB entry and remove the orphan user series.
+  try {
+    const userAdded = JSON.parse(localStorage.getItem('herLibraryUserSeries') || '[]');
+    if (!userAdded.length) return;
+    let changed = false;
+    userAdded.forEach(userSeries => {
+      const dbMatch = SEED_SERIES_DB.find(s =>
+        s.name.toLowerCase() === userSeries.name.toLowerCase() &&
+        !seriesList.find(x => x.id === userSeries.id) // only orphaned entries
+      );
+      if (!dbMatch) return;
+      // Find the library entry for this user series
+      const libEntry = seriesList.find(s => s.name.toLowerCase() === userSeries.name.toLowerCase());
+      if (!libEntry) return;
+      // Find or create a library entry backed by the DB
+      let dbLibEntry = seriesList.find(s => s._dbRef === dbMatch.name);
+      if (!dbLibEntry) {
+        dbLibEntry = { id: 's' + Date.now() + Math.random(), name: dbMatch.name, status: 'ongoing', totalBooks: dbMatch.totalBooks || null, _dbRef: dbMatch.name };
+        seriesList.push(dbLibEntry);
+      }
+      // Re-point all books from old entry to new
+      books.forEach(b => {
+        if (b.seriesId === libEntry.id) {
+          b.seriesId = dbLibEntry.id;
+          changed = true;
+        }
+      });
+      // Remove the old orphan library entry
+      const idx = seriesList.indexOf(libEntry);
+      if (idx > -1) seriesList.splice(idx, 1);
+    });
+    if (changed) save();
+  } catch(e) {}
 }
 
 function saveUserSeriesDB(entry) {
@@ -1197,6 +1323,85 @@ function saveUserSeriesDB(entry) {
       SEED_SERIES_DB.push(entry);
     }
   } catch(e) {}
+  // Also log to watchlist so it's included in the monthly GitHub push
+  saveToWatchlist(entry);
+}
+
+function saveToWatchlist(entry) {
+  try {
+    const watchlist = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
+    const names = new Set(watchlist.map(w => w.series_name.toLowerCase()));
+    if (!names.has((entry.name || '').toLowerCase())) {
+      watchlist.push({
+        series_name: entry.name || '',
+        author: (entry.authors && entry.authors[0]) || '',
+        date_added: new Date().toISOString().split('T')[0]
+      });
+      localStorage.setItem('herLibraryWatchlist', JSON.stringify(watchlist));
+    }
+  } catch(e) {}
+}
+
+function buildWatchlistCSV() {
+  const watchlist = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
+  if (!watchlist.length) return null;
+  const header = 'series_name,author,date_added';
+  const rows = watchlist.map(w =>
+    `"${(w.series_name||'').replace(/"/g,'""')}","${(w.author||'').replace(/"/g,'""')}","${w.date_added||''}"`
+  );
+  return [header, ...rows].join('\n');
+}
+
+async function pushWatchlistToGitHub() {
+  const pat = localStorage.getItem('herLibraryGitHubPAT') || '';
+  if (!pat) {
+    alert('No GitHub token saved. Open Settings (âš™) and paste your token first.');
+    return;
+  }
+  const csv = buildWatchlistCSV();
+  if (!csv) {
+    alert('Nothing in the watchlist yet â€” scan some books first!');
+    return;
+  }
+  const OWNER = 'werewolfchef94';
+  const REPO  = 'Charlottes-Library';
+  const PATH  = 'series-watchlist.csv';
+  const API   = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${PATH}`;
+
+  const btn = document.getElementById('push-watchlist-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'â³ Pushingâ€¦'; }
+
+  try {
+    // Get current SHA if file already exists (required for updates)
+    let sha = null;
+    try {
+      const check = await fetch(API, { headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github+json' } });
+      if (check.ok) { const d = await check.json(); sha = d.sha; }
+    } catch(e) {}
+
+    const body = {
+      message: `Update series watchlist ${new Date().toISOString().split('T')[0]}`,
+      content: btoa(unescape(encodeURIComponent(csv))),
+      ...(sha ? { sha } : {})
+    };
+
+    const res = await fetch(API, {
+      method: 'PUT',
+      headers: { Authorization: `token ${pat}`, Accept: 'application/vnd.github+json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if (res.ok) {
+      if (btn) { btn.textContent = 'âœ“ Pushed!'; setTimeout(() => { if(btn){btn.disabled=false;btn.textContent='Push to GitHub';} }, 3000); }
+    } else {
+      const err = await res.json();
+      alert('GitHub error: ' + (err.message || res.status));
+      if (btn) { btn.disabled = false; btn.textContent = 'Push to GitHub'; }
+    }
+  } catch(e) {
+    alert('Network error: ' + e.message);
+    if (btn) { btn.disabled = false; btn.textContent = 'Push to GitHub'; }
+  }
 }
 // --- Series Lookup -----------------------------------------------------------
 function lookupSeriesFromDB(title, author) {
@@ -1256,21 +1461,27 @@ function switchTab(tab) {
     b.classList.toggle('active',
       (i === 0 && tab === 'owned') ||
       (i === 1 && tab === 'wishlist') ||
-      (i === 2 && tab === 'series')
+      (i === 2 && tab === 'series') ||
+      (i === 3 && tab === 'research')
     );
   });
-  document.getElementById('book-list').style.display = tab === 'series' ? 'none' : 'flex';
-  document.getElementById('series-view').style.display = tab === 'series' ? 'block' : 'none';
-  // Search bar always visible; sort only for owned/wishlist
-  document.querySelector('.search-bar').style.display = '';
-  document.querySelector('.sort-row').style.display = tab === 'series' ? 'none' : '';
-  // Update search placeholder per tab
-  const placeholders = { owned: 'Search owned books...', wishlist: 'Search wishlist...', series: 'Search series...' };
-  document.getElementById('search-input').placeholder = placeholders[tab] || 'Search...';
-  // Clear search when switching tabs
-  document.getElementById('search-input').value = '';
-
-  if (tab === 'series') renderSeriesView();
+  const isResearch = tab === 'research';
+  const isSeries = tab === 'series';
+  document.getElementById('book-list').style.display   = (!isSeries && !isResearch) ? 'flex' : 'none';
+  document.getElementById('series-view').style.display  = isSeries   ? 'block' : 'none';
+  document.getElementById('research-view').style.display = isResearch ? 'block' : 'none';
+  // Hide search + sort on research tab (has its own search)
+  document.querySelector('.search-bar').style.display = isResearch ? 'none' : '';
+  document.querySelector('.sort-row').style.display   = (isSeries || isResearch) ? 'none' : '';
+  // Stats bar hidden on research
+  document.getElementById('stats-bar').style.display = isResearch ? 'none' : '';
+  if (!isResearch) {
+    const placeholders = { owned: 'Search owned books...', wishlist: 'Search wishlist...', series: 'Search series...' };
+    document.getElementById('search-input').placeholder = placeholders[tab] || 'Search...';
+    document.getElementById('search-input').value = '';
+  }
+  if (isSeries) renderSeriesView();
+  else if (isResearch) renderResearchView();
   else renderBooks();
 }
 
@@ -2838,6 +3049,71 @@ async function init() {
   renderBooks();
 }
 init();
+
+// --- Settings ----------------------------------------------------------------
+function openSettings() {
+  const pat = localStorage.getItem('herLibraryGitHubPAT') || '';
+  const watchlist = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
+  const modal = document.getElementById('settings-modal');
+  document.getElementById('pat-input').value = pat;
+  document.getElementById('watchlist-count').textContent = watchlist.length
+    ? `${watchlist.length} series in watchlist`
+    : 'No series logged yet';
+  modal.style.display = 'flex';
+}
+
+function closeSettings() {
+  document.getElementById('settings-modal').style.display = 'none';
+}
+
+function savePAT() {
+  const val = document.getElementById('pat-input').value.trim();
+  if (val) {
+    localStorage.setItem('herLibraryGitHubPAT', val);
+    document.getElementById('pat-saved-msg').style.display = 'inline';
+    setTimeout(() => { const m = document.getElementById('pat-saved-msg'); if(m) m.style.display='none'; }, 2000);
+  }
+}
+
+function clearWatchlist() {
+  if (confirm('Clear the watchlist log? This won\'t affect your books or series.')) {
+    localStorage.removeItem('herLibraryWatchlist');
+    document.getElementById('watchlist-count').textContent = 'No series logged yet';
+  }
+}
 </script>
+
+<!-- Settings Modal -->
+<div id="settings-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:1000;align-items:center;justify-content:center;padding:16px">
+  <div style="background:var(--parchment);border-radius:14px;padding:24px;width:100%;max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,0.25);font-family:Lato,sans-serif">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--spine)">âš™ Settings</h2>
+      <button onclick="closeSettings()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:var(--ink-light);line-height:1">Ã—</button>
+    </div>
+
+    <!-- GitHub Token -->
+    <div style="margin-bottom:20px">
+      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:6px">ðŸ”‘ GitHub Personal Access Token</div>
+      <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">Used to push your series watchlist to GitHub monthly. Only needs <em>Contents: Read & Write</em> on your repo.</div>
+      <input id="pat-input" type="password" placeholder="github_pat_â€¦" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid #c9b99a;font-size:0.85rem;font-family:Lato,sans-serif;background:#fff;color:var(--ink)">
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <button onclick="savePAT()" style="background:var(--gold);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">Save Token</button>
+        <span id="pat-saved-msg" style="display:none;color:green;font-size:0.8rem">âœ“ Saved</span>
+      </div>
+    </div>
+
+    <!-- Watchlist Push -->
+    <div style="border-top:1px solid #ddd;padding-top:18px;margin-bottom:20px">
+      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:4px">ðŸ“¤ Series Watchlist</div>
+      <div id="watchlist-count" style="font-size:0.78rem;color:var(--ink-light);margin-bottom:10px">No series logged yet</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="push-watchlist-btn" onclick="pushWatchlistToGitHub()" style="background:var(--spine);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">Push to GitHub</button>
+        <button onclick="clearWatchlist()" style="background:transparent;border:1px solid #c0392b;color:#c0392b;border-radius:8px;padding:7px 12px;font-size:0.78rem;font-family:Lato,sans-serif;cursor:pointer">Clear log</button>
+      </div>
+      <div style="font-size:0.72rem;color:var(--ink-light);margin-top:8px">Pushes <code>series-watchlist.csv</code> to your GitHub repo. Send me that file each month for DB updates.</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
