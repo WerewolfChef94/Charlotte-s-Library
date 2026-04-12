@@ -1384,6 +1384,45 @@ function save() {
   localStorage.setItem('herLibrarySeries', JSON.stringify(seriesList));
 }
 
+function normaliseAuthor(raw) {
+  if (!raw) return 'Unknown Author';
+  raw = raw.trim();
+
+  // Handle "Name:Surname, Name:Surname, Name Surname" Kindle duplicate pattern
+  const parts = raw.split(',').map(p => p.trim()).filter(Boolean);
+  if (parts.length > 1) {
+    // Prefer the last segment without colons â€” that's the clean version
+    const cleanPart = parts.slice().reverse().find(p => !p.includes(':')) || parts[parts.length - 1];
+    raw = cleanPart.trim();
+  }
+
+  // Remove colons used as space substitutes (e.g. "Ruby:Dixon" â†’ "Ruby Dixon")
+  raw = raw.replace(/:/g, ' ').replace(/\s+/g, ' ').trim();
+
+  // Strip trailing punctuation
+  raw = raw.replace(/[,:]+$/, '').trim();
+
+  return raw || 'Unknown Author';
+}
+
+function migrateAuthorNames() {
+  // One-time cleanup of messy Kindle-imported author names
+  if (localStorage.getItem('herLibraryAuthorsMigrated')) return;
+  let changed = 0;
+  books.forEach(b => {
+    const cleaned = normaliseAuthor(b.author);
+    if (cleaned !== b.author) {
+      b.author = cleaned;
+      changed++;
+    }
+  });
+  if (changed) {
+    save();
+    console.warn('Migrated ' + changed + ' author names');
+  }
+  localStorage.setItem('herLibraryAuthorsMigrated', '1');
+}
+
 // --- Tabs --------------------------------------------------------------------
 function switchTab(tab) {
   currentTab = tab;
@@ -2937,11 +2976,28 @@ function importKindleCSV(input) {
     // Clean author: "Lastname, Firstname:" â†’ "Firstname Lastname"
     function cleanAuthor(raw) {
       if (!raw) return 'Unknown Author';
-      raw = raw.replace(/:$/, '').trim();
-      // "Lastname, Firstname" â†’ "Firstname Lastname"
-      const m = raw.match(/^([^,]+),\s*(.+)$/);
+      raw = raw.trim();
+
+      // Handle "Name:Surname, Name:Surname, Name Surname" Kindle duplicate pattern
+      // Split on comma, take the last segment which is usually the clean version
+      const parts = raw.split(',').map(p => p.trim()).filter(Boolean);
+      if (parts.length > 1) {
+        // The clean name is typically the last part (no colons)
+        const cleanPart = parts.find(p => !p.includes(':')) || parts[parts.length - 1];
+        raw = cleanPart.trim();
+      }
+
+      // Remove any remaining colons (e.g. "Ruby:Dixon" â†’ "Ruby Dixon")
+      raw = raw.replace(/:/g, ' ').replace(/\s+/g, ' ').trim();
+
+      // Strip trailing colon/comma
+      raw = raw.replace(/[,:]+$/, '').trim();
+
+      // "Lastname Firstname" reversed pattern â€” only flip if it looks like "WORD, WORD"
+      const m = raw.match(/^([A-Z][a-z]+),\s*([A-Z].+)$/);
       if (m) return m[2].trim() + ' ' + m[1].trim();
-      return raw;
+
+      return raw || 'Unknown Author';
     }
 
     // Clean title: strip subtitle junk like "(Series Name Book 1)"
@@ -3182,6 +3238,7 @@ function saveBook() {
 // --- Init ---------------------------------------------------------------------
 async function init() {
   await loadSeriesDB();
+  migrateAuthorNames();
   renderBooks();
 }
 init();
