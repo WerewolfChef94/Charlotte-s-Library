@@ -3250,9 +3250,9 @@ function saveBook() {
 
 // --- Init ---------------------------------------------------------------------
 async function init() {
-  await loadSeriesDB();
-  migrateAuthorNames();
-  renderBooks();
+  try { await loadSeriesDB(); } catch(e) { console.warn('Series DB load failed:', e); }
+  try { migrateAuthorNames(); } catch(e) { console.warn('Migration failed:', e); }
+  try { renderBooks(); } catch(e) { console.error('renderBooks failed:', e); }
 }
 init();
 
@@ -3274,6 +3274,60 @@ function openSettings() {
 
 function closeSettings() {
   document.getElementById('settings-modal').style.display = 'none';
+}
+
+// â”€â”€ Backup & Restore â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+function downloadBackup() {
+  const backup = {
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    books: books,
+    seriesList: seriesList,
+    userSeries: JSON.parse(localStorage.getItem('herLibraryUserSeries') || '[]'),
+    watchlist: JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]')
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'charlottes-library-backup-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function restoreBackup(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const backup = JSON.parse(e.target.result);
+      if (!backup.books || !Array.isArray(backup.books)) {
+        alert('Invalid backup file â€” no books found.');
+        return;
+      }
+      if (!confirm(`Restore ${backup.books.length} books and ${(backup.seriesList||[]).length} series? This will replace your current library.`)) return;
+
+      books = backup.books;
+      seriesList = backup.seriesList || [];
+      localStorage.setItem('herLibrary', JSON.stringify(books));
+      localStorage.setItem('herLibrarySeries', JSON.stringify(seriesList));
+      if (backup.userSeries) localStorage.setItem('herLibraryUserSeries', JSON.stringify(backup.userSeries));
+      if (backup.watchlist) localStorage.setItem('herLibraryWatchlist', JSON.stringify(backup.watchlist));
+
+      const status = document.getElementById('backup-status');
+      status.textContent = 'âœ“ Restored ' + books.length + ' books successfully!';
+      status.style.display = 'block';
+      setTimeout(() => { status.style.display = 'none'; }, 4000);
+
+      renderBooks();
+    } catch(err) {
+      alert('Could not read backup file: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  input.value = '';
 }
 
 function saveGoogleKey() {
@@ -3538,6 +3592,18 @@ function bulkSetStatus(status) {
         <button onclick="saveGoogleKey()" style="background:var(--gold);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">Save Key</button>
         <span id="google-key-saved-msg" style="display:none;color:green;font-size:0.8rem">&#10003; Saved</span>
       </div>
+    </div>
+
+    <!-- Backup & Restore -->
+    <div style="margin-bottom:20px;padding:14px;background:linear-gradient(135deg,#fff8e7,#fdf0d0);border:1.5px solid var(--gold);border-radius:10px">
+      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:4px">&#128190; Backup &amp; Restore</div>
+      <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:10px">Download a backup of all your books and series. Restore it if anything goes wrong.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
+        <button onclick="downloadBackup()" style="background:var(--spine);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">â¬‡ Download Backup</button>
+        <button onclick="document.getElementById('restore-file-input').click()" style="background:white;color:var(--spine);border:1.5px solid var(--spine);border-radius:8px;padding:7px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">&#8679; Restore Backup</button>
+      </div>
+      <input type="file" id="restore-file-input" accept=".json" style="display:none" onchange="restoreBackup(this)">
+      <div id="backup-status" style="font-size:0.75rem;color:green;display:none"></div>
     </div>
 
     <!-- Watchlist Download -->
