@@ -1183,6 +1183,7 @@ let viewingSeriesId = null;
 let editingSeriesId = null;
 let bulkMode = false;
 let bulkSelected = new Set();
+let _scanToken = 0; // incremented each scan to cancel stale async lookups
 
 // --- Seed Series Database (embedded + optionally refreshed from series-db.json)
 const SERIES_DB_VERSION = "3.1";
@@ -2324,6 +2325,7 @@ function addManualBook() {
 }
 
 function showLookupResult(book) {
+  _scanToken++; // invalidate any previous async series lookup
   const area = document.getElementById('lookup-result-area');
   area.innerHTML = `<div class="lookup-result">
     ${book.cover ? `<img src="${book.cover}" alt="">` : '<div style="width:60px;height:90px;background:var(--spine);border-radius:4px;display:flex;align-items:center;justify-content:center;color:var(--gold-light);font-size:1.4rem">&#9776;</div>'}
@@ -2354,6 +2356,7 @@ function showLookupResult(book) {
 
 
 async function checkBookSeries(book) {
+  const myToken = _scanToken; // capture token at start
   const hint = document.getElementById('series-hint');
   if (!hint) return;
 
@@ -2381,23 +2384,25 @@ async function checkBookSeries(book) {
     );
   }
 
+  if (myToken !== _scanToken) return; // stale â€” a new scan started
+
   if (matchedSeries) {
-    currentBook.seriesId = matchedSeries.id;
-    if (seriesPosition) currentBook.seriesPosition = seriesPosition;
+    book.seriesId = matchedSeries.id;
+    if (seriesPosition) book.seriesPosition = seriesPosition;
     showSeriesHint(matchedSeries, book, hint, seriesPosition);
     return;
   }
 
   // Step 3: series detected from DB but not in library yet â€” auto-create and show panel
   if (seriesName) {
-    currentBook.detectedSeries = seriesName;
+    book.detectedSeries = seriesName;
     const dbRef = book._dbSeriesRef || SEED_SERIES_DB.find(s => s.name.toLowerCase() === seriesName.toLowerCase());
     if (dbRef) {
-      const newSeries = { id: 's' + Date.now(), name: dbRef.name, status: 'ongoing', totalBooks: dbRef.totalBooks || null };
+      const newSeries = { id: 's' + Date.now() + Math.random().toString(36).slice(2,6), name: dbRef.name, status: 'ongoing', totalBooks: dbRef.totalBooks || null };
       seriesList.push(newSeries);
       save();
-      currentBook.seriesId = newSeries.id;
-      if (seriesPosition) currentBook.seriesPosition = seriesPosition;
+      book.seriesId = newSeries.id;
+      if (seriesPosition) book.seriesPosition = seriesPosition;
       book._dbSeriesRef = dbRef;
       showSeriesHint(newSeries, book, hint, seriesPosition);
     } else {
