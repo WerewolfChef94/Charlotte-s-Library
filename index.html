@@ -1185,7 +1185,7 @@ let bulkMode = false;
 let bulkSelected = new Set();
 
 // --- Seed Series Database (embedded + optionally refreshed from series-db.json)
-const SERIES_DB_VERSION = "3.2";
+const SERIES_DB_VERSION = "3.1";
 let SEED_SERIES_DB = [];
 
 async function loadSeriesDB() {
@@ -1382,6 +1382,10 @@ function lookupSeriesFromDB(title, author) {
 function save() {
   localStorage.setItem('herLibrary', JSON.stringify(books));
   localStorage.setItem('herLibrarySeries', JSON.stringify(seriesList));
+}
+
+function getGoogleBooksKey() {
+  return localStorage.getItem('herLibraryGoogleKey') || '';
 }
 
 function normaliseAuthor(raw) {
@@ -2201,7 +2205,7 @@ async function lookupISBN(isbnOverride) {
   // Try Google Books API - most reliable with HTTPS
   try {
     
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=' + getGoogleBooksKey());
     
     const data = await res.json();
     
@@ -3061,7 +3065,7 @@ function importKindleCSV(input) {
       let cover = '';
       try {
         const q = encodeURIComponent(cleanTitle + ' ' + author);
-        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0`);
+        const res = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${q}&maxResults=1&key=${getGoogleBooksKey()}`);
         const data = await res.json();
         if (data.items && data.items[0]) {
           const img = data.items[0].volumeInfo.imageLinks;
@@ -3119,7 +3123,7 @@ async function searchKindle() {
   document.getElementById('kindle-status').innerHTML = '<div class="status-message status-loading">Searching...</div>';
   document.getElementById('kindle-results').innerHTML = '';
   try {
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=AIzaSyArUI6lc43ZcobaVpHp2nk28ft1ARRnnR0');
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=' + getGoogleBooksKey());
     const data = await res.json();
     document.getElementById('kindle-status').innerHTML = '';
     if (!data.items || data.items.length === 0) {
@@ -3247,6 +3251,8 @@ init();
 function openSettings() {
   const watchlist = JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]');
   const modal = document.getElementById('settings-modal');
+  const savedKey = localStorage.getItem('herLibraryGoogleKey') || '';
+  document.getElementById('google-key-input').value = savedKey;
   const uniqueAuthors = new Set(books.map(b => b.author).filter(Boolean)).size;
   const wlParts = [];
   if (watchlist.length) wlParts.push(`${watchlist.length} logged entr${watchlist.length === 1 ? 'y' : 'ies'}`);
@@ -3259,6 +3265,16 @@ function openSettings() {
 
 function closeSettings() {
   document.getElementById('settings-modal').style.display = 'none';
+}
+
+function saveGoogleKey() {
+  const val = document.getElementById('google-key-input').value.trim();
+  if (val) {
+    localStorage.setItem('herLibraryGoogleKey', val);
+    const msg = document.getElementById('google-key-saved-msg');
+    msg.style.display = 'inline';
+    setTimeout(() => { msg.style.display = 'none'; }, 2000);
+  }
 }
 
 
@@ -3502,6 +3518,17 @@ function bulkSetStatus(status) {
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
       <h2 style="margin:0;font-family:'Playfair Display',serif;font-size:1.2rem;color:var(--spine)">âš™ Settings</h2>
       <button onclick="closeSettings()" style="background:transparent;border:none;font-size:1.4rem;cursor:pointer;color:var(--ink-light);line-height:1">Ã—</button>
+    </div>
+
+    <!-- Google Books API Key -->
+    <div style="margin-bottom:20px">
+      <div style="font-weight:700;color:var(--spine);font-size:0.85rem;margin-bottom:6px">&#128214; Google Books API Key</div>
+      <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:8px">Required for book scanning and Kindle search. Stored only on this device.</div>
+      <input id="google-key-input" type="password" placeholder="AIzaSyâ€¦" style="width:100%;box-sizing:border-box;padding:8px 10px;border-radius:8px;border:1px solid #c9b99a;font-size:0.85rem;font-family:Lato,sans-serif;background:#fff;color:var(--ink)">
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <button onclick="saveGoogleKey()" style="background:var(--gold);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">Save Key</button>
+        <span id="google-key-saved-msg" style="display:none;color:green;font-size:0.8rem">&#10003; Saved</span>
+      </div>
     </div>
 
     <!-- Watchlist Download -->
