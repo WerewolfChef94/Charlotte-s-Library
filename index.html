@@ -3600,9 +3600,11 @@ function bulkSetStatus(status) {
       <div style="font-size:0.75rem;color:var(--ink-light);margin-bottom:10px">Download a backup of all your books and series. Restore it if anything goes wrong.</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">
         <button onclick="downloadBackup()" style="background:var(--spine);color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">â¬‡ Download Backup</button>
-        <button onclick="document.getElementById('restore-file-input').click()" style="background:white;color:var(--spine);border:1.5px solid var(--spine);border-radius:8px;padding:7px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">&#8679; Restore Backup</button>
+        <label style="background:white;color:var(--spine);border:1.5px solid var(--spine);border-radius:8px;padding:7px 14px;font-size:0.8rem;font-family:Lato,sans-serif;cursor:pointer;font-weight:700">
+          &#8679; Restore Backup
+          <input type="file" accept=".json" style="position:absolute;width:1px;height:1px;opacity:0;overflow:hidden" onchange="restoreBackup(this)">
+        </label>
       </div>
-      <input type="file" id="restore-file-input" accept=".json" style="display:none" onchange="restoreBackup(this)">
       <div id="backup-status" style="font-size:0.75rem;color:green;display:none"></div>
     </div>
 
