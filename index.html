@@ -1350,9 +1350,13 @@ function lookupSeriesFromDB(title, author) {
     for (const b of s.books) {
       const dbTitle = b.t.toLowerCase().replace(/[''":,!?]/g, '').trim();
       // Exact match = 100, substring = 70, all significant words match = 50
+      // Exact match = 100
+      // Substring match = 70 only if DB title is 4+ words OR 15+ chars (prevents "Him", "Her" etc false matches)
+      // Word match = 50 only if 3+ significant words all match
+      const dbWordCount = dbTitle.split(' ').filter(w => w.length > 0).length;
+      const substringAllowed = dbTitle.length >= 15 || dbWordCount >= 3;
       const titleScore = titleLower === dbTitle ? 100
-        : titleLower.includes(dbTitle) || dbTitle.includes(titleLower) ? 70
-        : titleLower.split(' ').filter(w => w.length > 3).every(w => dbTitle.includes(w)) ? 50
+        : substringAllowed && (titleLower.includes(dbTitle) || dbTitle.includes(titleLower)) ? 70
         : 0;
 
       if (titleScore >= 70) {
