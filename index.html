@@ -3134,6 +3134,11 @@ async function searchKindle() {
   try {
     const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=' + apiKey);
     const data = await res.json();
+    // Show any API error clearly
+    if (data.error) {
+      document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">API error: ' + (data.error.message || JSON.stringify(data.error)) + '</div>';
+      return;
+    }
     document.getElementById('kindle-status').innerHTML = '';
     if (!data.items || data.items.length === 0) {
       document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">No results found. Try different search terms.</div>';
