@@ -2204,8 +2204,12 @@ async function lookupISBN(isbnOverride) {
 
   // Try Google Books API - most reliable with HTTPS
   try {
-    
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=' + getGoogleBooksKey());
+    const apiKey = getGoogleBooksKey();
+    if (!apiKey) {
+      setScanStatus('No API key saved â€” open âš™ Settings to add your Google Books key.', 'err');
+      return;
+    }
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=' + apiKey);
     
     const data = await res.json();
     
@@ -3120,10 +3124,15 @@ function closeKindleSearch() {
 async function searchKindle() {
   const q = document.getElementById('kindle-search-input').value.trim();
   if (!q) return;
+  const apiKey = getGoogleBooksKey();
+  if (!apiKey) {
+    document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">No API key saved. Open âš™ Settings and paste your Google Books API key first.</div>';
+    return;
+  }
   document.getElementById('kindle-status').innerHTML = '<div class="status-message status-loading">Searching...</div>';
   document.getElementById('kindle-results').innerHTML = '';
   try {
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=' + getGoogleBooksKey());
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=' + apiKey);
     const data = await res.json();
     document.getElementById('kindle-status').innerHTML = '';
     if (!data.items || data.items.length === 0) {
