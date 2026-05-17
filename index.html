@@ -2212,14 +2212,13 @@ async function lookupISBN(isbnOverride) {
     const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn + '&key=' + apiKey);
     
     const data = await res.json();
-    
+    if (data.error) throw new Error(data.error.message);
     if (data.items && data.items.length > 0) {
       const info = data.items[0].volumeInfo;
       let cover = '';
       if (info.imageLinks) {
         cover = (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://');
       }
-
       currentBook = {
         id: null, isbn,
         title: info.title || 'Unknown Title',
@@ -2237,7 +2236,7 @@ async function lookupISBN(isbnOverride) {
       return;
     }
   } catch(e) {
-    
+    setScanStatus('Google Books: ' + e.message + ' â€” trying backup...', 'loading');
   }
 
   // Try Open Library
@@ -2271,6 +2270,32 @@ async function lookupISBN(isbnOverride) {
   } catch(e) {
     
   }
+
+  // Try Google Books without key as last resort
+  try {
+    setScanStatus('Trying final lookup...', 'loading');
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn);
+    const data = await res.json();
+    if (data.items && data.items.length > 0) {
+      const info = data.items[0].volumeInfo;
+      let cover = '';
+      if (info.imageLinks) {
+        cover = (info.imageLinks.thumbnail || info.imageLinks.smallThumbnail || '').replace('http://', 'https://');
+      }
+      currentBook = {
+        id: null, isbn,
+        title: info.title || 'Unknown Title',
+        author: (info.authors || ['Unknown Author']).join(', '),
+        cover, year: info.publishedDate ? info.publishedDate.substring(0, 4) : '',
+        pages: info.pageCount || '',
+        detectedSeries: null, seriesId: null, seriesPosition: null, _dbSeriesRef: null,
+        type: scanningFor, status: 'unread', rating: 0, notes: '', addedAt: Date.now()
+      };
+      setScanStatus('', 'ok');
+      showLookupResult(currentBook);
+      return;
+    }
+  } catch(e) {}
 
   // Show debug info and manual entry
   setScanStatus('Book not found. Please enter details manually below.', 'err');
