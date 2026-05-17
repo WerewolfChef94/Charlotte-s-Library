@@ -1387,6 +1387,27 @@ function lookupSeriesFromDB(title, author) {
 function save() {
   localStorage.setItem('herLibrary', JSON.stringify(books));
   localStorage.setItem('herLibrarySeries', JSON.stringify(seriesList));
+  // Auto-backup: keep a silent rolling backup of last known good state
+  autoBackup();
+}
+
+function autoBackup() {
+  try {
+    if (!books.length) return; // never overwrite a good backup with empty data
+    const snapshot = {
+      version: 1,
+      exportedAt: new Date().toISOString(),
+      bookCount: books.length,
+      books,
+      seriesList,
+      userSeries: JSON.parse(localStorage.getItem('herLibraryUserSeries') || '[]'),
+      watchlist: JSON.parse(localStorage.getItem('herLibraryWatchlist') || '[]')
+    };
+    localStorage.setItem('herLibraryAutoBackup', JSON.stringify(snapshot));
+    localStorage.setItem('herLibraryLastCount', String(books.length));
+  } catch(e) {
+    // localStorage might be full â€” silently ignore
+  }
 }
 
 function getGoogleBooksKey() {
@@ -2868,20 +2889,22 @@ function quickAdd(type) {
 
   // Brief toast confirmation
   showToast(`"${book.title}" added to ${type === 'owned' ? 'Library' : 'Wishlist'} âœ“`);
+
+
 }
 
-function showToast(msg) {
+function showToast(msg, duration) {
   let toast = document.getElementById('scan-toast');
   if (!toast) {
     toast = document.createElement('div');
     toast.id = 'scan-toast';
-    toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--spine);color:white;padding:10px 18px;border-radius:20px;font-family:Lato,sans-serif;font-size:0.85rem;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:opacity 0.4s;white-space:nowrap';
+    toast.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--spine);color:white;padding:10px 18px;border-radius:20px;font-family:Lato,sans-serif;font-size:0.85rem;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,0.3);transition:opacity 0.4s;white-space:nowrap;max-width:90vw;text-align:center';
     document.body.appendChild(toast);
   }
   toast.textContent = msg;
   toast.style.opacity = '1';
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => { toast.style.opacity = '0'; }, 2500);
+  toast._t = setTimeout(() => { toast.style.opacity = '0'; }, duration || 2500);
 }
 
 function proceedToAdd() {
@@ -3291,9 +3314,90 @@ function saveBook() {
 async function init() {
   try { await loadSeriesDB(); } catch(e) { console.warn('Series DB load failed:', e); }
   try { migrateAuthorNames(); } catch(e) { console.warn('Migration failed:', e); }
+  try { checkDataLoss(); } catch(e) { console.warn('Data loss check failed:', e); }
   try { renderBooks(); } catch(e) { console.error('renderBooks failed:', e); }
+  try { checkBackupDue(); } catch(e) {}
 }
 init();
+
+function checkBackupDue() {
+  if (!books.length) return; // nothing to back up
+  const lastBackup = localStorage.getItem('herLibraryLastBackupDate');
+  const today = new Date().toISOString().split('T')[0];
+
+  // First time â€” no backup ever taken
+  if (!lastBackup) {
+    showBackupBanner('You have never downloaded a backup. Keep your library safe!');
+    return;
+  }
+
+  // Calculate days since last backup
+  const daysSince = Math.floor((new Date(today) - new Date(lastBackup)) / (1000 * 60 * 60 * 24));
+  if (daysSince >= 7) {
+    showBackupBanner('Your last backup was ' + daysSince + ' days ago. Time for a new one!');
+  }
+}
+
+function showBackupBanner(msg) {
+  // Remove any existing banner
+  const existing = document.getElementById('backup-banner');
+  if (existing) existing.remove();
+
+  const banner = document.createElement('div');
+  banner.id = 'backup-banner';
+  banner.style.cssText = 'position:fixed;bottom:80px;left:0;right:0;margin:0 12px;background:var(--spine);color:white;border-radius:10px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;z-index:500;box-shadow:0 4px 16px rgba(0,0,0,0.25);font-family:Lato,sans-serif;font-size:0.82rem;';
+  banner.innerHTML = `
+    <span>ðŸ’¾ ${msg}</span>
+    <div style="display:flex;gap:6px;flex-shrink:0">
+      <button onclick="downloadBackup();document.getElementById('backup-banner').remove()"
+        style="background:var(--gold);color:var(--ink);border:none;border-radius:6px;padding:5px 10px;font-size:0.78rem;font-weight:700;font-family:Lato,sans-serif;cursor:pointer;white-space:nowrap">
+        Download
+      </button>
+      <button onclick="document.getElementById('backup-banner').remove()"
+        style="background:rgba(255,255,255,0.2);color:white;border:none;border-radius:6px;padding:5px 10px;font-size:0.78rem;font-family:Lato,sans-serif;cursor:pointer">
+        Later
+      </button>
+    </div>
+  `;
+  document.body.appendChild(banner);
+
+  // Auto-dismiss after 12 seconds
+  setTimeout(() => { if (banner.parentNode) banner.remove(); }, 12000);
+}
+
+function checkDataLoss() {
+  const lastCount = parseInt(localStorage.getItem('herLibraryLastCount') || '0');
+  const autoBackup = localStorage.getItem('herLibraryAutoBackup');
+
+  // If we had books before but now have none â€” data loss detected
+  if (lastCount >= 5 && books.length === 0 && autoBackup) {
+    try {
+      const backup = JSON.parse(autoBackup);
+      const msg = `âš ï¸ It looks like your library data was lost!
+
+` +
+        `Last known: ${backup.bookCount} books (${backup.exportedAt.split('T')[0]})
+` +
+        `Current: 0 books
+
+` +
+        `Restore from auto-backup now?`;
+
+      if (confirm(msg)) {
+        books = backup.books || [];
+        seriesList = backup.seriesList || [];
+        localStorage.setItem('herLibrary', JSON.stringify(books));
+        localStorage.setItem('herLibrarySeries', JSON.stringify(seriesList));
+        if (backup.userSeries) localStorage.setItem('herLibraryUserSeries', JSON.stringify(backup.userSeries));
+        if (backup.watchlist) localStorage.setItem('herLibraryWatchlist', JSON.stringify(backup.watchlist));
+        localStorage.setItem('herLibraryLastCount', String(books.length));
+        alert(`âœ“ Restored ${books.length} books successfully!`);
+      }
+    } catch(e) {
+      console.warn('Auto-restore failed:', e);
+    }
+  }
+}
 
 // --- Settings ----------------------------------------------------------------
 function openSettings() {
@@ -3317,10 +3421,11 @@ function closeSettings() {
 
 // â”€â”€ Backup & Restore â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-function downloadBackup() {
+function downloadBackup(silent) {
   const backup = {
     version: 1,
     exportedAt: new Date().toISOString(),
+    bookCount: books.length,
     books: books,
     seriesList: seriesList,
     userSeries: JSON.parse(localStorage.getItem('herLibraryUserSeries') || '[]'),
@@ -3330,9 +3435,13 @@ function downloadBackup() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'charlottes-library-backup-' + new Date().toISOString().split('T')[0] + '.json';
+  a.download = 'charlottes-library-backup.json'; // fixed filename â€” always overwrites the same file
   a.click();
   URL.revokeObjectURL(url);
+  // Record when the last backup was downloaded
+  localStorage.setItem('herLibraryLastBackupDate', new Date().toISOString().split('T')[0]);
+  localStorage.setItem('herLibraryLastBackupCount', String(books.length));
+  if (!silent) showToast('âœ“ Backup saved â€” ' + books.length + ' books', 3000);
 }
 
 function restoreBackup(input) {
