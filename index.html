@@ -999,14 +999,47 @@
     <div style="text-align:center;font-size:0.75rem;color:var(--ink-light);margin-bottom:10px">â€” or search for a single book â€”</div>
 
     <div class="form-group">
-      <label>Search by Title or Author</label>
-      <div style="display:flex;gap:8px">
-        <input type="text" id="kindle-search-input" placeholder="e.g. Harry Potter, Tolkien..." 
-          style="flex:1;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none"
-          onkeydown="if(event.key==='Enter')searchKindle()">
-        <button class="btn-primary" style="flex:none;padding:10px 16px" onclick="searchKindle()">Search</button>
+      <!-- Search type toggle -->
+      <div style="display:flex;gap:6px;margin-bottom:8px">
+        <button id="ks-type-title" onclick="setKindleSearchType('title')"
+          style="flex:1;padding:6px;border:1.5px solid var(--spine);border-radius:7px;font-family:Lato,sans-serif;font-size:0.78rem;font-weight:700;background:var(--spine);color:white;cursor:pointer">
+          ðŸ“– By Title
+        </button>
+        <button id="ks-type-author" onclick="setKindleSearchType('author')"
+          style="flex:1;padding:6px;border:1.5px solid var(--parchment-dark);border-radius:7px;font-family:Lato,sans-serif;font-size:0.78rem;font-weight:700;background:white;color:var(--ink);cursor:pointer">
+          âœ By Author
+        </button>
+        <button id="ks-type-manual" onclick="setKindleSearchType('manual')"
+          style="flex:1;padding:6px;border:1.5px solid var(--parchment-dark);border-radius:7px;font-family:Lato,sans-serif;font-size:0.78rem;font-weight:700;background:white;color:var(--ink);cursor:pointer">
+          âœ Manual
+        </button>
+      </div>
+
+      <!-- Search input (title/author) -->
+      <div id="ks-search-section">
+        <div style="display:flex;gap:8px">
+          <input type="text" id="kindle-search-input" placeholder="Search by title..."
+            style="flex:1;padding:10px 14px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.9rem;background:white;color:var(--ink);outline:none"
+            onkeydown="if(event.key==='Enter')searchKindle()">
+          <button class="btn-primary" style="flex:none;padding:10px 16px" onclick="searchKindle()">Search</button>
+        </div>
+      </div>
+
+      <!-- Manual entry section -->
+      <div id="ks-manual-section" style="display:none">
+        <input type="text" id="ks-manual-title" placeholder="Book title *" autocomplete="off"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px;-webkit-user-select:text;user-select:text">
+        <input type="text" id="ks-manual-author" placeholder="Author name" autocomplete="off"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px;-webkit-user-select:text;user-select:text">
+        <input type="text" id="ks-manual-series" placeholder="Series name (optional)" autocomplete="off"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px;-webkit-user-select:text;user-select:text">
+        <input type="number" id="ks-manual-series-pos" placeholder="Book number in series (optional)"
+          style="width:100%;padding:9px 12px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-family:Lato,sans-serif;font-size:0.88rem;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:7px">
+        <div id="ks-manual-error" style="font-size:0.78rem;color:#c0392b;margin-bottom:6px;display:none"></div>
+        <button class="btn-primary" style="width:100%" onclick="addKindleManual()">Add to Kindle Library</button>
       </div>
     </div>
+
     <div id="kindle-status"></div>
     <div id="kindle-results"></div>
     <div class="btn-row" style="margin-top:8px">
@@ -2323,16 +2356,59 @@ async function lookupISBN(isbnOverride) {
     }
   } catch(e) {}
 
-  // Show debug info and manual entry
+  // Show manual entry form
   setScanStatus('Book not found. Please enter details manually below.', 'err');
-  document.getElementById('lookup-result-area').innerHTML =
-    '<div style="margin-bottom:10px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Title</label>' +
-    '<input type="text" id="manual-title" placeholder="Book title" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
-    '<div style="margin-bottom:12px"><label style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px">Author</label>' +
-    '<input type="text" id="manual-author" placeholder="Author name" style="width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none"></div>' +
-    '<div class="btn-row">' +
-    '<button class="btn-secondary" onclick="closeScanner()">Cancel</button>' +
-    '<button class="btn-primary" onclick="addManualBook()">Add Book</button></div>';
+  const area = document.getElementById('lookup-result-area');
+  area.innerHTML = '';
+
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'padding:4px 0';
+
+  // Title field
+  const titleLabel = document.createElement('label');
+  titleLabel.style.cssText = 'font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px';
+  titleLabel.textContent = 'Title';
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.id = 'manual-title';
+  titleInput.placeholder = 'Book title';
+  titleInput.style.cssText = 'width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:10px;-webkit-user-select:text;user-select:text';
+  titleInput.setAttribute('autocomplete', 'off');
+
+  // Author field
+  const authorLabel = document.createElement('label');
+  authorLabel.style.cssText = 'font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--ink-light);font-weight:700;display:block;margin-bottom:5px';
+  authorLabel.textContent = 'Author';
+  const authorInput = document.createElement('input');
+  authorInput.type = 'text';
+  authorInput.id = 'manual-author';
+  authorInput.placeholder = 'Author name';
+  authorInput.style.cssText = 'width:100%;padding:10px;border:1.5px solid var(--parchment-dark);border-radius:8px;font-size:0.9rem;font-family:Lato,sans-serif;background:white;color:var(--ink);outline:none;box-sizing:border-box;margin-bottom:12px;-webkit-user-select:text;user-select:text';
+  authorInput.setAttribute('autocomplete', 'off');
+
+  // Buttons
+  const btnRow = document.createElement('div');
+  btnRow.className = 'btn-row';
+  const cancelBtn = document.createElement('button');
+  cancelBtn.className = 'btn-secondary';
+  cancelBtn.textContent = 'Cancel';
+  cancelBtn.onclick = closeScanner;
+  const addBtn = document.createElement('button');
+  addBtn.className = 'btn-primary';
+  addBtn.textContent = 'Add Book';
+  addBtn.onclick = addManualBook;
+  btnRow.appendChild(cancelBtn);
+  btnRow.appendChild(addBtn);
+
+  wrap.appendChild(titleLabel);
+  wrap.appendChild(titleInput);
+  wrap.appendChild(authorLabel);
+  wrap.appendChild(authorInput);
+  wrap.appendChild(btnRow);
+  area.appendChild(wrap);
+
+  // Focus title after a short delay
+  setTimeout(() => titleInput.focus(), 100);
 }
 function addManualBook() {
   const title = document.getElementById('manual-title').value.trim();
@@ -2998,6 +3074,7 @@ function openKindleSearch() {
   document.getElementById('kindle-search-input').value = '';
   document.getElementById('kindle-results').innerHTML = '';
   document.getElementById('kindle-status').innerHTML = '';
+  setKindleSearchType('title');
   setTimeout(() => document.getElementById('kindle-search-input').focus(), 100);
 }
 
@@ -3178,6 +3255,74 @@ function closeKindleSearch() {
   document.getElementById('kindle-modal').style.display = 'none';
 }
 
+let _kindleSearchType = 'title';
+
+function setKindleSearchType(type) {
+  _kindleSearchType = type;
+  ['title','author','manual'].forEach(t => {
+    const btn = document.getElementById('ks-type-' + t);
+    if (btn) {
+      btn.style.background = t === type ? 'var(--spine)' : 'white';
+      btn.style.color = t === type ? 'white' : 'var(--ink)';
+      btn.style.borderColor = t === type ? 'var(--spine)' : 'var(--parchment-dark)';
+    }
+  });
+  const searchSection = document.getElementById('ks-search-section');
+  const manualSection = document.getElementById('ks-manual-section');
+  if (type === 'manual') {
+    searchSection.style.display = 'none';
+    manualSection.style.display = 'block';
+  } else {
+    searchSection.style.display = 'block';
+    manualSection.style.display = 'none';
+    const input = document.getElementById('kindle-search-input');
+    input.placeholder = type === 'author' ? 'e.g. Ruby Dixon, Sara Cate...' : 'e.g. Ice Planet Barbarians...';
+    document.getElementById('kindle-status').innerHTML = '';
+    document.getElementById('kindle-results').innerHTML = '';
+  }
+}
+
+function addKindleManual() {
+  const title = (document.getElementById('ks-manual-title').value || '').trim();
+  const author = (document.getElementById('ks-manual-author').value || '').trim();
+  const seriesName = (document.getElementById('ks-manual-series').value || '').trim();
+  const seriesPos = parseInt(document.getElementById('ks-manual-series-pos').value) || null;
+  const errEl = document.getElementById('ks-manual-error');
+
+  if (!title) { errEl.textContent = 'Please enter a title.'; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+
+  // Find or create series
+  let seriesId = null;
+  if (seriesName) {
+    let s = seriesList.find(x => x.name.toLowerCase() === seriesName.toLowerCase());
+    if (!s) {
+      const dbRef = (SEED_SERIES_DB || []).find(x => x.name.toLowerCase() === seriesName.toLowerCase());
+      s = { id: 's' + Date.now() + Math.random().toString(36).slice(2,5), name: seriesName, status: 'ongoing', totalBooks: dbRef ? dbRef.totalBooks : null };
+      seriesList.push(s);
+    }
+    seriesId = s.id;
+  }
+
+  const book = {
+    id: 'b' + Date.now() + Math.random().toString(36).slice(2,6),
+    isbn: '', asin: '',
+    title, author: author || 'Unknown Author',
+    cover: '', year: '', pages: '',
+    format: 'kindle', type: 'owned', status: 'unread',
+    rating: 0, notes: '',
+    seriesId, seriesPosition: seriesPos,
+    detectedSeries: null, _dbSeriesRef: null,
+    addedAt: Date.now()
+  };
+  books.push(book);
+  save();
+  closeKindleSearch();
+  currentTab = 'owned';
+  renderBooks();
+  showToast(`"${title}" added to Kindle library âœ“`);
+}
+
 async function searchKindle() {
   const q = document.getElementById('kindle-search-input').value.trim();
   if (!q) return;
@@ -3186,10 +3331,14 @@ async function searchKindle() {
     document.getElementById('kindle-status').innerHTML = '<div class="status-message status-err">No API key saved. Open âš™ Settings and paste your Google Books API key first.</div>';
     return;
   }
+
+  // Build query â€” use inauthor: prefix for author searches for much better results
+  const query = _kindleSearchType === 'author' ? 'inauthor:' + q : 'intitle:' + q;
+
   document.getElementById('kindle-status').innerHTML = '<div class="status-message status-loading">Searching...</div>';
   document.getElementById('kindle-results').innerHTML = '';
   try {
-    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(q) + '&maxResults=8&key=' + apiKey);
+    const res = await fetch('https://www.googleapis.com/books/v1/volumes?q=' + encodeURIComponent(query) + '&maxResults=12&orderBy=relevance&key=' + apiKey);
     const data = await res.json();
     // Show any API error clearly
     if (data.error) {
